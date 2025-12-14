@@ -1,0 +1,218 @@
+[
+  {
+    "id": "basic_action",
+    "type": "action",
+    "unit": 2,
+    "english": "The [subject] [verb] [object]",
+    "nepali_structure": "[subject] ले [object] [verb]",
+    "example": {
+      "english": "The boy eats rice",
+      "nepali": "केटाले भात खान्छ",
+      "transliteration": "ketale bhat khancha"
+    },
+    "required_parts": ["subject", "ergative_marker", "object", "verb"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "existence",
+    "type": "existence",
+    "unit": 1,
+    "english": "There is a [object]",
+    "nepali_structure": "[object] छ",
+    "example": {
+      "english": "There is a car",
+      "nepali": "गाडी छ",
+      "transliteration": "gaadi cha"
+    },
+    "required_parts": ["object", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "existence_animate",
+    "type": "existence_animate",
+    "unit": 1,
+    "english": "[animate_object] is [location]",
+    "nepali_structure": "[animate_object] [location] छ",
+    "example": {
+      "english": "The sister is here",
+      "nepali": "दिदी यहाँ छिन्",
+      "transliteration": "didi yaha chin"
+    },
+    "required_parts": ["animate_object", "location_word", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "possession",
+    "type": "possession",
+    "unit": 1,
+    "english": "The [possessor] has a [object]",
+    "nepali_structure": "[possessor] सङ्ग [object] छ",
+    "example": {
+      "english": "The boy has a car",
+      "nepali": "केटा सङ्ग गाडी छ",
+      "transliteration": "keta sanga gaadi cha"
+    },
+    "required_parts": ["possessor", "possession_postposition", "object", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "identity_noun",
+    "type": "identity_noun",
+    "unit": 1,
+    "english": "[subject] is [identity_noun]",
+    "nepali_structure": "[subject] [identity_noun] हो",
+    "example": {
+      "english": "Ram is a doctor",
+      "nepali": "राम डाक्टर हो",
+      "transliteration": "ram daaktar ho"
+    },
+    "required_parts": ["subject", "identity_noun", "identity_copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "identity_adj",
+    "type": "identity_adj",
+    "unit": 1,
+    "english": "[subject] is [adjective]",
+    "nepali_structure": "[subject] [adjective] छ",
+    "example": {
+      "english": "The boy is tall",
+      "nepali": "केटो अग्लो छ",
+      "transliteration": "keto aglo cha"
+    },
+    "required_parts": ["subject", "adjective", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "identity_location",
+    "type": "identity_location",
+    "unit": 1,
+    "english": "[subject] is in/on [location]",
+    "nepali_structure": "[subject] [location_phrase] छ",
+    "example": {
+      "english": "The book is on the table",
+      "nepali": "किताब टेबलमा छ",
+      "transliteration": "kitab tebalma cha"
+    },
+    "required_parts": ["subject", "location_phrase", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "ergative_past_transitive",
+    "type": "ergative_past_transitive",
+    "unit": 99,
+    "english": "[subject] [verb] [object] (past)",
+    "nepali_structure": "[subject] ले [object] [verb]",
+    "example": {
+      "english": "Ram ate rice",
+      "nepali": "रामले भात खायो",
+      "transliteration": "ramle bhat khayo"
+    },
+    "required_parts": ["subject", "ergative_marker", "object", "verb_past"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "dative_animate_object",
+    "type": "dative_animate_object",
+    "unit": 99,
+    "english": "[subject] [verb] [object] (animate)",
+    "nepali_structure": "[subject] [object] लाई [verb]",
+    "example": {
+      "english": "I saw the dog",
+      "nepali": "मैले कुकुरलाई देखेँ",
+      "transliteration": "maile kukurlai dekhe"
+    },
+    "required_parts": ["subject", "ergative_marker", "object", "dative_marker", "verb_past"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "basic_action_negative",
+    "type": "action",
+    "unit": 3,
+    "negation_type": "action_present",
+    "english": "The [subject] does not [verb] [object]",
+    "nepali_structure": "[subject] ले [object] [verb stem] + दैन",
+    "example": {
+      "english": "He does not eat food.",
+      "nepali": "ऊ खाना खाँदैन।",
+      "transliteration": "u khana khãdaina"
+    },
+    "required_parts": ["subject", "ergative_marker", "object", "verb_negative_present"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "existence_negative",
+    "type": "existence",
+    "unit": 3,
+    "negation_type": "existence",
+    "english": "There is not a [object]",
+    "nepali_structure": "[object] छैन",
+    "example": {
+      "english": "There is not a book.",
+      "nepali": "किताब छैन।",
+      "transliteration": "kitab chaina"
+    },
+    "required_parts": ["object", "copula_negative"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "possession_negative",
+    "type": "possession",
+    "unit": 3,
+    "negation_type": "possession",
+    "english": "The [possessor] does not have a [object]",
+    "nepali_structure": "[possessor] सङ्ग [object] छैन",
+    "example": {
+      "english": "I do not have a car.",
+      "nepali": "मेरो सङ्ग गाडी छैन।",
+      "transliteration": "mero sanga gaadi chaina"
+    },
+    "required_parts": ["possessor", "possession_postposition", "object", "copula_negative"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "identity_noun_negative",
+    "type": "identity_noun",
+    "unit": 3,
+    "negation_type": "identity",
+    "english": "[subject] is not [identity_noun]",
+    "nepali_structure": "[subject] [identity_noun] होइन",
+    "example": {
+      "english": "He is not a teacher.",
+      "nepali": "ऊ शिक्षक होइन।",
+      "transliteration": "u shikshak hoina"
+    },
+    "required_parts": ["subject", "identity_noun", "identity_copula_negative"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "identity_adj_negative",
+    "type": "identity_adj",
+    "unit": 3,
+    "negation_type": "identity_adj",
+    "english": "[subject] is not [adjective]",
+    "nepali_structure": "[subject] [adjective] छैन",
+    "example": {
+      "english": "The boy is not tall.",
+      "nepali": "केटो अग्लो छैन।",
+      "transliteration": "keto aglo chaina"
+    },
+    "required_parts": ["subject", "adjective", "copula_negative"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "identity_location_negative",
+    "type": "identity_location",
+    "unit": 3,
+    "negation_type": "identity_location",
+    "english": "[subject] is not in/on [location]",
+    "nepali_structure": "[subject] [location_phrase] छैन",
+    "example": {
+      "english": "The book is not on the table.",
+      "nepali": "किताब टेबलमा छैन।",
+      "transliteration": "kitab tebalma chaina"
+    },
+    "required_parts": ["subject", "location_phrase", "copula_negative"],
+    "difficulty": "beginner"
+  }
+] 

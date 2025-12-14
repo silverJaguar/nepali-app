@@ -1,0 +1,490 @@
+{
+  "Greetings & Basic Expressions": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "नमस्ते", "definition": "Hello", "transliteration": "namaste", "phoneme": "nʌ.mʌs.te", "part_of_speech": "interjection", "can_be": ["greeting"] },
+        { "term": "बिदा", "definition": "Goodbye", "transliteration": "bida", "phoneme": "bi.da", "part_of_speech": "interjection", "can_be": ["farewell"] },
+        { "term": "धन्यवाद", "definition": "Thank you", "transliteration": "dhanyabad", "phoneme": "dʱʌn.jʌ.bad", "part_of_speech": "interjection", "can_be": ["gratitude"] },
+        { "term": "कृपया", "definition": "Please", "transliteration": "kripaya", "phoneme": "kri.pʌ.ja", "part_of_speech": "adverb", "can_be": ["polite_request"] }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "माफ गर्नुहोस्", "definition": "Sorry / Excuse me", "transliteration": "maaf garnuhos", "phoneme": "maːf ɡʌr.nu.hos", "part_of_speech": "phrase", "can_be": ["apology"] },
+        { "term": "हुन्छ", "definition": "Yes (for agreement or permission)", "transliteration": "huncha", "phoneme": "hun.t͡sʰa", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "copula_type": "modal" },
+        { "term": "छ", "definition": "is / exists / has", "gloss": "is", "transliteration": "cha", "phoneme": "t͡sʰa", "part_of_speech": "verb", "can_be": ["copula"], "verb_type": "copula", "copula_type": "existence", "used_in": ["existence", "possession", "identity"] },
+        { "term": "हो", "definition": "Yes (for confirming identity or correctness)", "transliteration": "ho", "phoneme": "ho", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "copula_type": "identity" }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "हुँदैन", "definition": "No (general negation)", "transliteration": "hundaina", "phoneme": "hun.dai.na", "part_of_speech": "verb", "can_be": ["predicate", "verb"] },
+        { "term": "होइन", "definition": "No (for negating identity or correctness)", "transliteration": "hoina", "phoneme": "hoi.na", "part_of_speech": "verb", "can_be": ["predicate", "verb"] },
+        { "term": "हाल खबर के छ?", "definition": "How are you?", "transliteration": "haal khabar ke cha?", "phoneme": "haːl kʰʌ.bʌr ke t͡sʰa", "part_of_speech": "phrase", "can_be": ["question"] },
+        { "term": "राम्रो छ", "definition": "I'm good / It's good", "transliteration": "ramro cha", "phoneme": "ram.ro t͡sʰa", "part_of_speech": "phrase", "can_be": ["statement"] },
+        { "term": "तपाईको नाम के हो?", "definition": "What is your name?", "transliteration": "tapaiko naam ke ho?", "phoneme": "tʌ.paːi.ko naːm ke ho", "part_of_speech": "phrase", "can_be": ["question"] }
+      ]
+    }
+  ],
+
+  "People & Family": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "आमा", "definition": "Mother", "gloss": "mother", "transliteration": "aama", "phoneme": "ɑː.ma", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "family_member", "animacy": "animate", "possessable": false },
+        { "term": "बुबा", "definition": "Father", "gloss": "father", "transliteration": "buba", "phoneme": "bu.ba", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "family_member", "animacy": "animate", "possessable": false },
+        { "term": "दिदी", "definition": "Older sister", "gloss": "older sister", "transliteration": "didi", "phoneme": "di.di", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "family_member", "relative_age": "older", "animacy": "animate", "possessable": false },
+        { "term": "बहिनी", "definition": "Younger sister", "gloss": "younger sister", "transliteration": "bahini", "phoneme": "bʌ.hi.ni", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "family_member", "relative_age": "younger", "animacy": "animate", "possessable": false }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "दाजु", "definition": "Older brother", "gloss": "older brother", "transliteration": "daju", "phoneme": "da.d͡zu", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "family_member", "relative_age": "older", "animacy": "animate", "possessable": false },
+        { "term": "भाई", "definition": "Younger brother", "gloss": "younger brother", "transliteration": "bhai", "phoneme": "bʱa.i", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "family_member", "relative_age": "younger", "animacy": "animate", "possessable": false },
+        { "term": "छोरा", "definition": "Son", "transliteration": "chhora", "phoneme": "t͡sʰo.ra", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "family_member" },
+        { "term": "छोरी", "definition": "Daughter", "transliteration": "chhori", "phoneme": "t͡sʰo.ri", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "family_member" }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "परिवार", "definition": "Family", "transliteration": "pariwaar", "phoneme": "pʌ.ri.waːr", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "family" },
+        { "term": "साथी", "definition": "Friend", "gloss": "friend", "transliteration": "saathi", "phoneme": "saː.tʰi", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "person", "animacy": "animate", "possessable": false },
+        { "term": "नाता", "definition": "Relationship / Kinship", "transliteration": "naata", "phoneme": "naː.ta", "part_of_speech": "noun", "can_be": ["object"], "category": "concept" }
+      ]
+    }
+  ],
+
+  "Food & Dining": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "भात", "definition": "Cooked rice", "transliteration": "bhat", "phoneme": "bʱat", "part_of_speech": "noun", "can_be": ["object"], "category": "food", "semantic_type": "food" },
+        { "term": "चामल", "definition": "Uncooked rice", "transliteration": "chamal", "phoneme": "t͡sa.mal", "part_of_speech": "noun", "can_be": ["object"], "category": "food" },
+        { "term": "तरकारी", "definition": "Vegetables / Curry", "transliteration": "tarkari", "phoneme": "tar.ka.ri", "part_of_speech": "noun", "can_be": ["object"], "category": "food" },
+        { "term": "मासु", "definition": "Meat", "transliteration": "masu", "phoneme": "ma.su", "part_of_speech": "noun", "can_be": ["object"], "category": "food", "semantic_type": "food" }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "पानी", "definition": "Water", "transliteration": "pani", "phoneme": "pa.ni", "part_of_speech": "noun", "can_be": ["object"], "category": "liquid" },
+        { "term": "चिया", "definition": "Tea", "transliteration": "chiya", "phoneme": "t͡si.ja", "part_of_speech": "noun", "can_be": ["object"], "category": "liquid" },
+        { "term": "दूध", "definition": "Milk", "transliteration": "doodh", "phoneme": "duːdʱ", "part_of_speech": "noun", "can_be": ["object"], "category": "liquid" },
+        { "term": "नुन", "definition": "Salt", "transliteration": "nun", "phoneme": "nun", "part_of_speech": "noun", "can_be": ["object"], "category": "solid" }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "मरिच", "definition": "Black pepper", "transliteration": "marich", "phoneme": "ma.rit͡s", "part_of_speech": "noun", "can_be": ["object"], "category": "solid" },
+        { "term": "खुर्सानी", "definition": "Chili", "transliteration": "khursani", "phoneme": "kʰur.sa.ni", "part_of_speech": "noun", "can_be": ["object"], "category": "solid" },
+        { "term": "मीठो", "definition": "Tasty / Sweet", "gloss": "tasty", "transliteration": "mitho", "phoneme": "mi.tʰo", "part_of_speech": "adjective", "can_be": ["modifier"], "category": "taste", "semantic_type": "taste_quality" },
+        { "term": "नमिठो", "definition": "Not tasty", "gloss": "not tasty", "transliteration": "namitho", "phoneme": "na.mi.tʰo", "part_of_speech": "adjective", "can_be": ["modifier"], "category": "taste", "semantic_type": "taste_quality" }
+      ]
+    },
+    {
+      "title": "Lesson 4",
+      "flashcards": [
+        { "term": "भोक लाग्यो", "definition": "I am hungry", "transliteration": "bhok lagyo", "phoneme": "bʱok la.ɡjo", "part_of_speech": "phrase", "can_be": ["statement"] },
+        { "term": "प्यास लाग्यो", "definition": "I am thirsty", "transliteration": "pyaas lagyo", "phoneme": "pjaːs la.ɡjo", "part_of_speech": "phrase", "can_be": ["statement"] },
+        { "term": "खाना तयार छ", "definition": "Food is ready", "transliteration": "khana tayar cha", "phoneme": "kʰa.na ta.jaɾ t͡sʰa", "part_of_speech": "phrase", "can_be": ["statement"] },
+        {
+          "term": "खान्छ",
+          "definition": "eats",
+          "transliteration": "khancha",
+          "part_of_speech": "verb",
+          "can_be": ["predicate", "verb"],
+          "verb_type": "action",
+          "negative_present": "खाँदैन",
+          "negative_past": "खाइनँ",
+          "visible_in_vocab": true,
+          "semantic_type": "eat_action",
+          "requires_object_type": ["food", "edible"]
+        },
+        
+        { "term": "पिउँछ", "definition": "drinks", "gloss": "drinks", "transliteration": "piuncha", "phoneme": "pi.un.t͡sʰa", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "used_in": ["action"], "requires_subject": ["animate"], "requires_object": ["liquid"], "visible_in_vocab": true, "semantic_type": "drink_action", "requires_object_type": ["liquid", "beverage"] }
+      ]
+    }
+  ],
+
+  "Numbers, Time & Money": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "एक", "definition": "One", "transliteration": "ek", "phoneme": "ek", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number" },
+        { "term": "दुई", "definition": "Two", "transliteration": "dui", "phoneme": "dui", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number" },
+        { "term": "तीन", "definition": "Three", "gloss": "three", "transliteration": "tin", "phoneme": "tin", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number", "animacy": "inanimate", "possessable": false },
+        { "term": "चार", "definition": "Four", "transliteration": "char", "phoneme": "t͡sar", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number" }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "पाँच", "definition": "Five", "transliteration": "panch", "phoneme": "pant͡s", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number" },
+        { "term": "छ", "definition": "Six", "transliteration": "chha", "phoneme": "t͡sʰa", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number" },
+        { "term": "सात", "definition": "Seven", "transliteration": "saat", "phoneme": "sat", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number" },
+        { "term": "आठ", "definition": "Eight", "transliteration": "aath", "phoneme": "aːʈʰ", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number" }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "नौ", "definition": "Nine", "transliteration": "nau", "phoneme": "nau", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number" },
+        { "term": "दश", "definition": "Ten", "transliteration": "dash", "phoneme": "daʃ", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "number" },
+        { "term": "समय", "definition": "Time", "transliteration": "samaya", "phoneme": "sʌ.mʌ.ja", "part_of_speech": "noun", "can_be": ["object"], "category": "concept" },
+        { "term": "पैसा", "definition": "Money", "transliteration": "paisa", "part_of_speech": "noun", "can_be": ["object"], "category": "currency", "possessable": true }
+      ]
+    },
+    {
+      "title": "Lesson 4",
+      "flashcards": [
+        { "term": "रुपैयाँ", "definition": "Rupee", "transliteration": "rupaiyaa", "part_of_speech": "noun", "can_be": ["object"], "category": "currency", "possessable": true },
+        { "term": "बिहान", "definition": "Morning", "gloss": "morning", "transliteration": "bihan", "phoneme": "bi.haːn", "part_of_speech": "noun", "can_be": ["subject"], "category": "time", "requires_genitive_link": true, "animacy": "inanimate", "possessable": false },
+        { "term": "दिउँसो", "definition": "Afternoon", "gloss": "afternoon", "transliteration": "diuso", "phoneme": "di.ũ.so", "part_of_speech": "noun", "can_be": ["subject"], "category": "time", "requires_genitive_link": true, "animacy": "inanimate", "possessable": false },
+        { "term": "बेलुका", "definition": "Evening", "gloss": "evening", "transliteration": "beluka", "phoneme": "be.lu.ka", "part_of_speech": "noun", "can_be": ["subject"], "category": "time", "requires_genitive_link": true, "animacy": "inanimate", "possessable": false },
+        { "term": "राति", "definition": "Night", "gloss": "night", "transliteration": "raati", "phoneme": "raː.ti", "part_of_speech": "noun", "can_be": ["subject"], "category": "time", "requires_genitive_link": true, "animacy": "inanimate", "possessable": false }
+      ]
+    }
+  ],
+
+  "Travel & Directions": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "यहाँ", "definition": "Here", "gloss": "here", "transliteration": "yaha", "phoneme": "ja.hã", "part_of_speech": "adverb", "can_be": ["location_word"], "category": "location", "animacy": "inanimate", "possessable": false },
+        { "term": "त्यहाँ", "definition": "There", "gloss": "there", "transliteration": "tyaha", "phoneme": "tja.hã", "part_of_speech": "adverb", "can_be": ["location_word"], "category": "location", "animacy": "inanimate", "possessable": false },
+        { "term": "बाटो", "definition": "Road / Path / Way", "transliteration": "bato", "phoneme": "ba.ʈo", "part_of_speech": "noun", "can_be": ["object"], "category": "transportation" },
+        { "term": "दायाँ", "definition": "Right", "transliteration": "daayaa", "phoneme": "da.jã", "part_of_speech": "noun", "can_be": ["object"], "category": "direction" },
+        { "term": "बायाँ", "definition": "Left", "transliteration": "baayaa", "phoneme": "ba.jã", "part_of_speech": "noun", "can_be": ["object"], "category": "direction" },
+        { "term": "अगाडि", "definition": "Forward / In front", "transliteration": "agadi", "phoneme": "ʌ.ɡa.ɖi", "part_of_speech": "noun", "can_be": ["object"], "category": "direction" }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "जान्छ", "definition": "goes", "gloss": "goes", "transliteration": "janchha", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "negative_present": "जाँदैन", "negative_past": "गइनँ", "visible_in_vocab": true, "semantic_type": "go_action", "requires_object_type": ["place", "accommodation"], "default_postposition": "मा" },
+        { "term": "जाँदैन", "definition": "does not go", "transliteration": "jãdaina", "part_of_speech": "verb", "can_be": ["verb_negative_present"], "verb_type": "action", "negative_of": "जान्छ", "visible_in_vocab": false },
+        { "term": "गइनँ", "definition": "did not go", "transliteration": "gainã", "part_of_speech": "verb", "can_be": ["verb_negative_past"], "verb_type": "action", "negative_of": "जान्छ", "visible_in_vocab": false },
+        { "term": "आउँछ", "definition": "comes", "gloss": "comes", "transliteration": "auncha", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "negative_present": "आउँदैन", "negative_past": "आइनँ", "visible_in_vocab": true, "semantic_type": "come_action", "requires_object_type": ["place", "accommodation"], "default_postposition": "मा" },
+        { "term": "आउँदैन", "definition": "does not come", "transliteration": "aundaina", "part_of_speech": "verb", "can_be": ["verb_negative_present"], "verb_type": "action", "negative_of": "आउँछ", "visible_in_vocab": false },
+        { "term": "आइनँ", "definition": "did not come", "transliteration": "ainã", "part_of_speech": "verb", "can_be": ["verb_negative_past"], "verb_type": "action", "negative_of": "आउँछ", "visible_in_vocab": false }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "होटेल", "definition": "Hotel", "transliteration": "hotel", "phoneme": "ho.ʈel", "part_of_speech": "noun", "can_be": ["object"], "category": "accommodation" },
+        { "term": "ट्याक्सी", "definition": "Taxi", "transliteration": "taxi", "phoneme": "tjak.si", "part_of_speech": "noun", "can_be": ["object"], "category": "transportation" },
+        { "term": "रेल", "definition": "Train", "transliteration": "rel", "phoneme": "rel", "part_of_speech": "noun", "can_be": ["object"], "category": "transportation" },
+        { "term": "स्टेसन", "definition": "Station", "transliteration": "stesan", "phoneme": "ste.sʌn", "part_of_speech": "noun", "can_be": ["object"], "category": "transportation" },
+        { "term": "गाडी", "definition": "Car", "transliteration": "gaadi", "part_of_speech": "noun", "can_be": ["object"], "category": "item", "possessable": true }
+      ]
+    },
+    {
+      "title": "Lesson 4",
+      "flashcards": [
+        { "term": "एयरपोर्ट", "definition": "Airport", "transliteration": "airport", "phoneme": "e.jʌr.poʈ", "part_of_speech": "noun", "can_be": ["object"], "category": "transportation" },
+        { "term": "कति टाढा छ?", "definition": "How far is it?", "transliteration": "kati taada cha?", "phoneme": "kʌ.ti ʈaː.ɖa t͡sʰa", "part_of_speech": "phrase", "can_be": ["question"] },
+        { "term": "म बाटो बिराएँ", "definition": "I am lost", "transliteration": "ma bato biraae", "phoneme": "ma ba.ʈo bi.ra.e", "part_of_speech": "phrase", "can_be": ["statement"] },
+        { "term": "यहाँ जान चाहन्छु", "definition": "I want to go here", "transliteration": "yaha jaan chahanchu", "phoneme": "ja.hã t͡sʰa.han.t͡su", "part_of_speech": "phrase", "can_be": ["statement"] }
+      ]
+    }
+  ],
+
+  "Health & Body": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "शरीर", "definition": "Body", "transliteration": "sharir", "phoneme": "ʃa.riɾ", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body", "semantic_type": "body_part" },
+        { "term": "टाउको", "definition": "Head", "transliteration": "tauko", "phoneme": "ʈaʊ.ko", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body" },
+        { "term": "मुख", "definition": "Mouth", "transliteration": "mukh", "phoneme": "mukʰ", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body" },
+        { "term": "आँखा", "definition": "Eye", "transliteration": "aankha", "phoneme": "ã.kʰa", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body" }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "नाक", "definition": "Nose", "transliteration": "naak", "phoneme": "naːk", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body" },
+        { "term": "कान", "definition": "Ear", "transliteration": "kaan", "phoneme": "kaːn", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body" },
+        { "term": "हात", "definition": "Hand", "gloss": "hand", "transliteration": "haat", "phoneme": "haːt", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body", "animacy": "inanimate", "possessable": false, "requires_possession": true },
+        { "term": "खुट्टा", "definition": "Leg / Foot", "gloss": "leg / foot", "transliteration": "khutta", "phoneme": "kʰuʈ.ʈa", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body", "animacy": "inanimate", "possessable": false, "requires_possession": true },
+        { "term": "डाक्टर", "definition": "Doctor", "transliteration": "daktar", "phoneme": "ɖak.ʈar", "part_of_speech": "noun", "can_be": ["object"], "category": "health", "semantic_type": "person" }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "पेट", "definition": "Stomach", "transliteration": "pet", "phoneme": "peʈ", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body" },
+        { "term": "रोग", "definition": "Illness / Disease", "transliteration": "rog", "phoneme": "roɡ", "part_of_speech": "noun", "can_be": ["object"], "category": "health", "semantic_type": "condition" },
+        { "term": "दुख्नु", "definition": "To hurt / To ache", "transliteration": "dukhnu", "phoneme": "dukʰ.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"] },
+        { "term": "औषधी", "definition": "Medicine", "transliteration": "aushadhi", "phoneme": "au.ʃʌ.dʱi", "part_of_speech": "noun", "can_be": ["object"], "category": "health", "semantic_type": "medicine" },
+        { "term": "अस्पताल", "definition": "Hospital", "transliteration": "aspataal", "phoneme": "ʌs.pa.taːl", "part_of_speech": "noun", "can_be": ["object"], "category": "place" }
+      ]
+    }
+
+  ],
+
+  "Jobs & Workplace": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "काम", "definition": "Work / Job", "transliteration": "kaam", "phoneme": "kaːm", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "work" },
+        { "term": "कर्मचारी", "definition": "Employee", "transliteration": "karmachaari", "phoneme": "kʌr.ma.t͡saː.ri", "part_of_speech": "noun", "can_be": ["object"], "category": "person" },
+        { "term": "शिक्षक", "definition": "Teacher", "gloss": "teacher", "transliteration": "shikshak", "phoneme": "ʃik.ʃʌk", "part_of_speech": "noun", "can_be": ["object"], "category": "person", "gender": "masculine", "animacy": "animate", "possessable": false, "gender_variants": [
+          { "term": "शिक्षिका", "transliteration": "shikshika", "definition": "Teacher (female)", "gender": "feminine" }
+        ]},
+        { "term": "कार्यालय", "definition": "Office", "transliteration": "kaaryalaya", "phoneme": "kaːr.ja.la.ja", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place" }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "इन्जिनियर", "definition": "Engineer", "gloss": "engineer", "transliteration": "engineer", "phoneme": "en.d͡zi.ni.jʌr", "part_of_speech": "noun", "can_be": ["object"], "category": "person", "animacy": "animate", "possessable": false },
+        { "term": "कलाकार", "definition": "Artist", "transliteration": "kalakaar", "phoneme": "ka.la.kaːr", "part_of_speech": "noun", "can_be": ["object"], "category": "person" },
+        { "term": "दोकान", "definition": "Shop / Store", "transliteration": "dokaan", "phoneme": "do.kaːn", "part_of_speech": "noun", "can_be": ["object"], "category": "place" },
+        { "term": "कम्पनी", "definition": "Company", "transliteration": "company", "phoneme": "kʌm.pa.ni", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place" },
+        { "term": "होटेल", "definition": "Hotel", "transliteration": "hotel", "phoneme": "ho.ʈel", "part_of_speech": "noun", "can_be": ["object"], "category": "accommodation" }
+      ]
+    }
+  ],
+
+  "Days, Months & Calendar": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "आज", "definition": "Today", "transliteration": "aaja", "phoneme": "aː.d͡za", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "भोलि", "definition": "Tomorrow", "transliteration": "bholi", "phoneme": "bʱo.li", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "हिजो", "definition": "Yesterday", "transliteration": "hijo", "phoneme": "hi.d͡zo", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "दिन", "definition": "Day", "transliteration": "din", "phoneme": "din", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "साता", "definition": "Week", "transliteration": "saata", "phoneme": "saː.ta", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "महिना", "definition": "Month", "transliteration": "mahina", "phoneme": "ma.hi.na", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "बर्ष", "definition": "Year", "transliteration": "barsha", "phoneme": "bʌr.ʃa", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "आइतबार", "definition": "Sunday", "transliteration": "aitabar", "phoneme": "ai.ta.bar", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "शुक्रबार", "definition": "Friday", "transliteration": "shukrabar", "phoneme": "ʃuk.ra.bar", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "सोमबार", "definition": "Monday", "transliteration": "sombar", "phoneme": "som.bar", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "मंगलबार", "definition": "Tuesday", "transliteration": "mangalbar", "phoneme": "maŋ.gal.bar", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "बुधबार", "definition": "Wednesday", "transliteration": "budhbar", "phoneme": "budʱ.bar", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "बिहीबार", "definition": "Thursday", "transliteration": "bihibar", "phoneme": "bi.hi.bar", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" },
+        { "term": "शनिबार", "definition": "Saturday", "transliteration": "shanibar", "phoneme": "ʃa.ni.bar", "part_of_speech": "noun", "can_be": ["subject"], "category": "time" }
+      ]
+    }
+  ],
+
+  "Clothing & Appearance": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "लुगा", "definition": "Clothes", "gloss": "clothes", "transliteration": "luga", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "plural": true },
+        { "term": "कपडा", "definition": "Fabric / Cloth", "gloss": "fabric", "transliteration": "kapada", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true },
+        { "term": "सर्ट", "definition": "Shirt", "gloss": "shirt", "transliteration": "sart", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "semantic_type": "clothing" },
+        { "term": "पाइन्ट", "definition": "Pants", "gloss": "pants", "transliteration": "paint", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "plural": true }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "कुर्ता", "definition": "Kurta (traditional top)", "gloss": "kurta", "transliteration": "kurta", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true },
+        { "term": "साडी", "definition": "Sari", "gloss": "sari", "transliteration": "sadi", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true },
+        { "term": "जुत्ता", "definition": "Shoes", "gloss": "shoes", "transliteration": "jutta", "phoneme": "jut.ta", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "animacy": "inanimate", "possessable": true, "plural": true },
+        { "term": "टोपी", "definition": "Hat / Cap", "gloss": "hat", "transliteration": "topi", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "चस्मा", "definition": "Glasses", "transliteration": "chasma", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true },
+        { "term": "रङ", "definition": "Color", "transliteration": "rang", "phoneme": "raŋ", "part_of_speech": "noun", "can_be": ["object"], "category": "appearance" },
+        { "term": "कपाल", "definition": "Hair", "transliteration": "kapal", "phoneme": "ka.pal", "part_of_speech": "noun", "can_be": ["object"], "category": "appearance" },
+        { "term": "अनुहार", "definition": "Face", "transliteration": "anuhaar", "phoneme": "ʌ.nu.haːr", "part_of_speech": "noun", "can_be": ["subject"], "category": "appearance" }
+      ]
+    },
+    {
+      "title": "Lesson 4",
+      "flashcards": [
+        { "term": "सुन्दर", "definition": "Beautiful", "gloss": "beautiful", "transliteration": "sundar", "phoneme": "sun.dar", "part_of_speech": "adjective", "can_be": ["modifier"], "category": "beauty", "semantic_type": "beauty_quality" },
+        { "term": "राम्रो", "definition": "good", "gloss": "good", "transliteration": "ramro", "phoneme": "ram.ro", "part_of_speech": "adjective", "can_be": ["modifier"], "category": "quality", "semantic_type": "beauty_quality" },
+        { "term": "सानो", "definition": "small", "gloss": "small", "transliteration": "sano", "phoneme": "sa.no", "part_of_speech": "adjective", "can_be": ["modifier"], "category": "size", "semantic_type": "size_quality" },
+        { "term": "ठूलो", "definition": "big", "gloss": "big", "transliteration": "thulo", "phoneme": "ʈʰu.lo", "part_of_speech": "adjective", "can_be": ["modifier"], "category": "size", "semantic_type": "size_quality" },
+        { "term": "झोला", "definition": "Bag", "transliteration": "jhola", "part_of_speech": "noun", "can_be": ["object"], "category": "item", "possessable": true }
+      ]
+    }
+  ],
+
+
+  "Postpositions": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "सङ्ग", "definition": "with (postposition for possession)", "transliteration": "sanga", "part_of_speech": "postposition", "can_be": ["possession_postposition"], "category": "postposition", "used_in": ["possession"] },
+        { "term": "ले", "definition": "ergative marker (doer)", "transliteration": "le", "part_of_speech": "postposition", "can_be": ["ergative_marker"], "category": "postposition", "used_in": ["ergative"] },
+        { "term": "लाई", "definition": "dative marker (receiver)", "transliteration": "lai", "part_of_speech": "postposition", "can_be": ["dative_marker"], "category": "postposition", "used_in": ["dative"] }
+      ]
+    }
+  ],
+
+  "Copulas": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "हो", "definition": "is (identity copula)", "transliteration": "ho", "part_of_speech": "copula", "can_be": ["identity_copula"], "category": "copula" },
+        { "term": "छन्", "definition": "are (plural copula)", "transliteration": "chan", "part_of_speech": "copula", "can_be": ["copula", "plural_copula"], "category": "copula" },
+        { "term": "छिन्", "definition": "is (honorific feminine copula)", "transliteration": "chhin", "phoneme": "t͡sʰin", "part_of_speech": "copula", "can_be": ["copula", "honorific_feminine_copula"], "category": "copula", "copula_type": "honorific_feminine", "visible_in_vocab": true },
+        { "term": "हुनुहुन्छ", "definition": "is/are (honorific copula)", "transliteration": "hunuhunchha", "part_of_speech": "copula", "can_be": ["copula", "honorific_copula"], "category": "copula", "visible_in_vocab": false, "unit_min": 2 }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "छैन", "definition": "is not / does not exist", "transliteration": "chaina", "part_of_speech": "copula", "can_be": ["copula_negative"], "category": "copula" },
+        { "term": "छैनन्", "definition": "are not / do not exist (plural)", "transliteration": "chainan", "part_of_speech": "copula", "can_be": ["copula_negative", "plural_copula_negative"], "category": "copula" },
+        { "term": "होइन", "definition": "is not (identity)", "transliteration": "hoina", "part_of_speech": "copula", "can_be": ["identity_copula_negative"], "category": "copula" },
+        { "term": "हैन", "definition": "is not (identity, alternative)", "transliteration": "hain", "part_of_speech": "copula", "can_be": ["identity_copula_negative"], "category": "copula" }
+      ]
+    }
+  ],
+
+  "Activities": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "गर्छ", "definition": "does", "gloss": "does", "transliteration": "garcha", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "negative_present": "गर्दैन", "negative_past": "गरिनँ", "visible_in_vocab": true, "semantic_type": "do_action", "requires_object_type": ["work"] },
+        { "term": "गर्दैन", "definition": "does not do", "transliteration": "gardaina", "part_of_speech": "verb", "can_be": ["verb_negative_present"], "verb_type": "action", "negative_of": "गर्छ", "visible_in_vocab": false },
+        { "term": "गरिनँ", "definition": "did not do", "transliteration": "garinã", "part_of_speech": "verb", "can_be": ["verb_negative_past"], "verb_type": "action", "negative_of": "गर्छ", "visible_in_vocab": false },
+        { "term": "सुन्छ", "definition": "listens", "gloss": "listens", "transliteration": "suncha", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "negative_present": "सुन्दैन", "negative_past": "सुनेनँ", "visible_in_vocab": true, "semantic_type": "hear_action", "requires_object_type": ["music", "instrument"] },
+        { "term": "सुन्दैन", "definition": "does not listen", "transliteration": "sundaina", "part_of_speech": "verb", "can_be": ["verb_negative_present"], "verb_type": "action", "negative_of": "सुन्छ", "visible_in_vocab": false },
+        { "term": "सुनेनँ", "definition": "did not listen", "transliteration": "sunenã", "part_of_speech": "verb", "can_be": ["verb_negative_past"], "verb_type": "action", "negative_of": "सुन्छ", "visible_in_vocab": false }
+      ]
+    }
+  ],
+
+  "Weather": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "वातावरण", "definition": "Weather", "transliteration": "bataawaran", "phoneme": "ba.taː.wa.ɾʌn", "part_of_speech": "noun", "can_be": ["subject"], "category": "concept" },
+        { "term": "घाम", "definition": "Sun / Sunshine", "transliteration": "gham", "phoneme": "ɡʱaːm", "part_of_speech": "noun", "can_be": ["subject"], "category": "nature" },
+        { "term": "हावा", "definition": "Wind / Air", "transliteration": "haawaa", "phoneme": "haː.waː", "part_of_speech": "noun", "can_be": ["subject"], "category": "nature" }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "हिउँ", "definition": "Snow", "transliteration": "hiun", "phoneme": "hiũ", "part_of_speech": "noun", "can_be": ["subject"], "category": "nature" },
+        { "term": "बादल", "definition": "Cloud", "transliteration": "baadal", "phoneme": "baː.dʌl", "part_of_speech": "noun", "can_be": ["subject"], "category": "nature" },
+        { "term": "आँधी", "definition": "Storm", "transliteration": "aandhi", "phoneme": "aːndʱi", "part_of_speech": "noun", "can_be": ["subject"], "category": "nature" },
+        { "term": "इन्द्रेणी", "definition": "Rainbow", "transliteration": "indreni", "phoneme": "in.dreː.ni", "part_of_speech": "noun", "can_be": ["subject"], "category": "nature" }
+      ]
+    }
+  ],
+
+  "Music": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "संगीत", "definition": "Music", "gloss": "music", "transliteration": "sangeet", "phoneme": "sʌŋ.ɡiːt", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "music", "animacy": "inanimate", "possessable": false },
+        { "term": "गीत", "definition": "Song", "gloss": "song", "transliteration": "geet", "phoneme": "ɡiːt", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "music", "animacy": "inanimate", "possessable": false },
+        { "term": "गायक", "definition": "Singer", "gloss": "singer", "transliteration": "gaayak", "phoneme": "ɡaː.jʌk", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "person", "gender": "masculine", "animacy": "animate", "possessable": false, "gender_variants": [
+          { "term": "गायिका", "transliteration": "gaayika", "definition": "Singer (female)", "gender": "feminine" }
+        ]}
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "बाँसुरी", "definition": "Flute", "gloss": "flute", "transliteration": "baansuri", "phoneme": "baːn.su.ri", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "instrument", "animacy": "inanimate", "possessable": true },
+        { "term": "मादल", "definition": "Drum (madal)", "gloss": "drum", "transliteration": "madal", "phoneme": "ma.dʌl", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "instrument", "animacy": "inanimate", "possessable": true },
+        { "term": "ताल", "definition": "Rhythm / Beat", "gloss": "rhythm", "transliteration": "taal", "phoneme": "taːl", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "music", "animacy": "inanimate", "possessable": false },
+        { "term": "नाच", "definition": "Dance", "gloss": "dance", "transliteration": "naach", "phoneme": "naːt͡sʰ", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "music", "animacy": "inanimate", "possessable": false }
+      ]
+    }
+  ],
+
+  "Senses": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "छाल", "definition": "Skin", "gloss": "skin", "transliteration": "chaal", "phoneme": "t͡sʰaːl", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "body_part", "animacy": "inanimate", "possessable": false },
+        { "term": "देख्छ", "definition": "sees", "gloss": "sees", "transliteration": "dekhchha", "phoneme": "dekʰ.t͡sʰʌ", "part_of_speech": "verb", "can_be": ["verb", "predicate"], "verb_type": "action", "semantic_type": "see_action", "requires_object_type": ["visible"] },
+        { "term": "सुनिन्छ", "definition": "hears", "gloss": "hears", "transliteration": "suninchha", "phoneme": "su.nin.t͡sʰʌ", "part_of_speech": "verb", "can_be": ["verb", "predicate"], "verb_type": "action", "semantic_type": "hear_action", "requires_object_type": ["audible"] }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "सुँघ्छ", "definition": "smells", "gloss": "smells", "transliteration": "sunghchha", "phoneme": "suŋ.ɡʱ.t͡sʰʌ", "part_of_speech": "verb", "can_be": ["verb", "predicate"], "verb_type": "action", "semantic_type": "smell_action", "requires_object_type": ["smellable"] },
+        { "term": "चाख्छ", "definition": "tastes", "gloss": "tastes", "transliteration": "chaakhchha", "phoneme": "t͡sʰaːk.t͡sʰʌ", "part_of_speech": "verb", "can_be": ["verb", "predicate"], "verb_type": "action", "semantic_type": "taste_action", "requires_object_type": ["tasteable"] },
+        { "term": "महसुस गर्छ", "definition": "feels", "gloss": "feels", "transliteration": "mahasus garchha", "phoneme": "mʌ.hʌ.sus ɡʌɾ.t͡sʰʌ", "part_of_speech": "verb", "can_be": ["verb", "predicate"], "verb_type": "action", "semantic_type": "feel_action", "requires_object_type": ["emotion", "concept", "health"] }      
+      ]
+    }
+  ],
+
+  "Emotions": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "खुशी", "definition": "Happy", "gloss": "happy", "transliteration": "khushi", "phoneme": "kʰu.ʃi", "part_of_speech": "adjective", "can_be": ["predicate", "modifier"], "category": "emotion", "semantic_type": "emotional_state", "animacy": "inanimate", "possessable": false },
+        { "term": "दुःखी", "definition": "Sad", "gloss": "sad", "transliteration": "dukhhi", "phoneme": "du.kʰi", "part_of_speech": "adjective", "can_be": ["predicate", "modifier"], "category": "emotion", "semantic_type": "emotional_state", "animacy": "inanimate", "possessable": false },
+        { "term": "रिसाएको", "definition": "Angry", "gloss": "angry", "transliteration": "risaeko", "phoneme": "ri.sa.e.ko", "part_of_speech": "adjective", "can_be": ["predicate", "modifier"], "category": "emotion", "semantic_type": "emotional_state", "animacy": "inanimate", "possessable": false },
+        { "term": "आश्चर्य", "definition": "Surprised / Amazed", "gloss": "surprised", "transliteration": "aashcharya", "phoneme": "aːs.t͡ʃʌr.jʌ", "part_of_speech": "adjective", "can_be": ["predicate"], "category": "emotion", "semantic_type": "emotional_state", "animacy": "inanimate", "possessable": false }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "डर", "definition": "Fear", "gloss": "fear", "transliteration": "dar", "phoneme": "ɖʌr", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "emotion", "animacy": "inanimate", "possessable": false },
+        { "term": "प्रेम", "definition": "Love (affection)", "gloss": "love", "transliteration": "prem", "phoneme": "prem", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "emotion", "animacy": "inanimate", "possessable": false },
+        { "term": "घृणा", "definition": "Disgust / Hate", "gloss": "hate", "transliteration": "ghrina", "phoneme": "ɡʱri.ɳaː", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "emotion", "animacy": "inanimate", "possessable": false },
+        { "term": "चिन्ता", "definition": "Worry / Anxiety", "gloss": "worry", "transliteration": "chinta", "phoneme": "t͡sin.taː", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "emotion", "animacy": "inanimate", "possessable": false }
+      ]
+    }
+  ],
+
+  "Shopping & Markets": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "बजार", "definition": "Market", "gloss": "market", "transliteration": "bazaar", "phoneme": "ba.zaːr", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place", "animacy": "inanimate", "possessable": false },
+        { "term": "दुकान", "definition": "Shop / Store", "gloss": "shop", "transliteration": "dukaan", "phoneme": "du.kaːn", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place", "animacy": "inanimate", "possessable": false },
+        { "term": "ग्राहक", "definition": "Customer", "gloss": "customer", "transliteration": "graahak", "phoneme": "ɡraː.hʌk", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "person", "animacy": "animate", "possessable": false },
+        { "term": "विक्रेता", "definition": "Seller / Vendor", "gloss": "seller", "transliteration": "vikreta", "phoneme": "bik.reː.taː", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "person", "animacy": "animate", "possessable": false }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "मूल्य", "definition": "Price", "gloss": "price", "transliteration": "moolya", "phoneme": "muːl.jʌ", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "concept", "animacy": "inanimate", "possessable": false },
+        { "term": "सस्तो", "definition": "Cheap", "gloss": "cheap", "transliteration": "sasto", "phoneme": "sʌs.to", "part_of_speech": "adjective", "can_be": ["modifier", "predicate"], "category": "price", "semantic_type": "price_quality", "animacy": "inanimate", "possessable": false },
+        { "term": "महँगो", "definition": "Expensive", "gloss": "expensive", "transliteration": "mahanggo", "phoneme": "mʌ.hʌŋ.ɡo", "part_of_speech": "adjective", "can_be": ["modifier", "predicate"], "category": "price", "semantic_type": "price_quality", "animacy": "inanimate", "possessable": false },
+        { "term": "किन्नु", "definition": "To buy", "gloss": "buys", "transliteration": "kinnu", "phoneme": "kin.nu", "part_of_speech": "verb", "can_be": ["verb", "predicate"], "verb_type": "action", "semantic_type": "buy_action", "requires_object_type": ["item", "thing", "food", "liquid", "clothing", "instrument"], "verb_forms": {
+          "Present": [
+            { "term": "किन्छ", "transliteration": "kincha", "definition": "buys (present)" },
+            { "term": "किन्छे", "transliteration": "kinche", "definition": "buy (present, 2nd person)" }
+          ],
+          "Past": [
+            { "term": "किन्यो", "transliteration": "kinyo", "definition": "bought (past)" },
+            { "term": "किने", "transliteration": "kine", "definition": "bought (past, 2nd person)" }
+          ],
+          "Future / Intent": [
+            { "term": "किन्ने", "transliteration": "kinne", "definition": "will buy" }
+          ]
+        }}
+      ]
+    }
+  ]
+
+}

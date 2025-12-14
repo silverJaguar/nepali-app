@@ -1,0 +1,648 @@
+{
+  "domains": {
+    "food": {
+      "name": "Food & Dining",
+      "description": "Vocabulary related to food, cooking, and dining",
+      "subjects": [
+        {
+          "word": "केटा",
+          "transliteration": "keta",
+          "english": "boy",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["food", "school", "family"],
+          "category": "animate"
+        },
+        {
+          "word": "केटी",
+          "transliteration": "keti",
+          "english": "girl",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["food", "school", "family"],
+          "category": "animate"
+        },
+        {
+          "word": "आमा",
+          "transliteration": "aama",
+          "english": "mother",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["food", "family"],
+          "category": "animate"
+        },
+        {
+          "word": "बुबा",
+          "transliteration": "buba",
+          "english": "father",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["food", "family"],
+          "category": "animate"
+        }
+      ],
+      "verbs": [
+        {
+          "word": "खान्छ",
+          "transliteration": "khancha",
+          "english": "eats",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["food"],
+          "requires_subject": ["animate"],
+          "requires_object": ["food"],
+          "requires_object_type": ["food", "edible"],
+          "semantic_constraints": {
+            "subject_types": ["person", "animal"],
+            "object_types": ["food", "edible"]
+          }
+        },
+        {
+          "word": "पकाउँछ",
+          "transliteration": "pakauncha",
+          "english": "cooks",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["food"],
+          "requires_subject": ["animate"],
+          "requires_object": ["food"],
+          "requires_object_type": ["food", "ingredient"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["food", "ingredient"]
+          }
+        },
+        {
+          "word": "पिउँछ",
+          "transliteration": "piuncha",
+          "english": "drinks",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["food"],
+          "requires_subject": ["animate"],
+          "requires_object": ["liquid"],
+          "requires_object_type": ["liquid", "beverage"],
+          "semantic_constraints": {
+            "subject_types": ["person", "animal"],
+            "object_types": ["liquid", "beverage"]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "word": "भात",
+          "transliteration": "bhat",
+          "english": "rice",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["food"],
+          "category": "food",
+          "semantic_type": "food"
+        },
+        {
+          "word": "सेब",
+          "transliteration": "seb",
+          "english": "apple",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["food"],
+          "category": "food",
+          "semantic_type": "food"
+        },
+        {
+          "word": "तरकारी",
+          "transliteration": "tarkari",
+          "english": "vegetables",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["food"],
+          "category": "food",
+          "semantic_type": "food"
+        },
+        {
+          "word": "मासु",
+          "transliteration": "masu",
+          "english": "meat",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["food"],
+          "category": "food",
+          "semantic_type": "food"
+        },
+        {
+          "word": "पानी",
+          "transliteration": "pani",
+          "english": "water",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["food"],
+          "category": "liquid",
+          "semantic_type": "liquid"
+        },
+        {
+          "word": "दूध",
+          "transliteration": "doodh",
+          "english": "milk",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["food"],
+          "category": "liquid",
+          "semantic_type": "liquid"
+        },
+        {
+          "word": "चिया",
+          "transliteration": "chiya",
+          "english": "tea",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["food"],
+          "category": "liquid",
+          "semantic_type": "liquid"
+        }
+      ]
+    },
+    "school": {
+      "name": "School & Learning",
+      "description": "Vocabulary related to education and learning",
+      "subjects": [
+        {
+          "word": "विद्यार्थी",
+          "transliteration": "bidyarthi",
+          "english": "student",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["school"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "शिक्षक",
+          "transliteration": "shikshak",
+          "english": "teacher",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["school"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "केटा",
+          "transliteration": "keta",
+          "english": "boy",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["food", "school", "family"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "केटी",
+          "transliteration": "keti",
+          "english": "girl",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["food", "school", "family"],
+          "category": "animate",
+          "semantic_type": "person"
+        }
+      ],
+      "verbs": [
+        {
+          "word": "पढ्छ",
+          "transliteration": "padhcha",
+          "english": "reads",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["school"],
+          "requires_subject": ["animate"],
+          "requires_object": ["text"],
+          "requires_object_type": ["text", "book", "lesson"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["text", "book", "lesson"]
+          }
+        },
+        {
+          "word": "लेख्छ",
+          "transliteration": "lekhcha",
+          "english": "writes",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["school"],
+          "requires_subject": ["animate"],
+          "requires_object": ["text"],
+          "requires_object_type": ["text", "lesson", "word"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["text", "lesson", "word"]
+          }
+        },
+        {
+          "word": "सिकाउँछ",
+          "transliteration": "sikauncha",
+          "english": "teaches",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["school"],
+          "requires_subject": ["animate"],
+          "requires_object": ["concept"],
+          "requires_object_type": ["concept", "lesson", "subject"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["concept", "lesson", "subject"]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "word": "किताब",
+          "transliteration": "kitab",
+          "english": "book",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["school"],
+          "category": "text",
+          "semantic_type": "text"
+        },
+        {
+          "word": "पाठ",
+          "transliteration": "paath",
+          "english": "lesson",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["school"],
+          "category": "concept",
+          "semantic_type": "concept"
+        },
+        {
+          "word": "कलम",
+          "transliteration": "kalam",
+          "english": "pen",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["school"],
+          "category": "tool",
+          "semantic_type": "tool"
+        }
+      ]
+    },
+    "family": {
+      "name": "Family & People",
+      "description": "Vocabulary related to family and relationships",
+      "subjects": [
+        {
+          "word": "आमा",
+          "transliteration": "aama",
+          "english": "mother",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["food", "family"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "बुबा",
+          "transliteration": "buba",
+          "english": "father",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["food", "family"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "दिदी",
+          "transliteration": "didi",
+          "english": "older sister",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["family"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "दाजु",
+          "transliteration": "daju",
+          "english": "older brother",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["family"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "भाई",
+          "transliteration": "bhai",
+          "english": "younger brother",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["family"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "बहिनी",
+          "transliteration": "bahini",
+          "english": "younger sister",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["family"],
+          "category": "animate",
+          "semantic_type": "person"
+        }
+      ],
+      "verbs": [
+        {
+          "word": "मन पराउँछ",
+          "transliteration": "man parauncha",
+          "english": "likes",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["family"],
+          "requires_subject": ["animate"],
+          "requires_object": ["any"],
+          "requires_object_type": ["person", "thing", "activity"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["person", "thing", "activity"]
+          }
+        },
+        {
+          "word": "हेर्छ",
+          "transliteration": "hercha",
+          "english": "looks at",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["family"],
+          "requires_subject": ["animate"],
+          "requires_object": ["any"],
+          "requires_object_type": ["person", "thing", "place"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["person", "thing", "place"]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "word": "परिवार",
+          "transliteration": "pariwaar",
+          "english": "family",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["family"],
+          "category": "group",
+          "semantic_type": "group"
+        },
+        {
+          "word": "साथी",
+          "transliteration": "saathi",
+          "english": "friend",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["family"],
+          "category": "person",
+          "semantic_type": "person"
+        }
+      ]
+    },
+    "music": {
+      "name": "Music & Activities",
+      "description": "Vocabulary related to music, singing, and activities",
+      "subjects": [
+        {
+          "word": "केटा",
+          "transliteration": "keta",
+          "english": "boy",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["music"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "केटी",
+          "transliteration": "keti",
+          "english": "girl",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["music"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "भाई",
+          "transliteration": "bhai",
+          "english": "younger brother",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["music"],
+          "category": "animate",
+          "semantic_type": "person"
+        }
+      ],
+      "verbs": [
+        {
+          "word": "गाउँछ",
+          "transliteration": "gauncha",
+          "english": "sings",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["music"],
+          "requires_subject": ["animate"],
+          "requires_object": ["song", "music"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["song", "music", "melody"]
+          }
+        },
+        {
+          "word": "बजाउँछ",
+          "transliteration": "bajãuncha",
+          "english": "plays (instrument)",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["music"],
+          "requires_subject": ["animate"],
+          "requires_object": ["instrument"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["instrument", "music"]
+          }
+        },
+        {
+          "word": "नाच्छ",
+          "transliteration": "nachcha",
+          "english": "dances",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["music"],
+          "requires_subject": ["animate"],
+          "requires_object": ["dance", "music"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["dance", "music"]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "word": "गीत",
+          "transliteration": "geet",
+          "english": "song",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["music"],
+          "category": "music",
+          "semantic_type": "song"
+        },
+        {
+          "word": "संगीत",
+          "transliteration": "sangeet",
+          "english": "music",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["music"],
+          "category": "music",
+          "semantic_type": "music"
+        },
+        {
+          "word": "माउथ अर्गन",
+          "transliteration": "mauth organ",
+          "english": "harmonium",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["music"],
+          "category": "instrument",
+          "semantic_type": "instrument"
+        }
+      ]
+    },
+    "health": {
+      "name": "Health & Body",
+      "description": "Vocabulary related to health, body parts, and medical terms",
+      "subjects": [
+        {
+          "word": "मान्छे",
+          "transliteration": "manche",
+          "english": "person",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["health"],
+          "category": "animate",
+          "semantic_type": "person"
+        },
+        {
+          "word": "डाक्टर",
+          "transliteration": "daktar",
+          "english": "doctor",
+          "part_of_speech": "noun",
+          "can_be": ["subject"],
+          "domains": ["health"],
+          "category": "animate",
+          "semantic_type": "person"
+        }
+      ],
+      "verbs": [
+        {
+          "word": "देख्छ",
+          "transliteration": "dekhcha",
+          "english": "sees",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["health"],
+          "requires_subject": ["animate"],
+          "requires_object": ["any"],
+          "semantic_constraints": {
+            "subject_types": ["person"],
+            "object_types": ["person", "thing", "place"]
+          }
+        },
+        {
+          "word": "दुख्छ",
+          "transliteration": "dukhcha",
+          "english": "hurts",
+          "part_of_speech": "verb",
+          "can_be": ["predicate"],
+          "domains": ["health"],
+          "requires_subject": ["body_part"],
+          "requires_object": ["any"],
+          "semantic_constraints": {
+            "subject_types": ["body_part"],
+            "object_types": ["any"]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "word": "टाउको",
+          "transliteration": "tauko",
+          "english": "head",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["health"],
+          "category": "body",
+          "semantic_type": "body_part"
+        },
+        {
+          "word": "हात",
+          "transliteration": "haat",
+          "english": "hand",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["health"],
+          "category": "body",
+          "semantic_type": "body_part"
+        },
+        {
+          "word": "रोग",
+          "transliteration": "rog",
+          "english": "illness",
+          "part_of_speech": "noun",
+          "can_be": ["object"],
+          "domains": ["health"],
+          "category": "health",
+          "semantic_type": "condition"
+        }
+      ]
+    }
+  },
+  "sentence_templates": {
+    "basic": {
+      "structure": "subject + verb + object",
+      "example": "केटा भात खान्छ (The boy eats rice)",
+      "domains": ["food", "school", "family", "music", "health"]
+    },
+    "with_adjective": {
+      "structure": "adjective + subject + verb + object",
+      "example": "सानो केटा सेब खान्छ (The small boy eats an apple)",
+      "domains": ["food", "school", "family", "music", "health"]
+    }
+  },
+  "adjectives": [
+    {
+      "word": "सानो",
+      "transliteration": "sano",
+      "english": "small",
+      "part_of_speech": "adjective",
+      "can_be": ["modifier"],
+      "domains": ["food", "school", "family", "music", "health"]
+    },
+    {
+      "word": "ठूलो",
+      "transliteration": "thulo",
+      "english": "big",
+      "part_of_speech": "adjective",
+      "can_be": ["modifier"],
+      "domains": ["food", "school", "family", "music", "health"]
+    },
+    {
+      "word": "राम्रो",
+      "transliteration": "ramro",
+      "english": "good",
+      "part_of_speech": "adjective",
+      "can_be": ["modifier"],
+      "domains": ["food", "school", "family", "music", "health"]
+    }
+  ]
+} 

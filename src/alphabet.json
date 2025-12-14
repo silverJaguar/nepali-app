@@ -1,0 +1,270 @@
+{
+  "Vowels": [
+    {
+      "letter": "अ",
+      "transliteration": "a",
+      "description": "A short vowel sound, similar to 'a' in 'ago'."
+    },
+    {
+      "letter": "आ",
+      "transliteration": "aa",
+      "description": "A long vowel sound, similar to 'a' in 'father'."
+    },
+    {
+      "letter": "इ",
+      "transliteration": "i",
+      "description": "A short vowel sound, similar to 'i' in 'bit'."
+    },
+    {
+      "letter": "ई",
+      "transliteration": "ii",
+      "description": "A long vowel sound, similar to 'ee' in 'see'."
+    },
+    {
+      "letter": "उ",
+      "transliteration": "u",
+      "description": "A short vowel sound, similar to 'u' in 'put'."
+    },
+    {
+      "letter": "ऊ",
+      "transliteration": "uu",
+      "description": "A long vowel sound, similar to 'oo' in 'food'."
+    },
+    {
+      "letter": "ऋ",
+      "transliteration": "ri",
+      "description": "A vowel sound similar to the 'ri' in 'riddle' but rolled slightly, used mainly in Sanskrit-derived words."
+    },
+    {
+      "letter": "ए",
+      "transliteration": "e",
+      "description": "A vowel sound similar to 'ay' in 'say'."
+    },
+    {
+      "letter": "ऐ",
+      "transliteration": "ai",
+      "description": "A diphthong similar to 'eye' in 'kite'. (A combintion of the 'ah' sound plus the 'ee' sound)."
+    },
+    {
+      "letter": "ओ",
+      "transliteration": "o",
+      "description": "A vowel sound similar to 'o' in 'go'."
+    },
+    {
+      "letter": "औ",
+      "transliteration": "au",
+      "description": "A diphthong similar to 'ow' in 'cow'."
+    },
+    {
+      "letter": "अं",
+      "transliteration": "am",
+      "description": "A nasalized vowel sound, often transliterated as 'am' or 'an'. It's made by expelling air through the nose."
+    },
+    {
+      "letter": "अः",
+      "transliteration": "ah",
+      "description": "A visarga sound, like a soft echoing 'h', often appearing at the end of Sanskrit-origin words."
+    }
+  ],
+
+  "Velar": [
+    {
+      "letter": "क",
+      "transliteration": "ka",
+      "description": "A velar consonant, similar to 'k' in 'kite'."
+    },
+    {
+      "letter": "ख",
+      "transliteration": "kha",
+      "description": "An aspirated velar consonant, like 'k' in 'khaki' with extra breath."
+    },
+    {
+      "letter": "ग",
+      "transliteration": "ga",
+      "description": "A voiced velar consonant, similar to 'g' in 'go'."
+    },
+    {
+      "letter": "घ",
+      "transliteration": "gha",
+      "description": "An aspirated voiced velar consonant, like 'g' with more breath."
+    },
+    {
+      "letter": "ङ",
+      "transliteration": "nga",
+      "description": "A velar nasal sound, similar to 'ng' in 'sing'."
+    }
+  ],
+
+  "Palatal": [
+    {
+      "letter": "च",
+      "transliteration": "cha",
+      "description": "A palatal consonant, similar to 'ch' in 'chat'."
+    },
+    {
+      "letter": "छ",
+      "transliteration": "chha",
+      "description": "An aspirated palatal consonant, pronounced like 'ch' in 'church' with more air."
+    },
+    {
+      "letter": "ज",
+      "transliteration": "ja",
+      "description": "A voiced palatal consonant, similar to 'j' in 'jam'."
+    },
+    {
+      "letter": "झ",
+      "transliteration": "jha",
+      "description": "An aspirated palatal consonant, pronounced like 'j' but with more breath."
+    },
+    {
+      "letter": "ञ",
+      "transliteration": "nya",
+      "description": "A palatal nasal sound, sort of pronounced like 'nee-yunh'."
+    }
+  ],
+
+  "Retroflex": [
+    {
+      "letter": "ट",
+      "transliteration": "ṭa",
+      "description": "A retroflex consonant with the tongue curled back, like the 't' in 'taper'."
+    },
+    {
+      "letter": "ठ",
+      "transliteration": "ṭha",
+      "description": "An aspirated retroflex consonant, pronounced like 't' with more breath."
+    },
+    {
+      "letter": "ड",
+      "transliteration": "ḍa",
+      "description": "A voiced retroflex consonant pronounced with a curled tongue, like the 'd' in 'dote'."
+    },
+    {
+      "letter": "ढ",
+      "transliteration": "ḍha",
+      "description": "An aspirated voiced retroflex consonant, pronounced like 'd' with more breath."
+    },
+    {
+      "letter": "ण",
+      "transliteration": "ṇa",
+      "description": "A retroflex nasal sound, pronounced with the tongue curled back. No English equivalent."
+    }
+  ],
+
+  "Dental": [
+    {
+      "letter": "त",
+      "transliteration": "ta",
+      "description": "A dental consonant, pronounced with the tongue touching the teeth. Similar to the 'th' in 'thorn'."
+    },
+    {
+      "letter": "थ",
+      "transliteration": "tha",
+      "description": "An aspirated dental consonant, pronounced with breath. Similar to 'th' with more breath."
+    },
+    {
+      "letter": "द",
+      "transliteration": "da",
+      "description": "A voiced dental consonant. Like the 'th' in 'the', but pressing the tongue into the roof of the mouth for longer."
+    },
+    {
+      "letter": "ध",
+      "transliteration": "dha",
+      "description": "An aspirated voiced dental consonant. Similar to the 'th' in 'the' with more breath."
+    },
+    {
+      "letter": "न",
+      "transliteration": "na",
+      "description": "A dental nasal consonant, like to 'n' in 'net'."
+    }
+  ],
+
+  "Labial": [
+    {
+      "letter": "प",
+      "transliteration": "pa",
+      "description": "A labial consonant, similar to 'p' in 'pen'."
+    },
+    {
+      "letter": "फ",
+      "transliteration": "pha",
+      "description": "An aspirated labial consonant, pronounced like 'p' more breath; not the same as 'f'."
+    },
+    {
+      "letter": "ब",
+      "transliteration": "ba",
+      "description": "A voiced labial consonant, similar to 'b' in 'bat'."
+    },
+    {
+      "letter": "भ",
+      "transliteration": "bha",
+      "description": "An aspirated voiced labial consonant, like 'b' with more breath."
+    },
+    {
+      "letter": "म",
+      "transliteration": "ma",
+      "description": "A labial nasal sound, like the 'm' in 'man'."
+    }
+  ],
+
+  "Approximants & Sibilants": [
+    {
+      "letter": "य",
+      "transliteration": "ya",
+      "description": "A palatal approximant, similar to 'y' in 'yes'."
+    },
+    {
+      "letter": "र",
+      "transliteration": "ra",
+      "description": "A tapped or rolled 'r' sound."
+    },
+    {
+      "letter": "ल",
+      "transliteration": "la",
+      "description": "A lateral consonant, similar to 'l' in 'love'."
+    },
+    {
+      "letter": "व",
+      "transliteration": "va",
+      "description": "A labiodental approximant, between 'v' and 'w'."
+    },
+    {
+      "letter": "श",
+      "transliteration": "sha",
+      "description": "A palatal sibilant, similar to 'sh' in 'shoe'."
+    },
+    {
+      "letter": "ष",
+      "transliteration": "ṣa",
+      "description": "A retroflex sibilant, pronounced like a harder 'sh'."
+    },
+    {
+      "letter": "स",
+      "transliteration": "sa",
+      "description": "A dental sibilant, similar to 's' in 'sun'."
+    },
+    {
+      "letter": "ह",
+      "transliteration": "ha",
+      "description": "A glottal consonant, like the 'h' in 'hat'."
+    }
+  ],
+
+  "Additional Sounds": [
+    {
+      "letter": "क्ष",
+      "transliteration": "kṣa",
+      "description": "A compound consonant pronounced similar to the 'ctio' when Drake says 'function' in Nokia."
+    },
+    {
+      "letter": "त्र",
+      "transliteration": "tra",
+      "description": "A compound consonant pronounced like 'th' + 'ra'."
+    },
+    {
+      "letter": "ज्ञ",
+      "transliteration": "gya",
+      "description": "A compound consonant often pronounced like 'gya' or 'dnya'."
+    }
+  ]
+}

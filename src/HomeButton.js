@@ -2,7 +2,8 @@ import React from "react";
 import { FiHome } from "react-icons/fi";
 
 const HomeButton = ({ currentSection, goHome }) => {
-  if (currentSection === null) return null; // hide on main menu
+  // Show button on all pages except main menu
+  if (currentSection === null) return null;
 
   return (
     <button

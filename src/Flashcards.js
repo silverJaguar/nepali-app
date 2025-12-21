@@ -1,37 +1,70 @@
 import React, { useState, useEffect } from "react";
 import { FiVolume2, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { getSettings } from "./utils/settings";
 
 const Flashcards = ({ unit, lessonData, onComplete, type }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [voices, setVoices] = useState([]);
   const [selectedVoiceURI, setSelectedVoiceURI] = useState('');
+  const [showTransliteration, setShowTransliteration] = useState(() => getSettings().showTransliteration);
   const currentCard = lessonData[currentIndex];
 
-  // Load voices on mount
+  // Load voices on mount and from settings
   useEffect(() => {
     const loadVoices = () => {
       const allVoices = window.speechSynthesis.getVoices();
       // Only Nepali or Hindi voices
       const filtered = allVoices.filter(v => v.lang === 'ne-NP' || v.lang === 'hi-IN');
       setVoices(filtered);
-      let defaultVoice = filtered.find(v => v.lang === 'ne-NP')
-        || filtered.find(v => v.lang === 'hi-IN');
-      if (defaultVoice) setSelectedVoiceURI(defaultVoice.voiceURI);
-      else setSelectedVoiceURI('');
+      
+      // Load voice from settings
+      const settings = getSettings();
+      if (settings.selectedVoiceURI && filtered.find(v => v.voiceURI === settings.selectedVoiceURI)) {
+        setSelectedVoiceURI(settings.selectedVoiceURI);
+      } else {
+        // Fallback to default
+        let defaultVoice = filtered.find(v => v.lang === 'ne-NP')
+          || filtered.find(v => v.lang === 'hi-IN');
+        if (defaultVoice) setSelectedVoiceURI(defaultVoice.voiceURI);
+        else setSelectedVoiceURI('');
+      }
     };
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
     return () => { window.speechSynthesis.onvoiceschanged = null; };
   }, []);
 
-  // Text-to-speech for letter (if available)
+  // Update transliteration display when settings change
+  useEffect(() => {
+    const checkSettings = () => {
+      setShowTransliteration(getSettings().showTransliteration);
+    };
+    checkSettings();
+    window.addEventListener('settingsChanged', checkSettings);
+    window.addEventListener('storage', checkSettings);
+    return () => {
+      window.removeEventListener('settingsChanged', checkSettings);
+      window.removeEventListener('storage', checkSettings);
+    };
+  }, []);
+
+  // Text-to-speech for letter (uses settings)
   const speakText = (text) => {
     if (window.speechSynthesis) {
-      const voice = voices.find(v => v.voiceURI === selectedVoiceURI);
+      const settings = getSettings();
+      const voiceURI = settings.selectedVoiceURI || selectedVoiceURI;
+      const voice = voices.find(v => v.voiceURI === voiceURI) || voices.find(v => v.voiceURI === selectedVoiceURI);
       const utter = new window.SpeechSynthesisUtterance(text);
       if (voice) {
         utter.voice = voice;
         utter.lang = voice.lang;
+      } else if (voices.length > 0) {
+        // Try default if selected voice not found
+        const defaultVoice = voices.find(v => v.lang === 'ne-NP') || voices.find(v => v.lang === 'hi-IN');
+        if (defaultVoice) {
+          utter.voice = defaultVoice;
+          utter.lang = defaultVoice.lang;
+        }
       }
       utter.rate = 0.85;
       window.speechSynthesis.speak(utter);
@@ -103,32 +136,12 @@ const Flashcards = ({ unit, lessonData, onComplete, type }) => {
               <FiVolume2 size={32} color="#222" />
             </button>
           </div>
-          {currentCard.transliteration && (
+          {currentCard.transliteration && showTransliteration && (
             <p className="transliteration" style={{ textAlign: 'center', margin: 0 }}>{currentCard.transliteration}</p>
           )}
           {currentCard.description && (
             <p className="definition" style={{ textAlign: 'center', margin: '0.6em 0 0 0' }}>{currentCard.description}</p>
           )}
-          {/* Voice selector below main content, centered */}
-          <div className="voice-selector" style={{ alignSelf: 'center', marginTop: '0.5em', marginBottom: '0.5em' }}>
-            <label htmlFor="voice-select">Voice:</label>
-            <select
-              id="voice-select"
-              value={selectedVoiceURI}
-              onChange={e => setSelectedVoiceURI(e.target.value)}
-              disabled={voices.length === 0}
-            >
-              {voices.length === 0 ? (
-                <option>No Nepali or Hindi voices available</option>
-              ) : (
-                voices.map(v => (
-                  <option key={v.voiceURI} value={v.voiceURI}>
-                    {v.name} ({v.lang})
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
           {/* Navigation buttons at the bottom, spaced apart, icons only */}
           <div style={{ display: 'flex', gap: '1.2rem', marginTop: 'auto', width: '100%', justifyContent: 'space-between' }}>
             <button

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { shuffle } from "../utils/helpers";
+import { getSettings } from "../utils/settings";
 
 const UnifiedMatchingSection = ({ flashcards, onComplete, type = 'vocab' }) => {
   // Prepare pairs based on type
@@ -21,6 +22,21 @@ const UnifiedMatchingSection = ({ flashcards, onComplete, type = 'vocab' }) => {
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [selectedRight, setSelectedRight] = useState(null);
   const [matches, setMatches] = useState([]);
+  const [showTransliteration, setShowTransliteration] = useState(() => getSettings().showTransliteration);
+
+  // Update transliteration display when settings change
+  useEffect(() => {
+    const checkSettings = () => {
+      setShowTransliteration(getSettings().showTransliteration);
+    };
+    checkSettings();
+    window.addEventListener('settingsChanged', checkSettings);
+    window.addEventListener('storage', checkSettings);
+    return () => {
+      window.removeEventListener('settingsChanged', checkSettings);
+      window.removeEventListener('storage', checkSettings);
+    };
+  }, []);
 
   const handleLeftClick = idx => {
     setSelectedLeft(idx);
@@ -74,7 +90,7 @@ const UnifiedMatchingSection = ({ flashcards, onComplete, type = 'vocab' }) => {
               onClick={() => handleLeftClick(idx)}
             >
               <span style={{ fontSize: '1.15em', fontWeight: 700 }}>{item.left}</span>
-              {type === 'vocab' && item.transliteration && (
+              {type === 'vocab' && item.transliteration && showTransliteration && (
                 <span style={{ fontSize: '0.95em', color: '#888', marginLeft: 8 }}>({item.transliteration})</span>
               )}
             </button>

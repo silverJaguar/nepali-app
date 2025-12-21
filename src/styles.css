@@ -189,7 +189,55 @@ button:focus {
   box-shadow: 0 4px 12px rgba(166,193,238,0.25);
 }
 
-/* On desktop, move home-fab to top-right */
+/* Floating Settings FAB icon - base styles */
+.settings-fab {
+  position: fixed;
+  background: #fff8fa;
+  border: 1.5px solid #db7093;
+  border-radius: 50%;
+  width: 3.2rem;
+  height: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(219,112,147,0.13);
+  z-index: 100;
+  color: #db7093;
+  font-size: 1.7rem;
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.settings-fab:hover, .settings-fab:focus {
+  background: #fbc2eb33;
+  border: 1.5px solid #a6c1ee;
+  box-shadow: 0 8px 24px rgba(166,193,238,0.18);
+}
+
+.settings-fab:active {
+  background: #fbc2eb66;
+  border: 1.5px solid #a6c1ee;
+  box-shadow: 0 4px 12px rgba(166,193,238,0.25);
+}
+
+/* Settings FAB positioned under home button (when home button is visible) */
+.settings-fab-under-home {
+  bottom: 6rem;
+  left: 50%;
+  margin-left: -1.6rem;
+}
+
+/* Settings FAB positioned in corner (when home button is not visible - main menu) */
+.settings-fab-corner {
+  top: 2.2rem;
+  right: 2.2rem;
+  bottom: auto;
+  left: auto;
+}
+
+/* On desktop, move home-fab and settings-fab to top-right */
 @media (min-width: 600px) {
   .home-fab {
     top: 2.2rem;
@@ -197,6 +245,19 @@ button:focus {
     left: auto;
     bottom: auto;
     transform: none;
+  }
+  .settings-fab-under-home {
+    top: 6.2rem;
+    right: 2.2rem;
+    left: auto;
+    bottom: auto;
+    margin-left: 0;
+  }
+  .settings-fab-corner {
+    top: 2.2rem;
+    right: 2.2rem;
+    left: auto;
+    bottom: auto;
   }
 }
 

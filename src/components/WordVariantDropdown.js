@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
+import { getSettings } from '../utils/settings';
 
 /**
  * WordVariantDropdown component for selecting verb forms or gender variants
@@ -12,7 +13,22 @@ import { FiChevronDown } from 'react-icons/fi';
  */
 const WordVariantDropdown = ({ word, onSelectVariant, onSelectWord, selectedVariant, isSelected }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showTransliteration, setShowTransliteration] = useState(() => getSettings().showTransliteration);
   const dropdownRef = useRef(null);
+
+  // Update transliteration display when settings change
+  useEffect(() => {
+    const checkSettings = () => {
+      setShowTransliteration(getSettings().showTransliteration);
+    };
+    checkSettings();
+    window.addEventListener('settingsChanged', checkSettings);
+    window.addEventListener('storage', checkSettings);
+    return () => {
+      window.removeEventListener('settingsChanged', checkSettings);
+      window.removeEventListener('storage', checkSettings);
+    };
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -99,7 +115,7 @@ const WordVariantDropdown = ({ word, onSelectVariant, onSelectWord, selectedVari
             }`}
           >
             <div className="font-medium">{form.term}</div>
-            {form.transliteration && (
+            {form.transliteration && showTransliteration && (
               <div className="text-xs text-gray-600">{form.transliteration}</div>
             )}
           </button>
@@ -122,7 +138,7 @@ const WordVariantDropdown = ({ word, onSelectVariant, onSelectWord, selectedVari
           }`}
         >
           <div className="font-medium">{word.term}</div>
-          {word.transliteration && (
+          {word.transliteration && showTransliteration && (
             <div className="text-xs text-gray-600">{word.transliteration}</div>
           )}
         </button>
@@ -136,7 +152,7 @@ const WordVariantDropdown = ({ word, onSelectVariant, onSelectWord, selectedVari
             }`}
           >
             <div className="font-medium">{variant.term}</div>
-            {variant.transliteration && (
+            {variant.transliteration && showTransliteration && (
               <div className="text-xs text-gray-600">{variant.transliteration}</div>
             )}
           </button>
@@ -170,7 +186,9 @@ const WordVariantDropdown = ({ word, onSelectVariant, onSelectWord, selectedVari
         }}
       >
         <div className="font-medium">{displayTerm}</div>
-        <div className="text-xs text-gray-600">{displayTransliteration}</div>
+        {showTransliteration && (
+          <div className="text-xs text-gray-600">{displayTransliteration}</div>
+        )}
         <FiChevronDown 
           style={{ 
             position: 'absolute',

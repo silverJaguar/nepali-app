@@ -6,6 +6,7 @@ import { useVoiceManager } from './hooks/useVoiceManager';
 import { getUnitNumber, isValidVerbObjectPair, isValidAdjectiveSubjectPair, generatePossessiveConstruction, generateGenitiveConstruction, selectCopulaByGender } from './utils/helpers';
 import { buildEnglishObjectPhrase, buildEnglishSubjectPhrase, getEnglishArticle } from './utils/postpositionMapper';
 import { filterSafeExercises, checkContentSafety } from './utils/contentFilter';
+import { getSettings } from './utils/settings';
 import WordVariantDropdown from './components/WordVariantDropdown';
 
 const SentenceConstruction = ({ currentUnit, onComplete }) => {
@@ -18,6 +19,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
   const [showHint, setShowHint] = useState(false);
   const [isCorrect, setIsCorrect] = useState(null);
   const [selectedVariants, setSelectedVariants] = useState({}); // Track selected variants: { wordTerm: variantTerm }
+  const [showTransliteration, setShowTransliteration] = useState(() => getSettings().showTransliteration);
   const { speakText } = useVoiceManager();
 
   // DEV: Use all vocabulary for now for testing, but filter negation in Unit 1
@@ -1480,6 +1482,20 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
     return finalExercises;
   };
 
+  // Update transliteration display when settings change
+  useEffect(() => {
+    const checkSettings = () => {
+      setShowTransliteration(getSettings().showTransliteration);
+    };
+    checkSettings();
+    window.addEventListener('settingsChanged', checkSettings);
+    window.addEventListener('storage', checkSettings);
+    return () => {
+      window.removeEventListener('settingsChanged', checkSettings);
+      window.removeEventListener('storage', checkSettings);
+    };
+  }, []);
+
   // Initialize exercises
   useEffect(() => {
     const exercises = generateExercises(currentUnit);
@@ -1948,30 +1964,32 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
             
             // Regular button for words without variants
             return (
-              <button
-                key={`${word.term}-${index}`}
-                onClick={() => handleWordSelect(word)}
-                className={`p-3 border rounded text-sm transition-colors ${
+            <button
+              key={`${word.term}-${index}`}
+              onClick={() => handleWordSelect(word)}
+              className={`p-3 border rounded text-sm transition-colors ${
                   isSelected
-                    ? 'bg-blue-100 border-blue-300'
-                    : 'bg-white border-gray-300 hover:bg-gray-50'
-                }`}
-                style={{
-                  display: 'inline-block',
-                  width: 'auto',
-                  fontWeight: 600,
-                  marginBottom: '0.5em',
-                  padding: '0.42em 0.75em',
-                  cursor: 'pointer',
-                  transition: 'background 0.18s, border 0.18s, color 0.18s',
-                  textAlign: 'center',
-                  verticalAlign: 'middle',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <div className="font-medium">{word.term}</div>
+                  ? 'bg-blue-100 border-blue-300'
+                  : 'bg-white border-gray-300 hover:bg-gray-50'
+              }`}
+              style={{
+                display: 'inline-block',
+                width: 'auto',
+                fontWeight: 600,
+                marginBottom: '0.5em',
+                padding: '0.42em 0.75em',
+                cursor: 'pointer',
+                transition: 'background 0.18s, border 0.18s, color 0.18s',
+                textAlign: 'center',
+                verticalAlign: 'middle',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <div className="font-medium">{word.term}</div>
+              {showTransliteration && (
                 <div className="text-xs text-gray-600">{word.transliteration}</div>
-              </button>
+              )}
+            </button>
             );
           })}
         </div>
@@ -2058,7 +2076,9 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
         <div className="mt-4 p-3 bg-green-50 rounded-lg">
           <h4 className="font-bold mb-2 text-green-800">Correct answer:</h4>
           <p className="font-medium">{currentExercise.targetNepali}</p>
-          <p className="text-sm text-gray-600">{currentExercise.targetTransliteration}</p>
+          {showTransliteration && (
+            <p className="text-sm text-gray-600">{currentExercise.targetTransliteration}</p>
+          )}
         </div>
       )}
     </div>

@@ -1,168 +1,205 @@
 import React, { useState, useEffect } from 'react';
 import SentenceConstruction from './SentenceConstruction';
+import GrammarPathway from './components/GrammarPathway';
+import GrammarQuiz from './components/GrammarQuiz';
+import IdentifyGrammar from './components/IdentifyGrammar';
+import FillBlank from './components/FillBlank';
 import { FiArrowLeft } from "react-icons/fi";
 import MinimalButton from './components/MinimalButton';
+import { grammarPathwayUnits, loadProgress, saveProgress } from './data/grammarPathwayData';
 
-const grammarUnits = [
-  {
-    id: 1,
-    name: 'Unit 1: Basic Sentences',
-    description: 'Simple identity, adjective, possession, and existence sentences.',
-    rules: [
-      {
-        title: 'Identity (A is B, noun)',
-        rule: 'A B हो (A B ho)',
-        examples: [
-          { nepali: 'ऊ शिक्षक हो।', literal: 'He teacher is', natural: 'He is a teacher.' },
-          { nepali: 'यो घर हो।', literal: 'This house is', natural: 'This is a house.' },
-          { nepali: 'उनी डाक्टर हुन्।', literal: 'She doctor is', natural: 'She is a doctor.' }
-        ]
-      },
-      {
-        title: 'Adjective (A is [adjective])',
-        rule: 'A [adjective] छ (A [adjective] cha)',
-        examples: [
-          { nepali: 'केटो अग्लो छ।', literal: 'Boy tall is', natural: 'The boy is tall.' },
-          { nepali: 'केटी राम्री छ।', literal: 'Girl beautiful is', natural: 'The girl is beautiful.' },
-          { nepali: 'यो मिठो छ।', literal: 'This tasty is', natural: 'This is tasty.' }
-        ]
-      },
-      {
-        title: 'Existence (There is [object])',
-        rule: '[object] छ, [animate thing] [location] छ or [location] [animate thing] छ ([object] chha)',
-        examples: [
-          { nepali: 'गाडी छ।', literal: 'Car is', natural: 'There is a car.' },
-          { nepali: 'किताब छ।', literal: 'Book is', natural: 'There is a book.' }
-        ]
-      },
-      {
-        title: 'Possession (A has B)',
-        rule: 'A सङ्ग B छ (A sanga B cha)',
-        examples: [
-          { nepali: 'केटासङ्ग गाडी छ।', literal: 'Boy-with car is', natural: 'The boy has a car.' },
-          { nepali: 'केटीसङ्ग किताब छ।', literal: 'Girl-with book is', natural: 'The girl has a book.' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Unit 2: Action Sentences',
-    description: 'Present tense action sentences with ergative case.',
-    rules: [
-      {
-        title: 'Present Tense Action (Transitive)',
-        rule: 'A ले B [verb-present]',
-        examples: [
-          { nepali: 'रामले भात खान्छ।', literal: 'Ram-le rice eats', natural: 'Ram eats rice.' },
-          { nepali: 'सिताले चिया पिउँछ।', literal: 'Sita-le tea drinks', natural: 'Sita drinks tea.' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Unit 3: Negation',
-    description: 'How to form negative sentences.',
-    rules: [
-      {
-        title: 'Negation (not)',
-        rule: 'A B होइन (A B hoina)',
-        examples: [
-          { nepali: 'ऊ शिक्षक होइन।', literal: 'He teacher not-is', natural: 'He is not a teacher.' },
-          { nepali: 'उनी डाक्टर होइनन्।', literal: 'She doctor not-is', natural: 'She is not a doctor.' }
-        ]
-      }
-    ]
-  }
-];
+// DEV MODE: Set to true to unlock all units for development/testing
+const DEV_MODE = true; // TODO: Disabled for development - set to false for production
 
-const GrammarMenu = ({ onSelectUnit }) => (
-  <div className="p-4 border rounded-lg shadow" style={{ maxWidth: 600, margin: '2em auto', background: '#fff8fa' }}>
-    <h2 className="text-xl font-bold mb-4">Grammar Units</h2>
-    {grammarUnits.map(unit => (
-      <button
-        key={unit.id}
-        className="pastel-button block w-full my-2"
-        onClick={() => onSelectUnit(unit.id)}
-      >
-        {unit.name}
-        <div className="text-xs text-gray-600">{unit.description}</div>
-      </button>
-    ))}
-  </div>
-);
-
-const GrammarUnitCard = ({ unit, onStart, onBack }) => (
-  <div className="p-4 border rounded-lg shadow" style={{ maxWidth: 600, margin: '2em auto', background: '#fff8fa', position: 'relative' }}>
-    {/* Minimalist back button in top-left inside card */}
-    <MinimalButton
-      onClick={onBack}
-      aria-label="Back"
-      style={{
-        position: 'absolute',
-        top: 18,
-        left: 18,
-        zIndex: 2,
-      }}
-    >
-      <FiArrowLeft size={28} />
-    </MinimalButton>
-    <h2 className="text-xl font-bold mb-2">{unit.name}</h2>
-    <p className="mb-4 text-gray-700">{unit.description}</p>
-    <div>
-      {unit.rules.map((rule, idx) => (
-        <div key={idx} className="grammar-rule-section" style={{ borderTop: idx !== 0 ? '1.5px solid #f3e6f7' : 'none', marginTop: idx !== 0 ? '2.2em' : 0, paddingTop: idx !== 0 ? '1.2em' : 0 }}>
-          <h3 className="text-lg font-semibold mb-1">{rule.title}</h3>
-          <div className="font-mono mb-1">{rule.rule}</div>
-          <div className="text-xs text-gray-600 mb-1">Examples:</div>
-          <table className="grammar-rule-table w-full text-sm mb-2">
-            <thead>
-              <tr>
-                <th>Nepali</th>
-                <th>Literal</th>
-                <th>Natural</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rule.examples.map((ex, exIdx) => (
-                <tr key={exIdx}>
-                  <td>{ex.nepali}</td>
-                  <td>{ex.literal}</td>
-                  <td>{ex.natural}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ))}
-    </div>
-    <div className="text-center mt-4">
-      <button
-        onClick={onStart}
-        className="pastel-button"
-        style={{ fontSize: '1.1em', padding: '1em 2em' }}
-      >
-        Start Sentence Construction
-      </button>
+// Unit selection menu - shows all grammar units
+const GrammarUnitMenu = ({ units, progress, onSelectUnit }) => (
+  <div className="grammar-unit-menu">
+    <h2 className="grammar-menu-title">Grammar Pathway</h2>
+    <p className="grammar-menu-subtitle">Master Nepali grammar step by step</p>
+    <div className="grammar-unit-list">
+      {units.map((unit, index) => {
+        const unitProgress = progress[unit.id];
+        const completedActivities = unitProgress?.activities 
+          ? Object.values(unitProgress.activities).filter(a => a.completed).length 
+          : 0;
+        const totalActivities = unit.activities.length;
+        const totalStars = unitProgress?.activities
+          ? Object.values(unitProgress.activities).reduce((sum, a) => sum + (a.stars || 0), 0)
+          : 0;
+        const maxStars = totalActivities * 3;
+        
+        // Check if previous unit is completed (for locking)
+        // DEV_MODE bypasses locking for development/testing
+        const isLocked = DEV_MODE ? false : (index > 0 && !progress[units[index - 1].id]?.completed);
+        
+        return (
+          <button
+            key={unit.id}
+            className={`grammar-unit-card ${isLocked ? 'locked' : ''}`}
+            onClick={() => !isLocked && onSelectUnit(unit.id)}
+            disabled={isLocked}
+          >
+            <div className="unit-card-header">
+              <span className="unit-number">{unit.id}</span>
+              <div className="unit-stars-preview">
+                {totalStars}/{maxStars} ★
+              </div>
+            </div>
+            <h3 className="unit-card-name">{unit.name}</h3>
+            <p className="unit-card-desc">{unit.description}</p>
+            <div className="unit-card-progress">
+              <div className="unit-progress-bar">
+                <div 
+                  className="unit-progress-fill"
+                  style={{ width: `${(completedActivities / totalActivities) * 100}%` }}
+                />
+              </div>
+              <span className="unit-progress-text">{completedActivities}/{totalActivities} complete</span>
+            </div>
+            {isLocked && (
+              <div className="unit-locked-overlay">
+                <span>🔒</span>
+                <span>Complete previous unit</span>
+              </div>
+            )}
+          </button>
+        );
+      })}
     </div>
   </div>
 );
 
 const GrammarSection = ({ onComplete }) => {
-  const [currentMode, setCurrentMode] = useState(null);
-  const [selectedUnit, setSelectedUnit] = useState(null);
-
-  if (!currentMode && !selectedUnit) {
-    return <GrammarMenu onSelectUnit={setSelectedUnit} />;
+  const [selectedUnitId, setSelectedUnitId] = useState(null);
+  const [currentActivity, setCurrentActivity] = useState(null);
+  const [currentActivityIndex, setCurrentActivityIndex] = useState(null);
+  const [progress, setProgress] = useState(() => loadProgress());
+  
+  // Save progress whenever it changes
+  useEffect(() => {
+    saveProgress(progress);
+  }, [progress]);
+  
+  const selectedUnit = grammarPathwayUnits.find(u => u.id === selectedUnitId);
+  
+  // Handle activity completion
+  const handleActivityComplete = (stars, passed) => {
+    if (!selectedUnitId || currentActivityIndex === null) return;
+    
+    setProgress(prev => {
+      const newProgress = { ...prev };
+      const unitProgress = { ...newProgress[selectedUnitId] };
+      const activities = { ...unitProgress.activities };
+      
+      // Update this activity's progress
+      activities[currentActivityIndex] = {
+        completed: passed,
+        stars: Math.max(activities[currentActivityIndex]?.stars || 0, stars),
+      };
+      
+      // Check if all activities in unit are completed
+      const allCompleted = Object.values(activities).every(a => a.completed);
+      
+      unitProgress.activities = activities;
+      unitProgress.completed = allCompleted;
+      newProgress[selectedUnitId] = unitProgress;
+      
+      return newProgress;
+    });
+    
+    // Go back to pathway view
+    setCurrentActivity(null);
+    setCurrentActivityIndex(null);
+  };
+  
+  // Handle activity selection from pathway
+  const handleSelectActivity = (activity, index) => {
+    setCurrentActivity(activity);
+    setCurrentActivityIndex(index);
+  };
+  
+  // Go back to pathway from activity
+  const handleBackToPathway = () => {
+    setCurrentActivity(null);
+    setCurrentActivityIndex(null);
+  };
+  
+  // Go to next unit
+  const handleNextUnit = () => {
+    const currentIndex = grammarPathwayUnits.findIndex(u => u.id === selectedUnitId);
+    if (currentIndex < grammarPathwayUnits.length - 1) {
+      setSelectedUnitId(grammarPathwayUnits[currentIndex + 1].id);
+    }
+  };
+  
+  // Render the current view
+  // 1. Unit menu (no unit selected)
+  if (!selectedUnitId) {
+    return (
+      <GrammarUnitMenu
+        units={grammarPathwayUnits}
+        progress={progress}
+        onSelectUnit={setSelectedUnitId}
+      />
+    );
   }
-
-  if (!currentMode && selectedUnit) {
-    const unit = grammarUnits.find(u => u.id === selectedUnit);
-    return <GrammarUnitCard unit={unit} onStart={() => setCurrentMode('construction')} onBack={() => setSelectedUnit(null)} />;
+  
+  // 2. Activity view (unit and activity selected)
+  if (currentActivity) {
+    const activityProps = {
+      unitId: selectedUnitId,
+      onComplete: handleActivityComplete,
+      onBack: handleBackToPathway,
+    };
+    
+    switch (currentActivity.type) {
+      case 'sentence_building':
+        return (
+          <SentenceConstruction
+            currentUnit={selectedUnitId}
+            onComplete={() => handleActivityComplete(2, true)} // Default 2 stars for completion
+          />
+        );
+      case 'quiz':
+        return <GrammarQuiz {...activityProps} />;
+      case 'identify_grammar':
+        return <IdentifyGrammar {...activityProps} />;
+      case 'fill_blank':
+        return <FillBlank {...activityProps} />;
+      default:
+        return <div>Unknown activity type</div>;
+    }
   }
-
-  return <SentenceConstruction currentUnit={selectedUnit} onComplete={onComplete} />;
+  
+  // 3. Pathway view (unit selected, no activity)
+  const currentUnitIndex = grammarPathwayUnits.findIndex(u => u.id === selectedUnitId);
+  const hasNextUnit = currentUnitIndex < grammarPathwayUnits.length - 1;
+  
+  return (
+    <div className="grammar-pathway-wrapper">
+      <MinimalButton
+        onClick={() => setSelectedUnitId(null)}
+        aria-label="Back to units"
+        style={{
+          position: 'absolute',
+          top: 18,
+          left: 18,
+          zIndex: 10,
+        }}
+      >
+        <FiArrowLeft size={24} />
+      </MinimalButton>
+      
+      <GrammarPathway
+        unit={selectedUnit}
+        activities={selectedUnit.activities}
+        progress={progress[selectedUnitId]}
+        onSelectActivity={handleSelectActivity}
+        onNextUnit={handleNextUnit}
+        hasNextUnit={hasNextUnit}
+      />
+    </div>
+  );
 };
 
-export default GrammarSection; 
+export default GrammarSection;

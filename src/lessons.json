@@ -292,7 +292,7 @@
         { "term": "लुगा", "definition": "Clothes", "gloss": "clothes", "transliteration": "luga", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "plural": true },
         { "term": "कपडा", "definition": "Fabric / Cloth", "gloss": "fabric", "transliteration": "kapada", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true },
         { "term": "सर्ट", "definition": "Shirt", "gloss": "shirt", "transliteration": "sart", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "semantic_type": "clothing" },
-        { "term": "पाइन्ट", "definition": "Pants", "gloss": "pants", "transliteration": "paint", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "plural": true }
+        { "term": "सुरूवाल", "definition": "Pants", "gloss": "pants", "transliteration": "suruwaal", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "plural": true }
       ]
     },
     {

@@ -432,3 +432,906 @@ button:focus-visible, .pastel-button:focus-visible {
   box-shadow: 0 2px 12px 0 rgba(160, 160, 180, 0.13);
   transition: filter 0.18s, box-shadow 0.18s;
 }
+
+/* =====================================================
+   GRAMMAR PATHWAY STYLES
+   ===================================================== */
+
+/* --- Unit Menu --- */
+.grammar-unit-menu {
+  max-width: 600px;
+  margin: 1em auto;
+  padding: 1.5em;
+}
+
+.grammar-menu-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #db7093;
+  text-align: center;
+  margin-bottom: 0.2em;
+}
+
+.grammar-menu-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 1.5em;
+  font-size: 1rem;
+}
+
+.grammar-unit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.grammar-unit-card {
+  background: #fff8fa;
+  border: 2px solid #f3e6f7;
+  border-radius: 20px;
+  padding: 1.2em;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.grammar-unit-card:hover:not(.locked) {
+  border-color: #db7093;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(219, 112, 147, 0.15);
+}
+
+.grammar-unit-card.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.unit-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.unit-number {
+  background: linear-gradient(135deg, #db7093 0%, #b48bbd 100%);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.unit-stars-preview {
+  color: #fbbf24;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.unit-card-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 0.3em 0;
+}
+
+.unit-card-desc {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 0.8em 0;
+  line-height: 1.4;
+}
+
+.unit-card-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+}
+
+.unit-progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #f0e6f4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.unit-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #db7093 0%, #b48bbd 100%);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.unit-progress-text {
+  font-size: 0.8rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.unit-locked-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+  font-size: 1rem;
+  color: #888;
+}
+
+/* --- Pathway Container --- */
+.grammar-pathway-wrapper {
+  position: relative;
+  min-height: 80vh;
+}
+
+.pathway-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 3em 1em 2em 1em;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 120px);
+}
+
+.pathway-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  margin-bottom: 1.5em;
+  position: relative;
+}
+
+.pathway-info-btn {
+  background: none !important;
+  border: 2px solid #db7093 !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #db7093 !important;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.pathway-info-btn:hover {
+  background: #db7093;
+  color: white;
+}
+
+.pathway-unit-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #333;
+  margin: 0;
+}
+
+/* --- Pathway Track (vertical) --- */
+.pathway-track {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 1em 0 2em 0;
+  gap: 0;
+}
+
+/* --- Pathway Node --- */
+.pathway-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 1em 0;
+}
+
+.pathway-node-left {
+  align-items: center;
+  margin-left: -25%;
+}
+
+.pathway-node-right {
+  align-items: center;
+  margin-left: 25%;
+}
+
+/* Connector line between nodes */
+.pathway-connector-line {
+  position: absolute;
+  width: 4px;
+  height: calc(100% + 2em);
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e0e7ff;
+  z-index: 0;
+  border-radius: 2px;
+}
+
+.pathway-node-btn {
+  width: 70px !important;
+  height: 70px !important;
+  min-width: 70px !important;
+  min-height: 70px !important;
+  max-width: 70px !important;
+  max-height: 70px !important;
+  border-radius: 50% !important;
+  border: 3px solid var(--activity-color, #888) !important;
+  background: var(--activity-bg, #f3f4f6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+.pathway-node-btn:hover:not(.locked) {
+  transform: scale(1.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.pathway-node-btn.active {
+  border-width: 4px;
+  box-shadow: 0 0 0 4px var(--activity-bg), 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 4px var(--activity-bg), 0 8px 24px rgba(0, 0, 0, 0.15); }
+  50% { box-shadow: 0 0 0 8px var(--activity-bg), 0 12px 32px rgba(0, 0, 0, 0.2); }
+}
+
+.pathway-node-btn.completed {
+  background: var(--activity-color);
+  border-color: var(--activity-color);
+}
+
+.pathway-node-btn.completed .pathway-node-icon svg {
+  stroke: white;
+}
+
+.pathway-node-btn.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: #ccc;
+  background: #f0f0f0;
+}
+
+.pathway-node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Pathway Stars --- */
+.pathway-stars {
+  display: flex;
+  gap: 2px;
+  margin-top: 0.5em;
+}
+
+/* --- Pathway Node Label --- */
+.pathway-node-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+  margin-top: 0.3em;
+  text-align: center;
+  max-width: 100px;
+}
+
+.pathway-node-label.locked {
+  color: #aaa;
+}
+
+/* Connector line completed state */
+.pathway-connector-line.completed {
+  background: linear-gradient(180deg, #db7093 0%, #b48bbd 100%) !important;
+}
+
+/* --- Next Unit Button --- */
+.pathway-next-unit {
+  text-align: center;
+  margin-top: 2em;
+  padding-bottom: 2em;
+}
+
+.pathway-next-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  background: linear-gradient(135deg, #db7093 0%, #b48bbd 100%);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 0.9em 2em;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.pathway-next-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(219, 112, 147, 0.3);
+}
+
+.pathway-next-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Info Modal --- */
+.pathway-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1em;
+}
+
+.pathway-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 2em;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.pathway-modal-close {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  background: none;
+  border: none;
+  padding: 0.5em;
+  cursor: pointer;
+  color: #666;
+}
+
+.pathway-modal-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #db7093;
+  margin: 0 0 0.5em 0;
+}
+
+.pathway-modal-description {
+  color: #555;
+  margin-bottom: 1.5em;
+  line-height: 1.5;
+}
+
+.pathway-modal-rules h4 {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1em;
+}
+
+.pathway-modal-rule {
+  background: #f8f5fa;
+  border-radius: 12px;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+.pathway-modal-rule strong {
+  display: block;
+  color: #b48bbd;
+  margin-bottom: 0.3em;
+}
+
+.pathway-modal-rule code {
+  display: block;
+  background: #e8e0f0;
+  padding: 0.5em;
+  border-radius: 6px;
+  margin-bottom: 0.8em;
+  font-size: 0.95rem;
+}
+
+.pathway-modal-example {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  padding: 0.5em 0;
+  border-top: 1px solid #e0d8e8;
+}
+
+.pathway-modal-example .nepali {
+  font-weight: 600;
+  color: #333;
+}
+
+.pathway-modal-example .english {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* =====================================================
+   QUIZ COMPONENT STYLES
+   ===================================================== */
+
+.quiz-container, .identify-container, .fillblank-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1em;
+}
+
+.quiz-header, .identify-header, .fillblank-header {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1.5em;
+}
+
+.quiz-progress, .identify-progress, .fillblank-progress {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+.quiz-progress span, .identify-progress span, .fillblank-progress span {
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+}
+
+.quiz-progress-bar, .identify-progress-bar, .fillblank-progress-bar {
+  height: 6px;
+  background: #e0e7ff;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.quiz-progress-fill, .identify-progress-fill, .fillblank-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #db7093 0%, #b48bbd 100%);
+  border-radius: 3px;
+}
+
+.quiz-question-card, .identify-card, .fillblank-card {
+  background: #fff8fa;
+  border-radius: 20px;
+  padding: 1.5em;
+  box-shadow: 0 4px 20px rgba(219, 112, 147, 0.1);
+}
+
+.quiz-nepali-sentence, .identify-sentence, .fillblank-sentence {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.nepali-text, .sentence-nepali, .fillblank-sentence-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.quiz-speak-btn, .identify-speak-btn, .fillblank-speak-btn {
+  background: none;
+  border: 2px solid #db7093;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #db7093;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s;
+}
+
+.quiz-speak-btn:hover, .identify-speak-btn:hover, .fillblank-speak-btn:hover {
+  background: #db7093;
+  color: white;
+}
+
+.quiz-question {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 1em 0;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+  margin-top: 1em;
+}
+
+.quiz-options.true-false {
+  flex-direction: row;
+  justify-content: center;
+}
+
+.quiz-options.true-false .quiz-option {
+  flex: 1;
+  max-width: 150px;
+}
+
+.quiz-option, .identify-option, .fillblank-option {
+  background: white;
+  border: 2px solid #e0e7ff;
+  border-radius: 12px;
+  padding: 1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  text-align: left;
+}
+
+.quiz-option:hover:not(:disabled), .identify-option:hover:not(:disabled), .fillblank-option:hover:not(:disabled) {
+  border-color: #b48bbd;
+  background: #faf5fc;
+}
+
+.quiz-option.selected, .identify-option.selected {
+  border-color: #b48bbd;
+  background: #f5f0fa;
+}
+
+.quiz-option.correct, .identify-option.correct, .fillblank-option.correct {
+  border-color: #10b981;
+  background: #d1fae5;
+}
+
+.quiz-option.wrong, .identify-option.wrong, .fillblank-option.wrong {
+  border-color: #ef4444;
+  background: #fee2e2;
+}
+
+.option-letter {
+  background: #e0e7ff;
+  color: #666;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.option-text {
+  flex: 1;
+}
+
+.option-icon {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.option-icon.correct { color: #10b981; }
+.option-icon.wrong { color: #ef4444; }
+
+.quiz-explanation, .identify-explanation, .fillblank-explanation {
+  margin-top: 1em;
+  padding: 1em;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.quiz-explanation.correct, .identify-explanation.correct, .fillblank-explanation.correct {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.quiz-explanation.wrong, .identify-explanation.wrong, .fillblank-explanation.wrong {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.quiz-next-btn, .identify-next-btn, .fillblank-next-btn {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 1.5em auto 0;
+  background: linear-gradient(135deg, #db7093 0%, #b48bbd 100%);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 1em 2em;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.quiz-next-btn:hover, .identify-next-btn:hover, .fillblank-next-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(219, 112, 147, 0.3);
+}
+
+/* --- Quiz Complete Screen --- */
+.quiz-complete, .identify-complete, .fillblank-complete {
+  text-align: center;
+  padding: 2em;
+  background: #fff8fa;
+  border-radius: 24px;
+  max-width: 400px;
+  margin: 2em auto;
+  box-shadow: 0 8px 32px rgba(219, 112, 147, 0.15);
+}
+
+.quiz-complete h2, .identify-complete h2, .fillblank-complete h2 {
+  font-size: 1.8rem;
+  color: #db7093;
+  margin-bottom: 0.5em;
+}
+
+.quiz-score, .identify-score, .fillblank-score {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #333;
+  margin: 0.5em 0;
+}
+
+.score-divider {
+  color: #ccc;
+  margin: 0 0.1em;
+}
+
+.score-total {
+  color: #888;
+}
+
+.quiz-stars, .identify-stars, .fillblank-stars {
+  font-size: 2.5rem;
+  margin: 0.5em 0;
+}
+
+.quiz-star, .identify-star, .fillblank-star {
+  color: #ddd;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.quiz-star.filled, .identify-star.filled, .fillblank-star.filled {
+  color: #fbbf24;
+}
+
+.quiz-message, .identify-message, .fillblank-message {
+  color: #666;
+  margin: 1em 0 1.5em;
+  line-height: 1.5;
+}
+
+.quiz-actions, .identify-actions, .fillblank-actions {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.quiz-btn, .identify-btn, .fillblank-btn {
+  padding: 0.9em 1.8em;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+  border: none;
+}
+
+.quiz-btn.primary, .identify-btn.primary, .fillblank-btn.primary {
+  background: linear-gradient(135deg, #db7093 0%, #b48bbd 100%);
+  color: white;
+}
+
+.quiz-btn.secondary, .identify-btn.secondary, .fillblank-btn.secondary {
+  background: white;
+  border: 2px solid #db7093;
+  color: #db7093;
+}
+
+.quiz-btn:hover, .identify-btn:hover, .fillblank-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(219, 112, 147, 0.25);
+}
+
+/* --- Identify Grammar Specific --- */
+.identify-sentence-block, .fillblank-sentence-block {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.identify-instruction, .fillblank-instruction {
+  font-size: 0.95rem;
+  color: #888;
+  margin-bottom: 0.8em;
+}
+
+.sentence-transliteration, .fillblank-transliteration {
+  font-size: 0.95rem;
+  color: #b48bbd;
+  margin-top: 0.3em;
+}
+
+.sentence-translation, .fillblank-translation {
+  font-size: 1rem;
+  color: #666;
+  font-style: italic;
+  margin-top: 0.3em;
+}
+
+.identify-hint, .fillblank-hint {
+  background: #fef3c7;
+  border-radius: 10px;
+  padding: 0.8em 1em;
+  margin-bottom: 1em;
+  font-size: 0.9rem;
+  color: #92400e;
+}
+
+.identify-hint-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 0.5em;
+}
+
+.identify-hint-btn:hover {
+  color: #db7093;
+}
+
+.identify-option .option-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.identify-option .option-desc {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 0.2em;
+}
+
+.identify-submit-btn, .fillblank-submit-btn {
+  display: block;
+  width: 100%;
+  max-width: 250px;
+  margin: 1.5em auto 0;
+  background: linear-gradient(135deg, #db7093 0%, #b48bbd 100%);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 1em 2em;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.identify-submit-btn:disabled, .fillblank-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.identify-actions-bottom, .fillblank-actions-bottom {
+  margin-top: 1em;
+}
+
+/* --- Fill in the Blank Specific --- */
+.fillblank-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8em;
+  margin-top: 1em;
+}
+
+.fillblank-option {
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0.8em 1em;
+}
+
+.fillblank-blank {
+  display: inline-block;
+  min-width: 80px;
+  padding: 0.1em 0.3em;
+  background: #f0e6f4;
+  border-radius: 6px;
+  border-bottom: 3px solid #b48bbd;
+  margin: 0 0.2em;
+}
+
+.fillblank-blank.correct {
+  background: #d1fae5;
+  border-color: #10b981;
+  color: #047857;
+}
+
+.fillblank-blank.wrong {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #b91c1c;
+}
+
+/* --- Mobile Adjustments --- */
+@media (max-width: 600px) {
+  .pathway-container {
+    padding: 2em 0.5em;
+  }
+  
+  .pathway-unit-name {
+    font-size: 1.2rem;
+  }
+  
+  .pathway-node-btn {
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 60px !important;
+    min-height: 60px !important;
+    max-width: 60px !important;
+    max-height: 60px !important;
+  }
+  
+  .pathway-node-left {
+    margin-left: -20%;
+  }
+  
+  .pathway-node-right {
+    margin-left: 20%;
+  }
+  
+  .quiz-question-card, .identify-card, .fillblank-card {
+    padding: 1em;
+  }
+  
+  .nepali-text, .sentence-nepali, .fillblank-sentence-text {
+    font-size: 1.3rem;
+  }
+  
+  .quiz-options.true-false {
+    flex-direction: column;
+  }
+  
+  .quiz-options.true-false .quiz-option {
+    max-width: none;
+  }
+  
+  .fillblank-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

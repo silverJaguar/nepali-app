@@ -146,6 +146,8 @@ const GrammarSection = ({ onComplete }) => {
   
   // 2. Activity view (unit and activity selected)
   if (currentActivity) {
+    const currentUnitIndex = grammarPathwayUnits.findIndex(u => u.id === selectedUnitId);
+    const hasNextUnit = currentUnitIndex < grammarPathwayUnits.length - 1;
     const activityProps = {
       unitId: selectedUnitId,
       onComplete: handleActivityComplete,
@@ -165,7 +167,13 @@ const GrammarSection = ({ onComplete }) => {
       case 'identify_grammar':
         return <IdentifyGrammar {...activityProps} />;
       case 'fill_blank':
-        return <FillBlank {...activityProps} />;
+        return (
+          <FillBlank
+            {...activityProps}
+            hasNextUnit={hasNextUnit}
+            onNextUnit={handleNextUnit}
+          />
+        );
       default:
         return <div>Unknown activity type</div>;
     }

@@ -1,198 +1,80 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FiArrowLeft, FiVolume2, FiCheck, FiX } from 'react-icons/fi';
 import { useVoiceManager } from '../hooks/useVoiceManager';
+import { getSettings } from '../utils/settings';
 import MinimalButton from './MinimalButton';
+import { getAvailableVocabulary, getTemplatesForUnit } from '../utils/grammarVocabulary';
+import { generateFillBlankExercises } from '../utils/fillBlankGenerator';
+import { getGrammarFeaturesForUnit } from '../data/grammarRules';
 
-// Fill in the blank exercises - picking the correct word to complete the sentence
-const generateFillBlankExercises = (unitId) => {
-  const exerciseBanks = {
-    1: [ // Unit 1: Basic Sentences - Copulas and particles
-      {
-        sentence: 'ऊ शिक्षक ___।',
-        transliteration: 'U shikshak ___.',
-        translation: 'He is a teacher.',
-        blank: 'हो',
-        options: ['हो', 'छ', 'छैन', 'होइन'],
-        hint: 'Identity sentences (A is B noun) use this copula.',
-        explanation: 'हो (ho) is used for identity - stating what someone IS (a noun).',
-        fullSentence: 'ऊ शिक्षक हो।',
-      },
-      {
-        sentence: 'केटो अग्लो ___।',
-        transliteration: 'Keto aglo ___.',
-        translation: 'The boy is tall.',
-        blank: 'छ',
-        options: ['हो', 'छ', 'सङ्ग', 'ले'],
-        hint: 'Adjective sentences (describing a quality) use this copula.',
-        explanation: 'छ (chha) is used with adjectives to describe qualities or states.',
-        fullSentence: 'केटो अग्लो छ।',
-      },
-      {
-        sentence: 'केटा___ किताब छ।',
-        transliteration: 'Keta___ kitab chha.',
-        translation: 'The boy has a book.',
-        blank: 'सङ्ग',
-        options: ['ले', 'सङ्ग', 'मा', 'को'],
-        hint: 'This particle means "with" and creates possession.',
-        explanation: 'सङ्ग (sanga) = "with". Boy-with book exists → Boy has book.',
-        fullSentence: 'केटासङ्ग किताब छ।',
-      },
-      {
-        sentence: 'यो घर ___।',
-        transliteration: 'Yo ghar ___.',
-        translation: 'This is a house.',
-        blank: 'हो',
-        options: ['छ', 'हो', 'थियो', 'हुन्छ'],
-        hint: 'We\'re identifying WHAT something is, not describing it.',
-        explanation: 'हो is used for identification: "This IS a house" (identity, not quality).',
-        fullSentence: 'यो घर हो।',
-      },
-      {
-        sentence: 'टेबलमा किताब ___।',
-        transliteration: 'Tebalma kitab ___.',
-        translation: 'There is a book on the table.',
-        blank: 'छ',
-        options: ['हो', 'छ', 'होइन', 'सङ्ग'],
-        hint: 'Existence sentences use this copula.',
-        explanation: 'छ is used for existence: stating that something exists somewhere.',
-        fullSentence: 'टेबलमा किताब छ।',
-      },
-    ],
-    2: [ // Unit 2: Action Sentences - Ergative case and verbs
-      {
-        sentence: 'राम___ भात खान्छ।',
-        transliteration: 'Ram___ bhat khancha.',
-        translation: 'Ram eats rice.',
-        blank: 'ले',
-        options: ['ले', 'सङ्ग', 'को', 'मा'],
-        hint: 'This particle marks the subject of a transitive verb.',
-        explanation: 'ले (le) is the ergative marker - used on subjects of transitive verbs.',
-        fullSentence: 'रामले भात खान्छ।',
-      },
-      {
-        sentence: 'सीताले चिया ___।',
-        transliteration: 'Sitale chiya ___.',
-        translation: 'Sita drinks tea.',
-        blank: 'पिउँछ',
-        options: ['खान्छ', 'पिउँछ', 'पकाउँछ', 'पढ्छ'],
-        hint: 'What verb goes with tea (चिया)?',
-        explanation: 'पिउँछ (piuncha) means "drinks" - the appropriate verb for tea.',
-        fullSentence: 'सीताले चिया पिउँछ।',
-      },
-      {
-        sentence: 'आमाले खाना ___।',
-        transliteration: 'Amale khana ___.',
-        translation: 'Mother cooks food.',
-        blank: 'पकाउँछ',
-        options: ['पकाउँछ', 'खान्छ', 'पिउँछ', 'हेर्छ'],
-        hint: 'What do you do with food (खाना) in the kitchen?',
-        explanation: 'पकाउँछ (pakauncha) means "cooks" - mother cooks food.',
-        fullSentence: 'आमाले खाना पकाउँछ।',
-      },
-      {
-        sentence: 'विद्यार्थी___ किताब पढ्छ।',
-        transliteration: 'Bidyarthi___ kitab padhcha.',
-        translation: 'The student reads a book.',
-        blank: 'ले',
-        options: ['ले', 'मा', 'सङ्ग', 'को'],
-        hint: 'Transitive verbs require this marker on the subject.',
-        explanation: 'पढ्छ (reads) is transitive, so the subject needs ले.',
-        fullSentence: 'विद्यार्थीले किताब पढ्छ।',
-      },
-      {
-        sentence: 'शिक्षकले पाठ ___।',
-        transliteration: 'Shikshakle paath ___.',
-        translation: 'The teacher teaches the lesson.',
-        blank: 'सिकाउँछ',
-        options: ['सिकाउँछ', 'पढ्छ', 'लेख्छ', 'खान्छ'],
-        hint: 'What does a teacher do with a lesson?',
-        explanation: 'सिकाउँछ (sikauncha) means "teaches".',
-        fullSentence: 'शिक्षकले पाठ सिकाउँछ।',
-      },
-    ],
-    3: [ // Unit 3: Negation
-      {
-        sentence: 'ऊ शिक्षक ___।',
-        transliteration: 'U shikshak ___.',
-        translation: 'He is not a teacher.',
-        blank: 'होइन',
-        options: ['हो', 'छ', 'होइन', 'छैन'],
-        hint: 'What is the negative of हो (identity)?',
-        explanation: 'होइन (hoina) negates identity sentences: हो → होइन.',
-        fullSentence: 'ऊ शिक्षक होइन।',
-      },
-      {
-        sentence: 'गाडी ___।',
-        transliteration: 'Gadi ___.',
-        translation: 'There is no car.',
-        blank: 'छैन',
-        options: ['छ', 'छैन', 'हो', 'होइन'],
-        hint: 'What is the negative of छ (existence)?',
-        explanation: 'छैन (chhaina) negates existence: छ → छैन.',
-        fullSentence: 'गाडी छैन।',
-      },
-      {
-        sentence: 'रामले भात ___।',
-        transliteration: 'Ramle bhat ___.',
-        translation: 'Ram does not eat rice.',
-        blank: 'खाँदैन',
-        options: ['खान्छ', 'खाँदैन', 'छ', 'छैन'],
-        hint: 'What is the negative form of खान्छ?',
-        explanation: 'खाँदैन (khandaina) is the negative of खान्छ.',
-        fullSentence: 'रामले भात खाँदैन।',
-      },
-      {
-        sentence: 'केटासङ्ग पैसा ___।',
-        transliteration: 'Ketasanga paisa ___.',
-        translation: 'The boy does not have money.',
-        blank: 'छैन',
-        options: ['छ', 'छैन', 'होइन', 'हो'],
-        hint: 'Possession uses सङ्ग + what negative copula?',
-        explanation: 'Negative possession: सङ्ग + छैन = "does not have".',
-        fullSentence: 'केटासङ्ग पैसा छैन।',
-      },
-      {
-        sentence: 'यो मिठो ___।',
-        transliteration: 'Yo mitho ___.',
-        translation: 'This is not tasty.',
-        blank: 'छैन',
-        options: ['हो', 'छ', 'होइन', 'छैन'],
-        hint: 'Adjective sentences use छ, so the negative is...',
-        explanation: 'Adjectives use छ for positive, छैन for negative.',
-        fullSentence: 'यो मिठो छैन।',
-      },
-    ],
-  };
-  
-  return exerciseBanks[unitId] || exerciseBanks[1];
-};
+// Fill in the blank: sentences are generated like Sentence Builder and Quiz (buildSentence + vocabulary + templates).
+// Blank is always a grammar word (copula or particle); options are grammar-relevant distractors.
 
-const FillBlank = ({ unitId, onComplete, onBack }) => {
+const FillBlank = ({ unitId, onComplete, onBack, hasNextUnit = false, onNextUnit }) => {
   const [exercises, setExercises] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [showTransliteration, setShowTransliteration] = useState(() => getSettings().showTransliteration);
+  const [showTranslation, setShowTranslation] = useState(false);
   const { speakText } = useVoiceManager();
-  
+
   useEffect(() => {
-    setExercises(generateFillBlankExercises(unitId));
+    try {
+      const vocabulary = getAvailableVocabulary(unitId);
+      const templates = getTemplatesForUnit(unitId);
+      if (vocabulary.length === 0 || templates.length === 0) {
+        setExercises([]);
+        return;
+      }
+      const generated = generateFillBlankExercises(unitId, vocabulary, templates, 6);
+      setExercises(generated || []);
+    } catch (err) {
+      console.error('[FillBlank] Failed to generate exercises:', err);
+      setExercises([]);
+    }
   }, [unitId]);
+
+  useEffect(() => {
+    setShowTranslation(false);
+  }, [currentIndex]);
+
+  useEffect(() => {
+    const onSettingsChange = () => setShowTransliteration(getSettings().showTransliteration);
+    window.addEventListener('settingsChanged', onSettingsChange);
+    window.addEventListener('storage', onSettingsChange);
+    return () => {
+      window.removeEventListener('settingsChanged', onSettingsChange);
+      window.removeEventListener('storage', onSettingsChange);
+    };
+  }, []);
   
   if (exercises.length === 0) {
-    return <div className="fillblank-loading">Loading exercises...</div>;
+    return (
+      <div className="fillblank-container" style={{ padding: '2em', textAlign: 'center' }}>
+        <MinimalButton onClick={onBack} aria-label="Back">
+          <FiArrowLeft size={24} />
+        </MinimalButton>
+        <div className="fillblank-loading" style={{ marginTop: '2em' }}>
+          <p>Generating exercises...</p>
+          <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.5em' }}>
+            If this persists, there may not be enough vocabulary or templates for this unit.
+          </p>
+        </div>
+      </div>
+    );
   }
   
   const currentExercise = exercises[currentIndex];
   
-  const handleSelect = (option) => {
+  const handleSelect = (optionValue) => {
     if (showResult) return;
-    setSelectedAnswer(option);
+    setSelectedAnswer(optionValue);
     setShowResult(true);
-    
-    if (option === currentExercise.blank) {
+    if (optionValue === currentExercise.blank) {
       setCorrectCount(prev => prev + 1);
     }
   };
@@ -202,6 +84,7 @@ const FillBlank = ({ unitId, onComplete, onBack }) => {
       setCurrentIndex(prev => prev + 1);
       setSelectedAnswer(null);
       setShowResult(false);
+      setShowTranslation(false);
     } else {
       setIsComplete(true);
     }
@@ -232,50 +115,108 @@ const FillBlank = ({ unitId, onComplete, onBack }) => {
   if (isComplete) {
     const stars = calculateStars();
     const passed = stars >= 1;
-    
+    const features = getGrammarFeaturesForUnit(unitId) || [];
+
     return (
-      <motion.div 
-        className="fillblank-complete"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+      <div
+        className="fillblank-container"
+        style={{
+          maxWidth: '600px',
+          margin: '0 auto',
+          padding: '2em',
+          position: 'relative',
+        }}
       >
-        <h2>{passed ? '✏️ Well Done!' : 'Keep Practicing!'}</h2>
-        <div className="fillblank-score">
-          <span className="score-number">{correctCount}</span>
-          <span className="score-divider">/</span>
-          <span className="score-total">{exercises.length}</span>
-        </div>
-        <div className="fillblank-stars">
-          {[0, 1, 2].map(i => (
-            <motion.span
-              key={i}
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: 0.3 + i * 0.15 }}
-              className={`fillblank-star ${i < stars ? 'filled' : ''}`}
+        <div
+          className="fillblank-complete fillblank-end-screen"
+          style={{
+            textAlign: 'center',
+            padding: '1.5em',
+            background: '#fff8fa',
+            borderRadius: '20px',
+            boxShadow: '0 8px 32px rgba(219, 112, 147, 0.15)',
+            maxWidth: '500px',
+            margin: '0 auto',
+          }}
+        >
+          <h2 style={{ fontSize: '1.5rem', color: '#db7093', marginBottom: '0.3em', marginTop: 0 }}>
+            {passed ? '🎉 Great job!' : 'Keep practicing!'}
+          </h2>
+          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#333', margin: '0.3em 0' }}>
+            <span>{correctCount}</span>
+            <span style={{ color: '#ccc', margin: '0 0.1em' }}>/</span>
+            <span style={{ color: '#888' }}>{exercises.length}</span>
+          </div>
+          <div style={{ fontSize: '2rem', margin: '0.3em 0 0.8em 0' }}>
+            {[0, 1, 2].map(i => (
+              <span key={i} style={{ color: i < stars ? '#fbbf24' : '#ddd', margin: '0 0.15em' }}>★</span>
+            ))}
+          </div>
+          {features.length > 0 && (
+            <div style={{ marginTop: '1em', padding: '1em', background: '#f9fafb', borderRadius: '12px', textAlign: 'left' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#333', marginBottom: '0.8em', textAlign: 'center' }}>
+                Skills Practiced
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5em' }}>
+                {features.map(f => (
+                  <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5em', padding: '0.5em', background: 'white', borderRadius: 6, fontSize: '0.85rem' }}>
+                    <span style={{ fontSize: '1rem', color: '#10b981', flexShrink: 0 }}>✓</span>
+                    <span style={{ fontWeight: 600, color: '#333' }}>{f.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <p style={{ color: '#666', margin: '1em 0 0.8em 0', lineHeight: 1.4, fontSize: '0.9rem' }}>
+            {stars === 3 && 'Perfect! You know your grammar particles!'}
+            {stars === 2 && 'Good job! A bit more practice and you\'ll master it.'}
+            {stars === 1 && 'Nice effort! Review the copulas and particles.'}
+            {stars === 0 && 'Keep studying the grammar rules!'}
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6em', marginTop: '1em', maxWidth: 280, marginLeft: 'auto', marginRight: 'auto' }}>
+            {hasNextUnit && typeof onNextUnit === 'function' && (
+              <button
+                type="button"
+                onClick={() => {
+                  onComplete(stars, passed);
+                  onNextUnit();
+                }}
+                style={{
+                  width: '100%',
+                  padding: '0.9em 1.8em',
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  border: 'none',
+                  borderRadius: 30,
+                  cursor: 'pointer',
+                  background: 'linear-gradient(135deg, #db7093 0%, #b48bbd 100%)',
+                  color: 'white',
+                  boxShadow: '0 4px 12px rgba(219, 112, 147, 0.3)',
+                }}
+              >
+                Next Unit
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => onComplete(stars, passed)}
+              style={{
+                width: '100%',
+                padding: '0.9em 1.8em',
+                fontSize: '0.95rem',
+                fontWeight: 700,
+                border: '2px solid #db7093',
+                borderRadius: 30,
+                cursor: 'pointer',
+                background: 'transparent',
+                color: '#db7093',
+              }}
             >
-              ★
-            </motion.span>
-          ))}
+              {hasNextUnit ? 'Back to Pathway' : 'Proceed to Pathway'}
+            </button>
+          </div>
         </div>
-        <p className="fillblank-message">
-          {stars === 3 && 'Perfect! You know your grammar particles!'}
-          {stars === 2 && 'Good job! A bit more practice and you\'ll master it.'}
-          {stars === 1 && 'Nice effort! Review the copulas and particles.'}
-          {stars === 0 && 'Keep studying the grammar rules!'}
-        </p>
-        <div className="fillblank-actions">
-          <button className="fillblank-btn secondary" onClick={onBack}>
-            Back to Pathway
-          </button>
-          <button 
-            className="fillblank-btn primary" 
-            onClick={() => onComplete(stars, passed)}
-          >
-            {passed ? 'Continue' : 'Try Again'}
-          </button>
-        </div>
-      </motion.div>
+      </div>
     );
   }
 
@@ -298,9 +239,14 @@ const FillBlank = ({ unitId, onComplete, onBack }) => {
       
       <motion.div
         key={currentIndex}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 1 }}
         className="fillblank-card"
+        style={{
+          marginTop: '1.5em',
+          minHeight: '280px',
+          display: 'block',
+        }}
       >
         <p className="fillblank-instruction">Fill in the blank:</p>
         
@@ -316,8 +262,23 @@ const FillBlank = ({ unitId, onComplete, onBack }) => {
               </button>
             )}
           </div>
-          <p className="fillblank-transliteration">{currentExercise.transliteration}</p>
-          <p className="fillblank-translation">"{currentExercise.translation}"</p>
+          {showTransliteration && (
+            <p className="fillblank-transliteration">{currentExercise.transliteration}</p>
+          )}
+          <div className="fillblank-translation-wrap">
+            {showTranslation ? (
+              <p className="fillblank-translation">"{currentExercise.translation}"</p>
+            ) : (
+              <button
+                type="button"
+                className="fillblank-translation-tap"
+                onClick={() => setShowTranslation(true)}
+                aria-label="Show translation"
+              >
+                Tap to show translation
+              </button>
+            )}
+          </div>
         </div>
         
         {!showResult && (
@@ -326,20 +287,23 @@ const FillBlank = ({ unitId, onComplete, onBack }) => {
         
         <div className="fillblank-options">
           {currentExercise.options.map(option => {
-            const isSelected = selectedAnswer === option;
-            const isCorrect = showResult && option === currentExercise.blank;
-            const isWrong = showResult && isSelected && option !== currentExercise.blank;
-            
+            const value = option.value;
+            const isSelected = selectedAnswer === value;
+            const isCorrect = showResult && value === currentExercise.blank;
+            const isWrong = showResult && isSelected && value !== currentExercise.blank;
             return (
               <motion.button
-                key={option}
+                key={value}
                 whileHover={!showResult ? { scale: 1.05 } : {}}
                 whileTap={!showResult ? { scale: 0.95 } : {}}
                 className={`fillblank-option ${isSelected ? 'selected' : ''} ${isCorrect ? 'correct' : ''} ${isWrong ? 'wrong' : ''}`}
-                onClick={() => handleSelect(option)}
+                onClick={() => handleSelect(value)}
                 disabled={showResult}
               >
-                {option}
+                <span className="option-nepali">{value}</span>
+                {showTransliteration && option.transliteration && (
+                  <span className="option-transliteration">{option.transliteration}</span>
+                )}
                 {showResult && isCorrect && <FiCheck className="option-icon" />}
                 {showResult && isWrong && <FiX className="option-icon" />}
               </motion.button>
@@ -347,28 +311,23 @@ const FillBlank = ({ unitId, onComplete, onBack }) => {
           })}
         </div>
         
-        <AnimatePresence>
-          {showResult && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`fillblank-explanation ${selectedAnswer === currentExercise.blank ? 'correct' : 'wrong'}`}
-            >
-              <p>{currentExercise.explanation}</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {showResult && (
+          <div
+            className={`fillblank-explanation ${selectedAnswer === currentExercise.blank ? 'correct' : 'wrong'}`}
+          >
+            <p>{currentExercise.explanation}</p>
+          </div>
+        )}
       </motion.div>
       
       {showResult && (
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+        <button
+          type="button"
           className="fillblank-next-btn"
           onClick={handleNext}
         >
           {currentIndex < exercises.length - 1 ? 'Next' : 'See Results'}
-        </motion.button>
+        </button>
       )}
     </div>
   );

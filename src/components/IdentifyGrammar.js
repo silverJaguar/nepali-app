@@ -4,6 +4,8 @@ import { FiArrowLeft, FiVolume2, FiCheck, FiX, FiHelpCircle } from 'react-icons/
 import { useVoiceManager } from '../hooks/useVoiceManager';
 import MinimalButton from './MinimalButton';
 
+// Identify: phased by unit — only ask what the grammar has already revealed.
+// Full plan: see docs/IDENTIFY_PHASED_ROLLOUT.md. Exercise banks here are for Unit 4+; units 1–3 do not show Identify.
 // Exercise data for identifying grammar structures
 const generateIdentifyExercises = (unitId) => {
   const exerciseBanks = {

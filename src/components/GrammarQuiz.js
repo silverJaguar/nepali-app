@@ -4,69 +4,9 @@ import { FiCheck, FiX, FiArrowLeft, FiVolume2 } from 'react-icons/fi';
 import { useVoiceManager } from '../hooks/useVoiceManager';
 import MinimalButton from './MinimalButton';
 import { generateQuiz } from '../utils/quizGenerator';
-import lessons from '../lessons.json';
-import sentenceTemplates from '../sentence_templates.json';
-import { checkContentSafety } from '../utils/contentFilter';
+import { getAvailableVocabulary, getTemplatesForUnit } from '../utils/grammarVocabulary';
 import { getSettings } from '../utils/settings';
 import QuizEndScreenPreview from './QuizEndScreenPreview';
-
-/**
- * Get filtered vocabulary for the unit (reuses logic from SentenceConstruction)
- */
-const getAvailableVocabulary = (currentUnit = 1) => {
-  // Get all vocabulary from lessons.json
-  const allVocabulary = Object.values(lessons).flatMap(unitLessons => 
-    unitLessons.flatMap(lesson => lesson.flashcards)
-  );
-  
-  // Apply content filtering
-  const safeVocabulary = allVocabulary.filter(word => {
-    const safetyCheck = checkContentSafety(word.term || '');
-    if (safetyCheck.isNSFW) return false;
-    
-    const definitionCheck = checkContentSafety(word.definition || word.gloss || '');
-    if (definitionCheck.isNSFW) return false;
-    
-    return true;
-  });
-  
-  // Filter vocabulary based on current unit
-  let filteredVocabulary = safeVocabulary;
-  
-  // For Units 1 and 2, filter out negation verbs (Unit 3 will include them)
-  if (currentUnit === 1 || currentUnit === 2) {
-    filteredVocabulary = safeVocabulary.filter(word => {
-      if (word.unit_min && word.unit_min > currentUnit) {
-        return false;
-      }
-      
-      if (word.visible_in_vocab === false) {
-        return false;
-      }
-      
-      // Filter out negation verbs for Units 1 and 2
-      if (word.part_of_speech === 'verb') {
-        const term = word.term || '';
-        const isNegation = term.includes('दैन') || term.includes('छैन') || term.includes('होइन') || term.includes('हैन') || term.includes('हुँदैन');
-        const hasNegativeProperty = word.can_be && word.can_be.some(type => type.includes('negative') || type.includes('verb_negative'));
-        
-        if (isNegation || hasNegativeProperty) {
-          return false;
-        }
-      }
-      return true;
-    });
-  }
-  
-  return filteredVocabulary;
-};
-
-/**
- * Get templates for the unit
- */
-const getTemplatesForUnit = (currentUnit) => {
-  return sentenceTemplates.filter(tmpl => tmpl.unit === currentUnit);
-};
 
 /**
  * Generate quiz questions dynamically

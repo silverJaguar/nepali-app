@@ -1,5 +1,8 @@
 // Grammar Pathway Unit Data
-// Each unit has a pathway with different activity types
+// Each unit has a pathway with different activity types.
+//
+// IDENTIFY PHASED ROLLOUT: See docs/IDENTIFY_PHASED_ROLLOUT.md for full reference.
+// Principle: never ask what the grammar hasn't revealed yet. Units 1–3: NO Identify. Unit 4+: limited then expanded by unit.
 
 export const grammarPathwayUnits = [
   {
@@ -43,7 +46,6 @@ export const grammarPathwayUnits = [
     activities: [
       { type: 'sentence_building', id: 'u1_build' },
       { type: 'quiz', id: 'u1_quiz' },
-      { type: 'identify_grammar', id: 'u1_identify' },
       { type: 'fill_blank', id: 'u1_fill' },
     ]
   },
@@ -80,7 +82,6 @@ export const grammarPathwayUnits = [
     activities: [
       { type: 'sentence_building', id: 'u2_build' },
       { type: 'quiz', id: 'u2_quiz' },
-      { type: 'identify_grammar', id: 'u2_identify' },
       { type: 'fill_blank', id: 'u2_fill' },
     ]
   },
@@ -124,7 +125,6 @@ export const grammarPathwayUnits = [
     activities: [
       { type: 'sentence_building', id: 'u3_build' },
       { type: 'quiz', id: 'u3_quiz' },
-      { type: 'identify_grammar', id: 'u3_identify' },
       { type: 'fill_blank', id: 'u3_fill' },
     ]
   },
@@ -145,12 +145,33 @@ export const getInitialProgress = () => {
   return progress;
 };
 
+// Migrate progress when Identify was removed from units 1–3 (was activity index 2; fill_blank was 3)
+function migrateProgressIfNeeded(progress) {
+  grammarPathwayUnits.forEach(unit => {
+    const unitProgress = progress[unit.id];
+    if (!unitProgress?.activities) return;
+    const acts = unitProgress.activities;
+    const currentCount = unit.activities.length;
+    // Old layout had 4 activities (build, quiz, identify, fill_blank); now 3 (build, quiz, fill_blank)
+    if (currentCount === 3 && (acts['3'] !== undefined || acts[3] !== undefined)) {
+      const fillData = acts['3'] ?? acts[3];
+      unitProgress.activities = {
+        0: acts['0'] ?? acts[0] ?? { completed: false, stars: 0 },
+        1: acts['1'] ?? acts[1] ?? { completed: false, stars: 0 },
+        2: fillData,
+      };
+    }
+  });
+  return progress;
+}
+
 // Load progress from localStorage
 export const loadProgress = () => {
   try {
     const saved = localStorage.getItem('grammarPathwayProgress');
     if (saved) {
-      return JSON.parse(saved);
+      const progress = JSON.parse(saved);
+      return migrateProgressIfNeeded(progress);
     }
   } catch (e) {
     console.error('Failed to load grammar progress:', e);

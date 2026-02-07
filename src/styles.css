@@ -1194,6 +1194,25 @@ button:focus-visible, .pastel-button:focus-visible {
   margin-top: 0.3em;
 }
 
+.fillblank-translation-wrap {
+  margin-top: 0.3em;
+}
+
+.fillblank-translation-tap {
+  background: none;
+  border: none;
+  padding: 0.3em 0;
+  font-size: 0.9rem;
+  color: #b48bbd;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.fillblank-translation-tap:hover {
+  color: #db7093;
+}
+
 .identify-hint, .fillblank-hint {
   background: #fef3c7;
   border-radius: 10px;
@@ -1260,10 +1279,24 @@ button:focus-visible, .pastel-button:focus-visible {
 }
 
 .fillblank-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 0.2em;
   font-size: 1.2rem;
   font-weight: 700;
   padding: 0.8em 1em;
+}
+
+.fillblank-option .option-nepali {
+  display: block;
+}
+
+.fillblank-option .option-transliteration {
+  font-size: 0.85em;
+  font-weight: 500;
+  color: #6b7280;
 }
 
 .fillblank-blank {

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { 
   FiInfo, 
   FiPlay, 
@@ -75,44 +75,46 @@ const ACTIVITY_TYPES = {
   },
 };
 
-const UnitInfoModal = ({ unit, onClose }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="pathway-modal-overlay"
-    onClick={onClose}
-  >
-    <motion.div
-      initial={{ scale: 0.9, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.9, opacity: 0 }}
-      className="pathway-modal"
-      onClick={e => e.stopPropagation()}
+export const UnitInfoModal = ({ unit, onClose }) => {
+  const openedAtRef = useRef(Date.now());
+  const handleOverlayClick = () => {
+    const elapsed = Date.now() - openedAtRef.current;
+    if (elapsed < 300) return; // Ignore overlay clicks for 300ms
+    onClose();
+  };
+  return (
+    <div
+      className="pathway-modal-overlay"
+      onClick={handleOverlayClick}
     >
-      <button className="pathway-modal-close" onClick={onClose}>
-        <FiX size={20} />
-      </button>
-      <h3 className="pathway-modal-title">{unit.name}</h3>
-      <p className="pathway-modal-description">{unit.description}</p>
-      <div className="pathway-modal-rules">
-        <h4>Grammar Rules:</h4>
-        {unit.rules?.map((rule, idx) => (
-          <div key={idx} className="pathway-modal-rule">
-            <strong>{rule.title}</strong>
-            <code>{rule.rule}</code>
-            {rule.examples?.slice(0, 2).map((ex, exIdx) => (
-              <div key={exIdx} className="pathway-modal-example">
-                <span className="nepali">{ex.nepali}</span>
-                <span className="english">{ex.natural}</span>
-              </div>
-            ))}
-          </div>
-        ))}
+      <div
+        className="pathway-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className="pathway-modal-close" onClick={onClose}>
+          <FiX size={20} />
+        </button>
+        <h3 className="pathway-modal-title">{unit.name}</h3>
+        <p className="pathway-modal-description">{unit.description}</p>
+        <div className="pathway-modal-rules">
+          <h4>Grammar Rules:</h4>
+          {unit.rules?.map((rule, idx) => (
+            <div key={idx} className="pathway-modal-rule">
+              <strong>{rule.title}</strong>
+              <code>{rule.rule}</code>
+              {rule.examples?.slice(0, 2).map((ex, exIdx) => (
+                <div key={exIdx} className="pathway-modal-example">
+                  <span className="nepali">{ex.nepali}</span>
+                  <span className="english">{ex.natural}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </motion.div>
-  </motion.div>
-);
+    </div>
+  );
+};
 
 const GrammarPathway = ({ 
   unit, 
@@ -162,8 +164,9 @@ const GrammarPathway = ({
       {/* Header */}
       <div className="pathway-header">
         <button 
+          type="button"
           className="pathway-info-btn"
-          onClick={() => setShowInfo(true)}
+          onClick={(e) => { e.stopPropagation(); setTimeout(() => setShowInfo(true), 0); }}
           aria-label="Unit information"
         >
           <FiInfo size={20} />
@@ -243,12 +246,12 @@ const GrammarPathway = ({
         </div>
       )}
       
-      {/* Info Modal */}
-      <AnimatePresence>
-        {showInfo && (
-          <UnitInfoModal unit={unit} onClose={() => setShowInfo(false)} />
+      {/* Info Modal - rendered via portal to document.body (no AnimatePresence - was preventing modal from showing) */}
+      {showInfo &&
+        ReactDOM.createPortal(
+          <UnitInfoModal unit={unit} onClose={() => setShowInfo(false)} />,
+          document.body
         )}
-      </AnimatePresence>
     </div>
   );
 };

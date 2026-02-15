@@ -30,6 +30,27 @@
     }
   ],
 
+  "Self & Others": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "म", "definition": "I/me", "gloss": "I", "transliteration": "ma", "phoneme": "ma", "part_of_speech": "pronoun", "can_be": ["subject"], "person": "first", "number": "singular", "formality": "neutral" },
+        { "term": "तिमी", "definition": "You (informal)", "gloss": "you", "transliteration": "timi", "phoneme": "ti.mi", "part_of_speech": "pronoun", "can_be": ["subject"], "person": "second", "number": "singular", "formality": "informal" },
+        { "term": "तपाईं", "definition": "You (polite)", "gloss": "you", "transliteration": "tapain", "phoneme": "tʌ.pa.ĩ", "part_of_speech": "pronoun", "can_be": ["subject"], "person": "second", "number": "singular", "formality": "polite" },
+        { "term": "हुनु", "definition": "To be (identity)", "gloss": "to be", "transliteration": "hunu", "phoneme": "hu.nu", "part_of_speech": "verb", "can_be": ["predicate"], "verb_type": "copula", "semantic_type": "identity" }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "मेरो", "definition": "My", "gloss": "my", "transliteration": "mero", "phoneme": "me.ro", "part_of_speech": "possessive_pronoun", "can_be": ["possessor"], "person": "first", "number": "singular", "possessive": true },
+        { "term": "तिम्रो", "definition": "Your (informal)", "gloss": "your", "transliteration": "timro", "phoneme": "tim.ro", "part_of_speech": "possessive_pronoun", "can_be": ["possessor"], "person": "second", "number": "singular", "formality": "informal", "possessive": true },
+        { "term": "तपाईंको", "definition": "Your (polite)", "gloss": "your", "transliteration": "tapainko", "phoneme": "tʌ.pa.ĩ.ko", "part_of_speech": "possessive_pronoun", "can_be": ["possessor"], "person": "second", "number": "singular", "formality": "polite", "possessive": true },
+        { "term": "को", "definition": "’s / of (possession marker)", "gloss": "'s", "transliteration": "ko", "phoneme": "ko", "part_of_speech": "postposition", "semantic_type": "possession" }
+      ]
+    }
+  ],
+
   "People & Family": [
     {
       "title": "Lesson 1",
@@ -229,7 +250,7 @@
 
   ],
 
-  "Jobs & Workplace": [
+  "Professions": [
     {
       "title": "Lesson 1",
       "flashcards": [
@@ -292,7 +313,7 @@
         { "term": "लुगा", "definition": "Clothes", "gloss": "clothes", "transliteration": "luga", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "plural": true },
         { "term": "कपडा", "definition": "Fabric / Cloth", "gloss": "fabric", "transliteration": "kapada", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true },
         { "term": "सर्ट", "definition": "Shirt", "gloss": "shirt", "transliteration": "sart", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "semantic_type": "clothing" },
-        { "term": "सुरूवाल", "definition": "Pants", "gloss": "pants", "transliteration": "suruwaal", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "plural": true }
+        { "term": "प्यान्ट", "definition": "Pants", "gloss": "pants", "transliteration": "pyant", "part_of_speech": "noun", "can_be": ["object"], "category": "clothing", "possessable": true, "plural": true }
       ]
     },
     {
@@ -483,6 +504,92 @@
             { "term": "किन्ने", "transliteration": "kinne", "definition": "will buy" }
           ]
         }}
+      ]
+    }
+  ],
+
+  "Home & Household": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "घर", "definition": "House / Home", "gloss": "house", "transliteration": "ghar", "phoneme": "ɡʱʌr", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place", "animacy": "inanimate", "possessable": true },
+        { "term": "कोठा", "definition": "Room", "gloss": "room", "transliteration": "kotha", "phoneme": "ko.ʈʰa", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "household_space", "animacy": "inanimate", "possessable": true },
+        { "term": "भान्सा", "definition": "Kitchen", "gloss": "kitchen", "transliteration": "bhaansa", "phoneme": "bʱaːn.sa", "part_of_speech": "noun", "can_be": ["object"], "category": "household_space", "animacy": "inanimate", "possessable": true },
+        { "term": "ओछ्यान", "definition": "Bed", "gloss": "bed", "transliteration": "ochhyan", "phoneme": "o.t͡sʰjan", "part_of_speech": "noun", "can_be": ["object"], "category": "furniture", "animacy": "inanimate", "possessable": true }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "ढोका", "definition": "Door", "gloss": "door", "transliteration": "dhoka", "phoneme": "d̪ʱo.ka", "part_of_speech": "noun", "can_be": ["object"], "category": "household_object", "animacy": "inanimate", "possessable": true },
+        { "term": "झ्याल", "definition": "Window", "gloss": "window", "transliteration": "jhyaal", "phoneme": "d͡ʑʱjaːl", "part_of_speech": "noun", "can_be": ["object"], "category": "household_object", "animacy": "inanimate", "possessable": true },
+        { "term": "टेबल", "definition": "Table", "gloss": "table", "transliteration": "tebal", "phoneme": "ʈe.bʌl", "part_of_speech": "noun", "can_be": ["object"], "category": "furniture", "animacy": "inanimate", "possessable": true },
+        { "term": "कुर्सी", "definition": "Chair", "gloss": "chair", "transliteration": "kursi", "phoneme": "kur.si", "part_of_speech": "noun", "can_be": ["object"], "category": "furniture", "animacy": "inanimate", "possessable": true }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "सफाइ", "definition": "Cleaning", "gloss": "cleaning", "transliteration": "safaai", "phoneme": "sʌ.faː.i", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "household_activity", "animacy": "inanimate", "possessable": false },
+        { "term": "धुनु", "definition": "To wash", "gloss": "to wash", "transliteration": "dhunu", "phoneme": "d̪ʱu.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "wash_action", "requires_object_type": ["clothing", "item"] },
+        { "term": "पकाउनु", "definition": "To cook", "gloss": "to cook", "transliteration": "pakaunu", "phoneme": "pʌ.ka.u.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "cook_action", "requires_object_type": ["food"] }
+      ]
+    }
+  ],
+
+  "School & Learning": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "विद्यालय", "definition": "School", "gloss": "school", "transliteration": "vidyaalaya", "phoneme": "bid.jaː.la.ja", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place", "animacy": "inanimate", "possessable": false },
+        { "term": "कक्षा", "definition": "Class", "gloss": "class", "transliteration": "kakshya", "phoneme": "kʌk.ʃja", "part_of_speech": "noun", "can_be": ["object"], "category": "education", "animacy": "inanimate", "possessable": false },
+        { "term": "विद्यार्थी", "definition": "Student", "gloss": "student", "transliteration": "vidyaarthi", "phoneme": "bid.jaːr.tʰi", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "person", "animacy": "animate", "possessable": false },
+        { "term": "पुस्तक", "definition": "Book", "gloss": "book", "transliteration": "pustak", "phoneme": "pus.tʌk", "part_of_speech": "noun", "can_be": ["object"], "category": "learning_material", "animacy": "inanimate", "possessable": true }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "कापी", "definition": "Notebook", "gloss": "notebook", "transliteration": "kaapi", "phoneme": "kaː.pi", "part_of_speech": "noun", "can_be": ["object"], "category": "learning_material", "animacy": "inanimate", "possessable": true },
+        { "term": "कलम", "definition": "Pen", "gloss": "pen", "transliteration": "kalam", "phoneme": "kʌ.lʌm", "part_of_speech": "noun", "can_be": ["object"], "category": "learning_material", "animacy": "inanimate", "possessable": true },
+        { "term": "लेख्नु", "definition": "To write", "gloss": "to write", "transliteration": "lekhnu", "phoneme": "lekʰ.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "write_action", "requires_object_type": ["text", "document", "learning_material"] },
+        { "term": "पढ्नु", "definition": "To read / study", "gloss": "to read", "transliteration": "padhnu", "phoneme": "pʌɖʱ.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "read_action", "requires_object_type": ["text", "learning_material"] }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "परीक्षा", "definition": "Exam / Test", "gloss": "exam", "transliteration": "pariksha", "phoneme": "pʌ.rik.ʃa", "part_of_speech": "noun", "can_be": ["object"], "category": "education", "animacy": "inanimate", "possessable": false },
+        { "term": "सिक्नु", "definition": "To learn", "gloss": "to learn", "transliteration": "siknu", "phoneme": "sik.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "process", "semantic_type": "learn_action", "requires_object_type": ["skill", "subject", "learning_material"] },
+        { "term": "सोध्नु", "definition": "To ask (a question)", "gloss": "to ask", "transliteration": "sodhnu", "phoneme": "so.d̪ʱ.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "communication", "semantic_type": "ask_action", "requires_object_type": ["question", "person"] }
+      ]
+    }
+  ],
+
+  "Workplace & Professional Life": [
+    {
+      "title": "Lesson 1",
+      "flashcards": [
+        { "term": "बैठक", "definition": "Meeting", "gloss": "meeting", "transliteration": "baithak", "phoneme": "bai.ʈʰʌk", "part_of_speech": "noun", "can_be": ["object"], "category": "work_activity", "animacy": "inanimate", "possessable": false },
+        { "term": "तालिका", "definition": "Schedule", "gloss": "schedule", "transliteration": "taalika", "phoneme": "taː.li.ka", "part_of_speech": "noun", "can_be": ["object"], "category": "time_management", "animacy": "inanimate", "possessable": true },
+        { "term": "समय", "definition": "Time", "gloss": "time", "transliteration": "samay", "phoneme": "sʌ.mʌj", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "concept", "animacy": "inanimate", "possessable": false },
+        { "term": "ढिलो", "definition": "Late", "gloss": "late", "transliteration": "dhilo", "phoneme": "d̪ʱi.lo", "part_of_speech": "adjective", "can_be": ["predicate", "modifier"], "category": "time_state", "semantic_type": "time_quality" }
+      ]
+    },
+    {
+      "title": "Lesson 2",
+      "flashcards": [
+        { "term": "काम गर्नु", "definition": "To work", "gloss": "to work", "transliteration": "kaam garnu", "phoneme": "kaːm gʌr.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "work_action" },
+        { "term": "सुरु गर्नु", "definition": "To start / begin", "gloss": "to start", "transliteration": "suru garnu", "phoneme": "su.ru gʌr.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "start_action", "requires_object_type": ["work", "activity", "event"] },
+        { "term": "सक्नु", "definition": "To finish / be able to", "gloss": "to finish", "transliteration": "saknu", "phoneme": "sʌk.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "modal", "semantic_type": "finish_action" }
+      ]
+    },
+    {
+      "title": "Lesson 3",
+      "flashcards": [
+        { "term": "कागज", "definition": "Document / Paper", "gloss": "document", "transliteration": "kaagaj", "phoneme": "kaː.ɡʌd͡ʑ", "part_of_speech": "noun", "can_be": ["object"], "category": "work_material", "animacy": "inanimate", "possessable": true },
+        { "term": "हस्ताक्षर", "definition": "Signature", "gloss": "signature", "transliteration": "hastaakshar", "phoneme": "hʌs.taːk.ʃʌr", "part_of_speech": "noun", "can_be": ["object"], "category": "work_process", "animacy": "inanimate", "possessable": false },
+        { "term": "पठाउनु", "definition": "To send", "gloss": "to send", "transliteration": "pathaunu", "phoneme": "pʌ.ʈʰa.u.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "communication", "semantic_type": "send_action", "requires_object_type": ["document", "message", "item"] }
       ]
     }
   ]

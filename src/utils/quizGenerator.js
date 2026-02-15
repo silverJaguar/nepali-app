@@ -507,18 +507,30 @@ function generateGrammarFeatureMC(templates, vocabulary, unitId) {
   
   const features = getGrammarFeaturesForUnit(unitId);
   
-  // Determine correct feature based on sentence type
+  // Determine correct feature based on sentence type (unit 3 uses negation-specific feature IDs)
   let correctFeatureId = '';
-  if (sentence.type === 'action') {
-    correctFeatureId = 'ergative_case';
-  } else if (sentence.type === 'possession') {
-    correctFeatureId = 'possession';
-  } else if (sentence.type === 'identity_noun') {
-    correctFeatureId = 'identity_copula';
-  } else if (sentence.type === 'identity_adj') {
-    correctFeatureId = 'adjective_copula';
-  } else if (sentence.type === 'existence') {
-    correctFeatureId = 'existence';
+  if (unitId === 3) {
+    if (sentence.type === 'action') {
+      correctFeatureId = 'negation_action';
+    } else if (sentence.type === 'possession') {
+      correctFeatureId = 'negative_possession';
+    } else if (sentence.type === 'identity_noun') {
+      correctFeatureId = 'negation_identity';
+    } else if (sentence.type === 'identity_adj' || sentence.type === 'existence') {
+      correctFeatureId = 'negation_existence';
+    }
+  } else {
+    if (sentence.type === 'action') {
+      correctFeatureId = 'ergative_case';
+    } else if (sentence.type === 'possession') {
+      correctFeatureId = 'possession';
+    } else if (sentence.type === 'identity_noun') {
+      correctFeatureId = 'identity_copula';
+    } else if (sentence.type === 'identity_adj') {
+      correctFeatureId = 'adjective_copula';
+    } else if (sentence.type === 'existence') {
+      correctFeatureId = 'existence';
+    }
   }
   
   // Find correct feature and get distractors

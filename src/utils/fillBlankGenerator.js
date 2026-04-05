@@ -121,6 +121,26 @@ function buildExerciseFromSentence(sentence, unitId, template) {
     options = makeOptions(['ले', 'सङ्ग', 'मा', 'को']);
     hint = 'Saying who does the action (the doer)';
     explanation = 'ले (le) is the ergative marker - used on subjects of transitive verbs.';
+  } else if (type === 'grammar_question') {
+    const kind = sentence.question_kind;
+    let blank = 'के';
+    if (kind === 'wh_where') blank = 'कहाँ';
+    else if (kind === 'wh_who') blank = sentence.nepali.includes('कोले') ? 'कोले' : 'को';
+    if (!nepali.includes(blank)) return null;
+    sentenceWithBlank = nepali.replace(blank, '___');
+    transliterationWithBlank = replaceBlankInTransliteration(fullTransliteration, blank === 'के' ? 'ke' : blank === 'कहाँ' ? 'kahaan' : blank === 'कोले' ? 'kole' : 'ko');
+    options = makeOptions(['के', 'को', 'कोले', 'कहाँ']);
+    hint = 'Choose the question word or marker that fits this pattern.';
+    explanation =
+      kind === 'yes_no'
+        ? 'Yes/no questions begin with के before the unchanged statement.'
+        : kind === 'wh_what'
+          ? 'के replaces the noun slot you are asking about (what).'
+          : kind === 'wh_who'
+            ? 'को (or कोले with transitive subjects) asks who.'
+            : kind === 'wh_where' && sentence.base_sentence_type === 'action'
+              ? 'कहाँ asks where someone goes or comes. जानु/आउनु are intransitive: use कहाँ + verb, not ले + के.'
+              : 'कहाँ asks where something is (or where someone is).';
   } else if (type === 'action' && template.negation_type === 'action_present' && components.verb) {
     // Negative action: blank the verb (sentence uses negative form)
     const parts = nepali.replace(/।\s*$/, '').split(' ');

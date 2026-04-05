@@ -3,10 +3,11 @@ import lessons from './lessons.json';
 import sentenceTemplates from './sentence_templates.json';
 import { FiVolume2, FiRotateCw, FiCheck, FiX } from 'react-icons/fi';
 import { useVoiceManager } from './hooks/useVoiceManager';
-import { getUnitNumber, isValidVerbObjectPair, isValidAdjectiveSubjectPair, generatePossessiveConstruction, generateGenitiveConstruction, selectCopulaByGender } from './utils/helpers';
+import { getUnitNumber, isValidVerbObjectPair, isValidAdjectiveSubjectPair, generatePossessiveConstruction, generateGenitiveConstruction, selectCopulaByGender, buildTermToFlashcardMap, isFiniteActionLemmaVerb } from './utils/helpers';
 import { buildEnglishObjectPhrase, buildEnglishSubjectPhrase, getEnglishArticle } from './utils/postpositionMapper';
 import { filterSafeExercises, checkContentSafety } from './utils/contentFilter';
 import { getSettings } from './utils/settings';
+import { generateGrammarQuestionExercises } from './utils/grammarQuestionExercises';
 import WordVariantDropdown from './components/WordVariantDropdown';
 
 const SentenceConstruction = ({ currentUnit, onComplete }) => {
@@ -163,6 +164,15 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
       console.error('[ERROR] No templates found for unit:', currentUnit);
       return [];
     }
+
+    if (currentUnit === 4) {
+      const gq = generateGrammarQuestionExercises(vocabulary);
+      if (gq.length === 0) {
+        console.error('[ERROR] Unit 4: could not generate grammar question exercises.');
+        return [];
+      }
+      return filterSafeExercises(gq);
+    }
     
     // Determine target exercise count based on number of templates
     let targetExercises, maxExercises;
@@ -189,6 +199,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
     const hunuhunchhaCopula = vocabulary.find(w => w.term === 'हुनुहुन्छ');
     const chaCopula = vocabulary.find(w => w.term === 'छ' && w.copula_type === 'existence');
     const modalCopula = vocabulary.find(w => w.term === 'हुन्छ' && w.copula_type === 'modal');
+    const verbFlashMap = buildTermToFlashcardMap(vocabulary);
     let exercises = [];
     // Get sentence templates from lessons.json
     const shuffledTemplates = templates.slice().sort(() => Math.random() - 0.5);
@@ -211,14 +222,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
           }
         } else if (template.type === 'action') {
           if (part === 'verb') {
-            filteredParts[part] = vocabulary.filter(word => {
-              if (word.verb_type !== 'action') return false;
-              // Block infinitive verbs (ending with नु) - sentences must use finite forms
-              // Exception: "हुनुहुन्छ" is a copula, not an infinitive verb
-              const term = word.term || '';
-              const isInfinitive = term.endsWith('नु') && !term.includes('हुन्छ');
-              return !isInfinitive;
-            });
+            filteredParts[part] = vocabulary.filter(word => isFiniteActionLemmaVerb(word));
           } else if (part === 'subject') {
             filteredParts[part] = vocabulary.filter(word => word.can_be && word.can_be.includes('subject') && (word.animacy === 'animate' || word.category === 'person' || word.category === 'family_member'));
           } else if (part === 'object') {
@@ -329,7 +333,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
         for (const verb of filteredParts.verb) {
           for (const object of filteredParts.object) {
             // Check if this verb-object combination makes sense
-            if (isValidVerbObjectPair(verb, object)) {
+            if (isValidVerbObjectPair(verb, object, verbFlashMap)) {
               validVerbObjectPairs.push({ verb, object });
             }
           }
@@ -445,6 +449,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
     const hunuhunchhaCopula = vocabulary.find(w => w.term === 'हुनुहुन्छ');
     const chaCopula = vocabulary.find(w => w.term === 'छ' && w.copula_type === 'existence');
     const modalCopula = vocabulary.find(w => w.term === 'हुन्छ' && w.copula_type === 'modal');
+    const verbFlashMap = buildTermToFlashcardMap(vocabulary);
     let exercises = [];
     
     // Generate exercises for this single template
@@ -475,14 +480,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
           }
         } else if (template.type === 'action') {
           if (part === 'verb') {
-            filteredParts[part] = vocabulary.filter(word => {
-              if (word.verb_type !== 'action') return false;
-              // Block infinitive verbs (ending with नु) - sentences must use finite forms
-              // Exception: "हुनुहुन्छ" is a copula, not an infinitive verb
-              const term = word.term || '';
-              const isInfinitive = term.endsWith('नु') && !term.includes('हुन्छ');
-              return !isInfinitive;
-            });
+            filteredParts[part] = vocabulary.filter(word => isFiniteActionLemmaVerb(word));
           } else if (part === 'subject') {
             filteredParts[part] = vocabulary.filter(word => word.can_be && word.can_be.includes('subject') && (word.animacy === 'animate' || word.category === 'person' || word.category === 'family_member'));
           } else if (part === 'object') {
@@ -504,7 +502,15 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
           if (part === 'subject') {
             filteredParts[part] = vocabulary.filter(word => word.can_be && word.can_be.includes('subject'));
           } else if (part === 'adjective') {
-            filteredParts[part] = vocabulary.filter(word => word.can_be && word.can_be.includes('modifier'));
+            const subjects = filteredParts['subject'] || [];
+            const allAdjectives = vocabulary.filter(word => word.can_be && word.can_be.includes('modifier'));
+            if (subjects.length > 0) {
+              filteredParts[part] = allAdjectives.filter(adj =>
+                subjects.some(subject => isValidAdjectiveSubjectPair(adj, subject))
+              );
+            } else {
+              filteredParts[part] = allAdjectives;
+            }
           } else if (part === 'copula') {
             filteredParts[part] = [chaCopula, chanCopula, hunuhunchhaCopula].filter(Boolean);
           } else {
@@ -603,7 +609,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
           console.log('  Testing verb-object compatibility:');
           const compatibleVerbs = [];
           for (const testVerb of verbs) {
-            const compatibleObjects = filteredParts['object'].filter(o => isValidVerbObjectPair(testVerb, o));
+            const compatibleObjects = filteredParts['object'].filter(o => isValidVerbObjectPair(testVerb, o, verbFlashMap));
             console.log(`    ${testVerb.term}: ${compatibleObjects.length} compatible objects`);
             if (compatibleObjects.length > 0) {
               compatibleVerbs.push(testVerb);
@@ -631,7 +637,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
           // DEBUG: Log available objects
           const objects = filteredParts['object'].filter(o => {
             // Use the isValidVerbObjectPair function for proper semantic filtering
-            return isValidVerbObjectPair(verb, o);
+            return isValidVerbObjectPair(verb, o, verbFlashMap);
           });
           console.log('  Objects:', objects);
           if (!objects || objects.length === 0) {
@@ -729,10 +735,12 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
           const objects = filteredParts['object'];
           const verbs = filteredParts['verb_past'];
           if (!subjects || !ergatives || !objects || !verbs || subjects.length === 0 || ergatives.length === 0 || objects.length === 0 || verbs.length === 0) continue;
+          const verb = verbs[Math.floor(Math.random() * verbs.length)];
+          const validObjects = objects.filter(o => isValidVerbObjectPair(verb, o, verbFlashMap));
+          if (validObjects.length === 0) continue;
           const subject = subjects[Math.floor(Math.random() * subjects.length)];
           const ergative = ergatives[0];
-          const object = objects[Math.floor(Math.random() * objects.length)];
-          const verb = verbs[Math.floor(Math.random() * verbs.length)];
+          const object = validObjects[Math.floor(Math.random() * validObjects.length)];
           requiredWords = [subject, ergative, object, verb];
         } else if (template.type === 'dative_animate_object') {
           // subject, ले, object, लाई, verb_past
@@ -742,11 +750,13 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
           const datives = filteredParts['dative_marker'];
           const verbs = filteredParts['verb_past'];
           if (!subjects || !ergatives || !objects || !datives || !verbs || subjects.length === 0 || ergatives.length === 0 || objects.length === 0 || datives.length === 0 || verbs.length === 0) continue;
+          const verb = verbs[Math.floor(Math.random() * verbs.length)];
+          const validObjects = objects.filter(o => isValidVerbObjectPair(verb, o, verbFlashMap));
+          if (validObjects.length === 0) continue;
           const subject = subjects[Math.floor(Math.random() * subjects.length)];
           const ergative = ergatives[0];
-          const object = objects[Math.floor(Math.random() * objects.length)];
+          const object = validObjects[Math.floor(Math.random() * validObjects.length)];
           const dative = datives[0];
-          const verb = verbs[Math.floor(Math.random() * verbs.length)];
           requiredWords = [subject, ergative, object, dative, verb];
         } else if (template.type === 'existence' && template.negation_type) {
           // object, छैन (negative existence)
@@ -808,9 +818,10 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
           const verbs = filteredParts['verb_negative_present'];
           if (!subjects || !ergatives || !objects || !verbs || subjects.length === 0 || ergatives.length === 0 || objects.length === 0 || verbs.length === 0) continue;
           const verb = verbs[Math.floor(Math.random() * verbs.length)];
+          const validObjects = objects.filter(o => isValidVerbObjectPair(verb, o, verbFlashMap));
+          if (validObjects.length === 0) continue;
           const subject = subjects[Math.floor(Math.random() * subjects.length)];
-          // For negative verbs, we don't need semantic filtering since they should work with any object
-          const object = objects[Math.floor(Math.random() * objects.length)];
+          const object = validObjects[Math.floor(Math.random() * validObjects.length)];
           const ergative = ergatives[0];
           requiredWords = [subject, ergative, object, verb];
         } else {
@@ -1042,7 +1053,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
               }
             } else if (template.type === 'action') {
               if (part === 'verb') {
-                filteredParts[part] = vocabulary.filter(word => word.verb_type === 'action');
+                filteredParts[part] = vocabulary.filter(word => isFiniteActionLemmaVerb(word));
               } else if (part === 'subject') {
                 filteredParts[part] = vocabulary.filter(word => word.can_be && word.can_be.includes('subject') && (word.animacy === 'animate' || word.category === 'person' || word.category === 'family_member'));
               } else if (part === 'object') {
@@ -1158,7 +1169,11 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
                 // Always include 'ले' after subject for present tense (for now)
                 const verbs = filteredParts['verb'];
                 if (!verbs || verbs.length === 0) continue;
-                const verb = verbs[Math.floor(Math.random() * verbs.length)];
+                const compatibleVerbs = verbs.filter(testVerb =>
+                  filteredParts['object'].some(o => isValidVerbObjectPair(testVerb, o, verbFlashMap))
+                );
+                if (compatibleVerbs.length === 0) continue;
+                const verb = compatibleVerbs[Math.floor(Math.random() * compatibleVerbs.length)];
                 const subjects = filteredParts['subject'].filter(s => {
                   if (!verb.requires_subject) return true;
                   return verb.requires_subject.includes(s.category) || verb.requires_subject.includes('animate');
@@ -1167,7 +1182,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
                 const subject = subjects[Math.floor(Math.random() * subjects.length)];
                 const objects = filteredParts['object'].filter(o => {
                   // Use the isValidVerbObjectPair function for proper semantic filtering
-                  return isValidVerbObjectPair(verb, o);
+                  return isValidVerbObjectPair(verb, o, verbFlashMap);
                 });
                 if (!objects || objects.length === 0) continue;
                 console.log(`  Filtered objects for "${verb.term}":`, objects.map(o => o.term));
@@ -1228,7 +1243,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
                 const verb = verbs[Math.floor(Math.random() * verbs.length)];
                 
                 // Filter objects based on semantic compatibility with the selected verb
-                const validObjects = objects.filter(o => isValidVerbObjectPair(verb, o));
+                const validObjects = objects.filter(o => isValidVerbObjectPair(verb, o, verbFlashMap));
                 if (validObjects.length === 0) continue;
                 
                 const object = validObjects[Math.floor(Math.random() * validObjects.length)];
@@ -1246,7 +1261,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
                 const verb = verbs[Math.floor(Math.random() * verbs.length)];
                 
                 // Filter objects based on semantic compatibility with the selected verb
-                const validObjects = objects.filter(o => isValidVerbObjectPair(verb, o));
+                const validObjects = objects.filter(o => isValidVerbObjectPair(verb, o, verbFlashMap));
                 if (validObjects.length === 0) continue;
                 
                 const object = validObjects[Math.floor(Math.random() * validObjects.length)];
@@ -1306,8 +1321,10 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
                 const verbs = filteredParts['verb_negative_present'];
                 if (!subjects || !ergatives || !objects || !verbs || subjects.length === 0 || ergatives.length === 0 || objects.length === 0 || verbs.length === 0) continue;
                 const verb = verbs[Math.floor(Math.random() * verbs.length)];
+                const validObjects = objects.filter(o => isValidVerbObjectPair(verb, o, verbFlashMap));
+                if (validObjects.length === 0) continue;
                 const subject = subjects[Math.floor(Math.random() * subjects.length)];
-                const object = objects[Math.floor(Math.random() * objects.length)];
+                const object = validObjects[Math.floor(Math.random() * validObjects.length)];
                 const ergative = ergatives[0];
                 requiredWords = [subject, ergative, object, verb];
               } else {
@@ -1591,6 +1608,13 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
     if (!exercise || !exercise.requiredWords) return '';
     
     const template = exercise.template;
+
+    if (template.type === 'grammar_question') {
+      const prompt = exercise.questionEnglishPrompt || template.english || '';
+      const safetyCheck = checkContentSafety(prompt);
+      if (safetyCheck.isNSFW) return 'Please select a different exercise.';
+      return prompt;
+    }
     
     // Safety check: ensure the exercise is appropriate
     const safetyCheck = checkContentSafety(template.english || '');
@@ -2066,7 +2090,10 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
             Nepali sentence structure: <strong>{currentExercise.template.nepali_structure}</strong>
           </p>
           <p className="text-sm mt-1">
-            You need: {currentExercise.template.required_parts.join(', ')}
+            You need:{' '}
+            {currentExercise.hintParts?.length
+              ? currentExercise.hintParts.join(', ')
+              : currentExercise.template.required_parts.join(', ')}
           </p>
         </div>
       )}

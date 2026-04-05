@@ -28,7 +28,7 @@ export const grammarPathwayUnits = [
       },
       {
         title: 'Existence (There is...)',
-        rule: '[object] छ ([object] chha)',
+        rule: '[Object] छ ([Object] chha)',
         examples: [
           { nepali: 'गाडी छ।', literal: 'Car is', natural: 'There is a car.' },
           { nepali: 'किताब छ।', literal: 'Book is', natural: 'There is a book.' },
@@ -36,7 +36,7 @@ export const grammarPathwayUnits = [
       },
       {
         title: 'Possession (A has B)',
-        rule: 'A सङ्ग B छ (A sanga B cha)',
+        rule: '[A] सङ्ग [B] छ ([A] sanga [B] cha)',
         examples: [
           { nepali: 'केटासङ्ग गाडी छ।', literal: 'Boy-with car is', natural: 'The boy has a car.' },
           { nepali: 'केटीसङ्ग किताब छ।', literal: 'Girl-with book is', natural: 'The girl has a book.' },
@@ -56,7 +56,7 @@ export const grammarPathwayUnits = [
     rules: [
       {
         title: 'Present Tense Transitive',
-        rule: 'Subject + ले + Object + Verb',
+        rule: '[Subject] + ले + [Object] + [Verb]',
         examples: [
           { nepali: 'रामले भात खान्छ।', literal: 'Ram-le rice eats', natural: 'Ram eats rice.' },
           { nepali: 'सिताले चिया पिउँछ।', literal: 'Sita-le tea drinks', natural: 'Sita drinks tea.' },
@@ -72,7 +72,7 @@ export const grammarPathwayUnits = [
       },
       {
         title: 'Word Order (SOV)',
-        rule: 'Subject + Object + Verb',
+        rule: '[Subject] + [Object] + [Verb]',
         examples: [
           { nepali: 'केटाले किताब पढ्छ।', literal: 'Boy-le book reads', natural: 'The boy reads a book.' },
           { nepali: 'दिदीले गीत गाउँछ।', literal: 'Sister-le song sings', natural: 'Sister sings a song.' },
@@ -92,7 +92,7 @@ export const grammarPathwayUnits = [
     rules: [
       {
         title: 'Negative Identity',
-        rule: 'A B होइन (A B hoina)',
+        rule: '[A] [B] होइन ([A] [B] hoina)',
         examples: [
           { nepali: 'ऊ शिक्षक होइन।', literal: 'He teacher is-not', natural: 'He is not a teacher.' },
           { nepali: 'यो घर होइन।', literal: 'This house is-not', natural: 'This is not a house.' },
@@ -100,7 +100,7 @@ export const grammarPathwayUnits = [
       },
       {
         title: 'Negative Existence/Adjective',
-        rule: 'A छैन (A chhaina)',
+        rule: '[A] छैन ([A] chhaina)',
         examples: [
           { nepali: 'गाडी छैन।', literal: 'Car is-not', natural: 'There is no car.' },
           { nepali: 'यो मिठो छैन।', literal: 'This tasty is-not', natural: 'This is not tasty.' },
@@ -108,14 +108,14 @@ export const grammarPathwayUnits = [
       },
       {
         title: 'Negative Possession',
-        rule: 'A सङ्ग B छैन (A sanga B chhaina)',
+        rule: '[A] सङ्ग [B] छैन ([A] sanga [B] chhaina)',
         examples: [
           { nepali: 'केटासङ्ग पैसा छैन।', literal: 'Boy-with money is-not', natural: 'The boy does not have money.' },
         ]
       },
       {
         title: 'Negative Action',
-        rule: 'Subject + ले + Object + Verb-दैन',
+        rule: '[Subject] ले [Object] [Verb] दैन ([Subject] le [Object] [Verb] daina)',
         examples: [
           { nepali: 'रामले भात खाँदैन।', literal: 'Ram-le rice eats-not', natural: 'Ram does not eat rice.' },
           { nepali: 'सिताले चिया पिउँदैन।', literal: 'Sita-le tea drinks-not', natural: 'Sita does not drink tea.' },
@@ -126,6 +126,51 @@ export const grammarPathwayUnits = [
       { type: 'sentence_building', id: 'u3_build' },
       { type: 'quiz', id: 'u3_quiz' },
       { type: 'fill_blank', id: 'u3_fill' },
+    ]
+  },
+  {
+    id: 4,
+    name: 'Unit 4: Questions',
+    description: 'Learn to form yes/no questions and basic information questions using question words like “what,” “who,” and “where."',
+    rules: [
+      {
+        title: 'Yes/No Questions',
+        rule: 'के [Subject] [Object] छ? (ke [Subject] [Object] cha?)',
+        examples: [
+          { nepali: 'के तपाईंसँग किताब छ?', literal: '? You have book', natural: 'Do you have a book?' },
+          { nepali: 'के ऊ विद्यालय जान्छ?', literal: '? He school goes', natural: 'Does he go to school?' },
+        ]
+      },
+      {
+        title: 'What Questions',
+        rule: '[A] के हो? ([A] ke ho?)',
+        examples: [
+          { nepali: 'यो के हो?', literal: 'This what is?', natural: 'What is this?' },
+          { nepali: 'त्यो के हो?', literal: 'That what is?', natural: 'What is that?' },
+        ]
+      },
+      {
+        title: 'Who Questions',
+        rule: '[Person] को हो?',
+        examples: [
+          { nepali: 'ऊ को हो?', literal: 'He who is?', natural: 'Who is he?' },
+          { nepali: 'उनी को हुन्?', literal: 'They who are?', natural: 'Who are they?' },
+        ]
+      },
+      {
+        title: 'Where Questions',
+        rule: 'Noun कहाँ छ?',
+        examples: [
+          { nepali: 'किताब कहाँ छ?', literal: 'Book where is?', natural: 'Where is the book?' },
+          { nepali: 'कुकुर कहाँ छ?', literal: 'Dog where is?', natural: 'Where is the dog?' },
+        ]
+      },
+    ],
+    activities: [
+      { type: 'sentence_building', id: 'u4_build' },
+      { type: 'quiz', id: 'u4_quiz' },
+      { type: 'fill_blank', id: 'u4_fill' },
+      { type: 'identify_grammar', id: 'u4_identify' },
     ]
   },
 ];

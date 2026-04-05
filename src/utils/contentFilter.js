@@ -118,6 +118,10 @@ function buildEnglishSentenceForFilter(exercise) {
   
   const template = exercise.template;
   const words = exercise.requiredWords;
+
+  if (template.type === 'grammar_question' && exercise.questionEnglishPrompt) {
+    return exercise.questionEnglishPrompt;
+  }
   
   // For possession sentences: [possessor] does/does not have [object]
   if (template.type === 'possession') {

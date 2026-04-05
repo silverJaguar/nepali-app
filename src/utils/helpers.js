@@ -9,6 +9,87 @@ export function shuffle(array) {
   return arr;
 }
 
+/** Map term → flashcard for resolving negative_of / lemma metadata. */
+export function buildTermToFlashcardMap(vocabulary) {
+  const map = Object.create(null);
+  if (!Array.isArray(vocabulary)) return map;
+  for (const w of vocabulary) {
+    if (w && w.term) map[w.term] = w;
+  }
+  return map;
+}
+
+/**
+ * Action verbs that can head a declarative clause: exclude standalone negative forms
+ * (सुन्दैन, जाँदैन, …) which lack requires_object_type / semantic_type on the card.
+ */
+export function isFiniteActionLemmaVerb(word) {
+  if (!word || word.verb_type !== 'action') return false;
+  const term = word.term || '';
+  const isInfinitive = term.endsWith('नु') && !term.includes('हुन्छ');
+  if (isInfinitive) return false;
+  const cb = word.can_be || [];
+  const hasLemmaSlot = cb.some(c => c === 'predicate' || c === 'verb');
+  const onlyNegative =
+    (cb.includes('verb_negative_present') || cb.includes('verb_negative_past')) &&
+    !hasLemmaSlot;
+  return !onlyNegative;
+}
+
+function resolveVerbForObjectSemantics(verb, termToFlashcardMap) {
+  if (!verb || !termToFlashcardMap || typeof termToFlashcardMap !== 'object') {
+    return verb;
+  }
+  const visited = new Set();
+  let semantic_type = verb.semantic_type || '';
+  let requires_object_type = Array.isArray(verb.requires_object_type)
+    ? [...verb.requires_object_type]
+    : [];
+  let cur = verb;
+  while (
+    cur?.negative_of &&
+    termToFlashcardMap[cur.negative_of] &&
+    !visited.has(cur.term)
+  ) {
+    visited.add(cur.term);
+    cur = termToFlashcardMap[cur.negative_of];
+    if (!semantic_type && cur.semantic_type) {
+      semantic_type = cur.semantic_type;
+    }
+    if (
+      requires_object_type.length === 0 &&
+      Array.isArray(cur.requires_object_type) &&
+      cur.requires_object_type.length > 0
+    ) {
+      requires_object_type = [...cur.requires_object_type];
+    }
+  }
+  const keepReq =
+    verb.requires_object_type && verb.requires_object_type.length > 0
+      ? verb.requires_object_type
+      : requires_object_type;
+  return {
+    ...verb,
+    semantic_type: semantic_type || verb.semantic_type,
+    requires_object_type: keepReq,
+  };
+}
+
+/**
+ * Transitive actions: ergative ले + direct object. Intransitive motion (जानु, आउनु, …):
+ * no ले; destination is expressed with a postposition (e.g. ठाउँमा), not as a direct object of ले.
+ */
+export function verbUsesErgativeConstruction(verb, termToFlashcardMap = null) {
+  const v = termToFlashcardMap
+    ? resolveVerbForObjectSemantics(verb, termToFlashcardMap)
+    : verb;
+  if (!v) return true;
+  if (v.transitive === false) return false;
+  const st = v.semantic_type || '';
+  if (st === 'go_action' || st === 'come_action') return false;
+  return true;
+}
+
 export function getUnitNumber(unitName) {
   const unitMap = {
     'Greetings & Basic Expressions': 1,
@@ -28,12 +109,15 @@ export function getUnitNumber(unitName) {
   return unitMap[unitName] || 1;
 }
 
-export function isValidVerbObjectPair(verb, object) {
-  const verbSemanticType = verb.semantic_type || '';
+export function isValidVerbObjectPair(verb, object, termToFlashcardMap = null) {
+  const v = termToFlashcardMap
+    ? resolveVerbForObjectSemantics(verb, termToFlashcardMap)
+    : verb;
+  const verbSemanticType = v.semantic_type || '';
   const objectCategory = object.category || '';
   const objectSemanticType = object.semantic_type || '';
   const objectAnimacy = object.animacy || '';
-  const verbRequiresObjectType = verb.requires_object_type || [];
+  const verbRequiresObjectType = v.requires_object_type || [];
   
   // Category hierarchy: family_member is a subset of person
   const isFamilyMember = objectCategory === 'family_member';
@@ -94,11 +178,22 @@ export function isValidVerbObjectPair(verb, object) {
     return emotionCategories.includes(objectCategory) || isSensation;
   }
   
-  // PERCEPTION VERB RULES (see, hear)
-  if (['see_action', 'hear_action'].includes(verbSemanticType)) {
-    // Can see/hear most physical things, but not abstract concepts
-    const blockedForPerception = ['concept', 'time', 'currency', 'number'];
+  // PERCEPTION VERB RULES (see, hear) — only when verb has no stricter requires_object_type
+  if (['see_action', 'hear_action'].includes(verbSemanticType) && verbRequiresObjectType.length === 0) {
+    const blockedForPerception = ['concept', 'time', 'currency', 'number', 'emotion'];
     return !blockedForPerception.includes(objectCategory);
+  }
+
+  // SMELL / TASTE — require matching sensory objects if not already enforced above
+  if (['smell_action', 'taste_action'].includes(verbSemanticType) && verbRequiresObjectType.length === 0) {
+    const needSmell = verbSemanticType === 'smell_action';
+    const needTaste = verbSemanticType === 'taste_action';
+    if (needSmell) {
+      return objectSemanticType === 'smellable' || objectCategory === 'food' || objectCategory === 'liquid';
+    }
+    if (needTaste) {
+      return objectSemanticType === 'tasteable' || ['food', 'liquid', 'solid'].includes(objectCategory);
+    }
   }
   
   // MUSIC/PERFORMANCE VERB RULES (sing, play instrument, dance)
@@ -130,7 +225,7 @@ export function isValidVerbObjectPair(verb, object) {
   }
   
   // BLOCK ABSTRACT CONCEPTS FOR MOST ACTION VERBS
-  const abstractCategories = ['concept', 'time', 'currency', 'number'];
+  const abstractCategories = ['concept', 'time', 'currency', 'number', 'emotion'];
   if (abstractCategories.includes(objectCategory)) {
     return false;
   }

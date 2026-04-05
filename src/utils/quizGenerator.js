@@ -7,7 +7,7 @@ import { buildSentence } from './sentenceBuilder';
 
 /**
  * Main function: Generate a complete quiz with 3 MC + 2 TF questions
- * @param {number} unitId - The grammar unit (1, 2, or 3)
+ * @param {number} unitId - The grammar unit (1–4+)
  * @param {Array} vocabulary - Filtered vocabulary for the unit
  * @param {Array} templates - Sentence templates for the unit
  * @returns {Array} Array of 5 question objects
@@ -324,7 +324,7 @@ function generateWordOrderMC(templates, vocabulary, unitId) {
     throw new Error('Failed to generate word order MC question after multiple attempts');
   }
   
-  const correctNepali = sentence.nepali;
+  const correctNepali = sentence.nepali.replace(/\?/g, '।').trim();
   const english = sentence.english;
   
   // Generate wrong word orders
@@ -354,38 +354,49 @@ function generateWordOrderMC(templates, vocabulary, unitId) {
  */
 function generateWrongWordOrders(sentence) {
   const distractors = [];
-  const parts = sentence.nepali.replace('।', '').split(' ');
+  const parts = sentence.nepali
+    .replace(/[।?]/g, '')
+    .split(' ')
+    .filter(Boolean);
   
-  if (sentence.type === 'action') {
-    // Wrong orders for action sentences
-    // Correct: Subject+ले Object Verb
-    const subj = parts[0]; // includes ले
-    const obj = parts[1];
-    const verb = parts[2];
-    
-    distractors.push(`${obj} ${subj} ${verb}।`); // OSV
-    distractors.push(`${verb} ${subj} ${obj}।`); // VSO
-    
-    // Misplaced ergative marker
-    const subjWithoutLe = subj.replace('ले', '');
-    distractors.push(`${subjWithoutLe} ${obj} ले ${verb}।`);
+  if (sentence.type === 'grammar_question') {
+    if (parts.length >= 2) {
+      distractors.push([...parts].reverse().join(' ') + '।');
+      distractors.push(shuffle([...parts]).join(' ') + '।');
+      distractors.push(shuffle([...parts]).join(' ') + '।');
+    }
+  } else if (sentence.type === 'action') {
+    // Correct: Subject ले Object Verb (spaced) OR Subjectले Object Verb (legacy 3 tokens)
+    if (parts.length >= 4) {
+      const subj = parts[0];
+      const le = parts[1];
+      const obj = parts[2];
+      const verb = parts[3];
+      distractors.push(`${obj} ${subj} ${le} ${verb}।`);
+      distractors.push(`${verb} ${subj} ${le} ${obj}।`);
+      distractors.push(`${subj} ${obj} ${le} ${verb}।`);
+    } else {
+      const subj = parts[0];
+      const obj = parts[1];
+      const verb = parts[2];
+      distractors.push(`${obj} ${subj} ${verb}।`);
+      distractors.push(`${verb} ${subj} ${obj}।`);
+      const subjWithoutLe = subj.replace('ले', '');
+      distractors.push(`${subjWithoutLe} ${obj} ले ${verb}।`);
+    }
     
   } else if (sentence.type === 'possession') {
-    // Wrong orders for possession
-    // Correct: Possessor+सङ्ग Object Copula
-    const poss = parts[0]; // includes सङ्ग
+    // Correct: Possessorसङ्ग Object Copula (first token attaches सङ्ग)
+    const poss = parts[0];
     const obj = parts[1];
     const copula = parts[2];
-    
-    distractors.push(`${obj} ${poss} ${copula}।`); // Object first
-    
-    // Misplaced सङ्ग
+    distractors.push(`${obj} ${poss} ${copula}।`);
     const possWithoutSanga = poss.replace('सङ्ग', '');
     distractors.push(`${possWithoutSanga} ${obj}सङ्ग ${copula}।`);
     distractors.push(`${possWithoutSanga} ${obj} ${copula} सङ्ग।`);
     
-  } else if (sentence.type === 'identity_noun' || sentence.type === 'identity_adj') {
-    // Wrong orders for identity/adjective
+  } else if (sentence.type === 'identity_noun' || sentence.type === 'identity_adj' || sentence.type === 'identity_location') {
+    // Wrong orders for identity/adjective/location
     // Correct: Subject Modifier Copula
     const subj = parts[0];
     const modifier = parts[1];
@@ -413,8 +424,8 @@ function generateWrongWordOrders(sentence) {
     distractors.push(shuffled1, shuffled2, shuffled3);
   }
   
-  // Ensure distractors are different from correct answer
-  return distractors.filter(d => d !== sentence.nepali);
+  const normTarget = sentence.nepali.replace(/\?/g, '।').trim();
+  return distractors.filter(d => d.replace(/\?/g, '।').trim() !== normTarget);
 }
 
 /**
@@ -484,6 +495,10 @@ function generateWrongTranslations(sentence, vocabulary) {
     distractors.push(`The ${comp.object.english.toLowerCase()} is here.`);
     distractors.push(`It is a ${comp.object.english.toLowerCase()}.`);
     distractors.push(`The ${comp.object.english.toLowerCase()} exists.`);
+  } else if (sentence.type === 'grammar_question' && sentence.declarative_english) {
+    distractors.push(sentence.declarative_english);
+    distractors.push(`(Statement) ${sentence.declarative_english}`);
+    distractors.push(`Does not match: ${sentence.declarative_english}`);
   }
   
   return distractors.filter(d => d !== sentence.english && d.trim());
@@ -509,7 +524,15 @@ function generateGrammarFeatureMC(templates, vocabulary, unitId) {
   
   // Determine correct feature based on sentence type (unit 3 uses negation-specific feature IDs)
   let correctFeatureId = '';
-  if (unitId === 3) {
+  if (unitId === 4 && sentence.type === 'grammar_question') {
+    const map = {
+      yes_no: 'yn_question',
+      wh_what: 'wh_what',
+      wh_who: 'wh_who',
+      wh_where: 'wh_where',
+    };
+    correctFeatureId = map[sentence.question_kind] || '';
+  } else if (unitId === 3) {
     if (sentence.type === 'action') {
       correctFeatureId = 'negation_action';
     } else if (sentence.type === 'possession') {
@@ -742,6 +765,24 @@ function introduceGrammaticalError(sentence, unitId) {
       }
     }
     
+  } else if (unitId === 4) {
+    if (sentence.type === 'grammar_question' && sentence.question_kind === 'yes_no' && sentence.nepali.trim().startsWith('के ')) {
+      const stripped = sentence.nepali.replace(/^के\s+/, '').replace(/\?/g, '').trim();
+      const wrong = stripped.endsWith('।') ? stripped : `${stripped}।`;
+      return {
+        sentence: wrong,
+        transliteration: generateTransliterationFromNepali(wrong),
+        explanation: 'Yes/no questions are formed by placing के at the beginning; the rest stays the same as the statement.',
+      };
+    }
+    if (sentence.type === 'grammar_question' && sentence.question_kind === 'wh_where') {
+      const wrong = sentence.nepali.replace('कहाँ', 'के').replace(/\?/g, '').trim() + '।';
+      return {
+        sentence: wrong,
+        transliteration: generateTransliterationFromNepali(wrong),
+        explanation: 'Where-questions use कहाँ in the location slot, not के.',
+      };
+    }
   } else if (unitId === 3) {
     // Unit 3 errors: wrong negative form
     if (sentence.nepali.includes('होइन')) {
@@ -782,10 +823,13 @@ function introduceGrammaticalError(sentence, unitId) {
  * Explanation helpers
  */
 function getWordOrderExplanation(sentence) {
+  if (sentence.type === 'grammar_question') {
+    return 'Questions keep SOV order; only के / को / कहाँ or leading के is added per the question rules.';
+  }
   if (sentence.type === 'action') {
-    return 'Correct SOV order with ergative marker: [Subject]ले [Object] [Verb].';
+    return 'Correct SOV order with ergative marker: [Subject] ले [Object] [Verb].';
   } else if (sentence.type === 'possession') {
-    return 'Correct possession structure: [Possessor]सङ्ग [Object] छ.';
+    return 'Correct possession structure: [Possessor]सङ्ग [Object] [Copula].';
   } else if (sentence.type === 'identity_noun' || sentence.type === 'identity_adj') {
     return 'Correct structure: [Subject] [Modifier] [Copula].';
   }
@@ -793,6 +837,9 @@ function getWordOrderExplanation(sentence) {
 }
 
 function getTranslationExplanation(sentence) {
+  if (sentence.type === 'grammar_question') {
+    return 'This question is formed from a declarative by the Unit 4 rules (prepend के or replace one slot with a question word).';
+  }
   if (sentence.type === 'action') {
     return `${sentence.components.ergative} marks the subject doing the transitive action.`;
   } else if (sentence.type === 'possession') {
@@ -806,6 +853,9 @@ function getTranslationExplanation(sentence) {
 }
 
 function getCorrectSentenceExplanation(sentence) {
+  if (sentence.type === 'grammar_question') {
+    return 'Correct: Follows the question formation rules (unchanged statement except के / question-word replacement).';
+  }
   if (sentence.type === 'action') {
     return 'Correct: Uses ergative marker ले and SOV word order.';
   } else if (sentence.type === 'possession') {

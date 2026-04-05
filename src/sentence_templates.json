@@ -4,7 +4,7 @@
     "type": "action",
     "unit": 2,
     "english": "The [subject] [verb] [object]",
-    "nepali_structure": "[subject] ले [object] [verb]",
+    "nepali_structure": "Transitive: [subject] ले [object] [verb]. Motion (जान्छ/आउँछ): [subject] [place+मा] [verb] (no ले).",
     "example": {
       "english": "The boy eats rice",
       "nepali": "केटाले भात खान्छ",
@@ -213,6 +213,149 @@
       "transliteration": "kitab tebalma chaina"
     },
     "required_parts": ["subject", "location_phrase", "copula_negative"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_yn_possession",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "possession",
+    "question_kind": "yes_no",
+    "english": "Build the Nepali yes/no question.",
+    "nepali_structure": "के + (unchanged declarative)",
+    "required_parts": ["के", "possessor", "सङ्ग", "object", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_yn_existence",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "existence",
+    "question_kind": "yes_no",
+    "english": "Build the Nepali yes/no question.",
+    "nepali_structure": "के + (unchanged declarative)",
+    "required_parts": ["के", "object", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_yn_identity_noun",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "identity_noun",
+    "question_kind": "yes_no",
+    "english": "Build the Nepali yes/no question.",
+    "nepali_structure": "के + (unchanged declarative)",
+    "required_parts": ["के", "subject", "identity_noun", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_yn_identity_adj",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "identity_adj",
+    "question_kind": "yes_no",
+    "english": "Build the Nepali yes/no question.",
+    "nepali_structure": "के + (unchanged declarative)",
+    "required_parts": ["के", "subject", "adjective", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_yn_action",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "basic_action",
+    "question_kind": "yes_no",
+    "english": "Build the Nepali yes/no question.",
+    "nepali_structure": "के + (unchanged declarative). Transitive: subject + ले + object + verb. Intransitive motion (जानु/आउनु): subject + place+मा + verb (no ले).",
+    "required_parts": ["के", "subject", "…", "verb"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_yn_identity_location",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "identity_location",
+    "question_kind": "yes_no",
+    "english": "Build the Nepali yes/no question.",
+    "nepali_structure": "के + (unchanged declarative)",
+    "required_parts": ["के", "subject", "location", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_wh_what_identity",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "identity_noun",
+    "question_kind": "wh_what",
+    "english": "Build the Nepali what-question.",
+    "nepali_structure": "[subject] के [copula]?",
+    "required_parts": ["subject", "के", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_wh_what_possession",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "possession",
+    "question_kind": "wh_what",
+    "english": "Build the Nepali what-question.",
+    "nepali_structure": "[possessor] सङ्ग के [copula]?",
+    "required_parts": ["possessor", "सङ्ग", "के", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_wh_what_action",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "basic_action",
+    "question_kind": "wh_what",
+    "english": "Build the Nepali what-question.",
+    "nepali_structure": "[subject]ले के [verb]?",
+    "required_parts": ["subject", "ले", "के", "verb"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_wh_who_identity",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "identity_noun",
+    "question_kind": "wh_who",
+    "english": "Build the Nepali who-question.",
+    "nepali_structure": "[subject] को [copula]?",
+    "required_parts": ["subject", "को", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_wh_who_action",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "basic_action",
+    "question_kind": "wh_who",
+    "english": "Build the Nepali who-question.",
+    "nepali_structure": "कोले [object] [verb]?",
+    "required_parts": ["कोले", "object", "verb"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_wh_where",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "identity_location",
+    "question_kind": "wh_where",
+    "english": "Build the Nepali where-question.",
+    "nepali_structure": "[subject] कहाँ [copula]?",
+    "required_parts": ["subject", "कहाँ", "copula"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "u4_wh_where_motion",
+    "type": "grammar_question",
+    "unit": 4,
+    "base_template_id": "basic_action",
+    "question_kind": "wh_where",
+    "english": "Build the Nepali where-question (motion).",
+    "nepali_structure": "[subject] कहाँ [verb]? (no ले — जानु/आउनु are intransitive)",
+    "required_parts": ["subject", "कहाँ", "verb"],
     "difficulty": "beginner"
   }
 ] 

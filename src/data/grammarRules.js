@@ -154,6 +154,79 @@ export const GRAMMAR_RULES = {
       falseExplanation: 'Honorific forms maintain their level. हुन् → हुनुहुन्न, not होइन.',
     },
   ],
+
+  4: [
+    // Unit 4: Questions (formed from declaratives)
+    {
+      feature: 'yn_question_ke',
+      statement: 'Yes/no questions are formed by placing के at the beginning of the statement; word order stays the same',
+      true: true,
+      explanation: 'के + unchanged declarative + ? (e.g. ऊ आउँछ। → के ऊ आउँछ?).',
+      falseVersion: 'Yes/no questions require changing verb endings and reversing word order after के',
+      falseExplanation: 'Only के is added at the start; verbs, particles, and SOV order stay the same.',
+    },
+    {
+      feature: 'wh_what_ke_slot',
+      statement: 'In what-questions, के replaces the noun being asked about (one slot only)',
+      true: true,
+      explanation:
+        'Example: यो किताब हो → यो के हो? For transitive actions: [subject]ले के [verb]? — not with intransitive motion (use कहाँ for “where”).',
+      falseVersion: 'In what-questions, के always goes at the very beginning like yes/no questions',
+      falseExplanation: 'Sentence-initial के is for yes/no. Replacing a noun with के asks “what.”',
+    },
+    {
+      feature: 'wh_who_ko',
+      statement: 'Who-questions use को in place of the person being asked about (e.g. ऊ शिक्षक हो → ऊ को हो?)',
+      true: true,
+      explanation: 'को replaces the person slot; the rest of the sentence is unchanged.',
+      falseVersion: 'Who-questions use के in place of the person being asked about',
+      falseExplanation: 'के is “what” or yes/no marker; को is used for “who” in this pattern.',
+    },
+    {
+      feature: 'wh_where_kaha',
+      statement: 'Where-questions replace the location phrase with कहाँ (e.g. किताब टेबलमा छ → किताब कहाँ छ?)',
+      true: true,
+      explanation: 'The location slot becomes कहाँ; subject and copula stay in place.',
+      falseVersion: 'Where-questions add कहाँ only at the beginning of the sentence',
+      falseExplanation: 'कहाँ replaces where the location was, not necessarily the first word.',
+    },
+    {
+      feature: 'ergative_transitive_only',
+      statement: 'In present tense, the ergative marker ले is used with transitive verbs (subject acts on a direct object), not with intransitive verbs like जानु or आउनु',
+      true: true,
+      explanation:
+        'Intransitive motion uses subject + destination with a postposition (e.g. …मा) + verb: छोरी बजारमा जान्छ। not *छोरीले बजार जान्छ।',
+      falseVersion: 'ले is used on the subject whenever someone “does” something, including for जान्छ and आउँछ',
+      falseExplanation:
+        'जानु and आउनु are intransitive: no ले. Use a location phrase (…मा) instead of ergative + bare object.',
+    },
+    {
+      feature: 'ke_object_not_motion',
+      statement: 'के in a wh-question replaces a noun that would be a direct object; it is not used to ask “where” someone goes with जानु/आउनु',
+      true: true,
+      explanation:
+        'For “where” with motion, use कहाँ: छोरी कहाँ जाँदैन? — not *छोरीले के जाँदैन?',
+      falseVersion: 'छोरीले के जाँदैन? is a natural way to ask where the daughter is going',
+      falseExplanation:
+        'That sentence mixes ergative ले and के with an intransitive verb. Use कहाँ (and no ले) for destination: छोरी कहाँ जाँदैन?',
+    },
+    {
+      feature: 'no_inversion',
+      statement: 'Nepali questions keep SOV order; the language does not invert like English',
+      true: true,
+      explanation: 'Question words or के are inserted or swapped into slots; the rest stays SOV.',
+      falseVersion: 'Nepali questions usually move the verb before the subject, like English',
+      falseExplanation: 'Nepali remains verb-final (SOV) in these patterns.',
+    },
+    {
+      feature: 'negation_with_ke',
+      statement: 'Negative statements still form yes/no questions with leading के (e.g. ऊ आउँदैन। → के ऊ आउँदैन?)',
+      true: true,
+      explanation: 'Negation (छैन, होइन, -दैन) is unchanged; only के is prepended.',
+      falseVersion: 'Negative statements cannot use के for yes/no questions',
+      falseExplanation: 'The same yes/no rule applies: prepend के to the negative statement.',
+    },
+  ],
 };
 
 // Helper to get a random true/false grammar question for a unit
@@ -211,6 +284,12 @@ export function getGrammarFeaturesForUnit(unitId) {
       { id: 'negation_existence', label: 'Existence negation', description: 'There is not...' },
       { id: 'negation_action', label: 'Action negation', description: 'Does not [verb]' },
       { id: 'negative_possession', label: 'Negative possession', description: 'Does not have' },
+    ],
+    4: [
+      { id: 'yn_question', label: 'Yes/no question (के + statement)', description: 'Same declarative with leading के' },
+      { id: 'wh_what', label: 'What question (के in a slot)', description: 'के replaces the asked-about noun' },
+      { id: 'wh_who', label: 'Who question (को / कोले)', description: 'को replaces the person (or कोले for transitive subject)' },
+      { id: 'wh_where', label: 'Where question (कहाँ)', description: 'कहाँ replaces location (copula sentences) or destination with motion verbs (no ले)' },
     ],
   };
   

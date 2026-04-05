@@ -158,6 +158,43 @@ function generateFallbackQuestions(unitId) {
         explanation: 'हो → होइन for identity sentences.',
       },
     ],
+    4: [
+      {
+        type: 'multiple_choice',
+        question: '"Does Ram eat rice?" - Which is correct?',
+        options: ['के राम ले भात खान्छ।', 'राम ले भात के खान्छ।', 'राम ले भात खान्छ के।', 'के खान्छ राम ले भात।'],
+        answer: 0,
+        explanation: 'Yes/no questions add के at the beginning; the rest stays the same.',
+        nepali: 'के राम ले भात खान्छ।',
+      },
+      {
+        type: 'multiple_choice',
+        question: 'What does "यो के हो?" demonstrate?',
+        options: ['Yes/no question', 'What question (के in a slot)', 'Who question', 'Where question'],
+        answer: 1,
+        explanation: 'के replaces the identity noun: "What is this?"',
+        nepali: 'यो के हो?',
+      },
+      {
+        type: 'true_false',
+        question: '"किताब कहाँ छ?" is grammatically correct.',
+        answer: true,
+        explanation: 'कहाँ replaces the location phrase; SOV order is kept.',
+        nepali: 'किताब कहाँ छ?',
+      },
+      {
+        type: 'true_false',
+        question: 'Who-questions always use sentence-initial के.',
+        answer: false,
+        explanation: 'Who uses को (or कोले for transitive subjects), not sentence-initial के.',
+      },
+      {
+        type: 'true_false',
+        question: 'Nepali yes/no questions are formed by prepending के to the statement without changing word order.',
+        answer: true,
+        explanation: 'Only के is added at the start; verb forms and particles stay the same.',
+      },
+    ],
   };
   
   return fallbacks[unitId] || fallbacks[1];

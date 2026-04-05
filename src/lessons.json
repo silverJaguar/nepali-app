@@ -188,10 +188,10 @@
     {
       "title": "Lesson 2",
       "flashcards": [
-        { "term": "जान्छ", "definition": "goes", "gloss": "goes", "transliteration": "janchha", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "negative_present": "जाँदैन", "negative_past": "गइनँ", "visible_in_vocab": true, "semantic_type": "go_action", "requires_object_type": ["place", "accommodation"], "default_postposition": "मा" },
+        { "term": "जान्छ", "definition": "goes", "gloss": "goes", "transliteration": "janchha", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "transitive": false, "negative_present": "जाँदैन", "negative_past": "गइनँ", "visible_in_vocab": true, "semantic_type": "go_action", "requires_object_type": ["place", "accommodation"], "default_postposition": "मा" },
         { "term": "जाँदैन", "definition": "does not go", "transliteration": "jãdaina", "part_of_speech": "verb", "can_be": ["verb_negative_present"], "verb_type": "action", "negative_of": "जान्छ", "visible_in_vocab": false },
         { "term": "गइनँ", "definition": "did not go", "transliteration": "gainã", "part_of_speech": "verb", "can_be": ["verb_negative_past"], "verb_type": "action", "negative_of": "जान्छ", "visible_in_vocab": false },
-        { "term": "आउँछ", "definition": "comes", "gloss": "comes", "transliteration": "auncha", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "negative_present": "आउँदैन", "negative_past": "आइनँ", "visible_in_vocab": true, "semantic_type": "come_action", "requires_object_type": ["place", "accommodation"], "default_postposition": "मा" },
+        { "term": "आउँछ", "definition": "comes", "gloss": "comes", "transliteration": "auncha", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "transitive": false, "negative_present": "आउँदैन", "negative_past": "आइनँ", "visible_in_vocab": true, "semantic_type": "come_action", "requires_object_type": ["place", "accommodation"], "default_postposition": "मा" },
         { "term": "आउँदैन", "definition": "does not come", "transliteration": "aundaina", "part_of_speech": "verb", "can_be": ["verb_negative_present"], "verb_type": "action", "negative_of": "आउँछ", "visible_in_vocab": false },
         { "term": "आइनँ", "definition": "did not come", "transliteration": "ainã", "part_of_speech": "verb", "can_be": ["verb_negative_past"], "verb_type": "action", "negative_of": "आउँछ", "visible_in_vocab": false }
       ]
@@ -268,8 +268,7 @@
         { "term": "इन्जिनियर", "definition": "Engineer", "gloss": "engineer", "transliteration": "engineer", "phoneme": "en.d͡zi.ni.jʌr", "part_of_speech": "noun", "can_be": ["object"], "category": "person", "animacy": "animate", "possessable": false },
         { "term": "कलाकार", "definition": "Artist", "transliteration": "kalakaar", "phoneme": "ka.la.kaːr", "part_of_speech": "noun", "can_be": ["object"], "category": "person" },
         { "term": "दोकान", "definition": "Shop / Store", "transliteration": "dokaan", "phoneme": "do.kaːn", "part_of_speech": "noun", "can_be": ["object"], "category": "place" },
-        { "term": "कम्पनी", "definition": "Company", "transliteration": "company", "phoneme": "kʌm.pa.ni", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place" },
-        { "term": "होटेल", "definition": "Hotel", "transliteration": "hotel", "phoneme": "ho.ʈel", "part_of_speech": "noun", "can_be": ["object"], "category": "accommodation" }
+        { "term": "कम्पनी", "definition": "Company", "transliteration": "company", "phoneme": "kʌm.pa.ni", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place" }
       ]
     }
   ],
@@ -346,12 +345,14 @@
     }
   ],
 
-
   "Postpositions": [
     {
       "title": "Lesson 1",
       "flashcards": [
         { "term": "सङ्ग", "definition": "with (postposition for possession)", "transliteration": "sanga", "part_of_speech": "postposition", "can_be": ["possession_postposition"], "category": "postposition", "used_in": ["possession"] },
+        { "term": "मा", "definition": "in / on / at (location)", "gloss": "in", "transliteration": "maa", "part_of_speech": "postposition", "can_be": ["location_postposition"], "category": "postposition", "used_in": ["location"], "unit_min": 4 },
+        { "term": "के", "definition": "what; yes/no question marker", "gloss": "what", "transliteration": "ke", "part_of_speech": "particle", "can_be": ["question_particle"], "unit_min": 4 },
+        { "term": "कहाँ", "definition": "where", "gloss": "where", "transliteration": "kahaan", "part_of_speech": "adverb", "can_be": ["question_word"], "unit_min": 4 },
         { "term": "ले", "definition": "ergative marker (doer)", "transliteration": "le", "part_of_speech": "postposition", "can_be": ["ergative_marker"], "category": "postposition", "used_in": ["ergative"] },
         { "term": "लाई", "definition": "dative marker (receiver)", "transliteration": "lai", "part_of_speech": "postposition", "can_be": ["dative_marker"], "category": "postposition", "used_in": ["dative"] }
       ]
@@ -479,8 +480,8 @@
     {
       "title": "Lesson 1",
       "flashcards": [
-        { "term": "बजार", "definition": "Market", "gloss": "market", "transliteration": "bazaar", "phoneme": "ba.zaːr", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place", "animacy": "inanimate", "possessable": false },
-        { "term": "दुकान", "definition": "Shop / Store", "gloss": "shop", "transliteration": "dukaan", "phoneme": "du.kaːn", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place", "animacy": "inanimate", "possessable": false },
+        { "term": "बजार", "definition": "Market", "gloss": "market", "transliteration": "bajaar", "phoneme": "ba.zaːr", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place", "animacy": "inanimate", "possessable": false },
+        { "term": "दोकान", "definition": "Shop / Store", "gloss": "shop", "transliteration": "dokaan", "phoneme": "du.kaːn", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "place", "animacy": "inanimate", "possessable": false },
         { "term": "ग्राहक", "definition": "Customer", "gloss": "customer", "transliteration": "graahak", "phoneme": "ɡraː.hʌk", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "person", "animacy": "animate", "possessable": false },
         { "term": "विक्रेता", "definition": "Seller / Vendor", "gloss": "seller", "transliteration": "vikreta", "phoneme": "bik.reː.taː", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "person", "animacy": "animate", "possessable": false }
       ]
@@ -531,7 +532,7 @@
       "title": "Lesson 3",
       "flashcards": [
         { "term": "सफाइ", "definition": "Cleaning", "gloss": "cleaning", "transliteration": "safaai", "phoneme": "sʌ.faː.i", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "household_activity", "animacy": "inanimate", "possessable": false },
-        { "term": "धुनु", "definition": "To wash", "gloss": "to wash", "transliteration": "dhunu", "phoneme": "d̪ʱu.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "wash_action", "requires_object_type": ["clothing", "item"] },
+        { "term": "धुनु", "definition": "To wash", "gloss": "to wash", "transliteration": "dhunu", "phoneme": "d̪ʱu.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "wash_action", "requires_object_type": ["clothing", "item", "body_part", "dishware"] },
         { "term": "पकाउनु", "definition": "To cook", "gloss": "to cook", "transliteration": "pakaunu", "phoneme": "pʌ.ka.u.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "cook_action", "requires_object_type": ["food"] }
       ]
     }
@@ -572,7 +573,6 @@
       "flashcards": [
         { "term": "बैठक", "definition": "Meeting", "gloss": "meeting", "transliteration": "baithak", "phoneme": "bai.ʈʰʌk", "part_of_speech": "noun", "can_be": ["object"], "category": "work_activity", "animacy": "inanimate", "possessable": false },
         { "term": "तालिका", "definition": "Schedule", "gloss": "schedule", "transliteration": "taalika", "phoneme": "taː.li.ka", "part_of_speech": "noun", "can_be": ["object"], "category": "time_management", "animacy": "inanimate", "possessable": true },
-        { "term": "समय", "definition": "Time", "gloss": "time", "transliteration": "samay", "phoneme": "sʌ.mʌj", "part_of_speech": "noun", "can_be": ["subject", "object"], "category": "concept", "animacy": "inanimate", "possessable": false },
         { "term": "ढिलो", "definition": "Late", "gloss": "late", "transliteration": "dhilo", "phoneme": "d̪ʱi.lo", "part_of_speech": "adjective", "can_be": ["predicate", "modifier"], "category": "time_state", "semantic_type": "time_quality" }
       ]
     },
@@ -581,7 +581,8 @@
       "flashcards": [
         { "term": "काम गर्नु", "definition": "To work", "gloss": "to work", "transliteration": "kaam garnu", "phoneme": "kaːm gʌr.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "work_action" },
         { "term": "सुरु गर्नु", "definition": "To start / begin", "gloss": "to start", "transliteration": "suru garnu", "phoneme": "su.ru gʌr.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "start_action", "requires_object_type": ["work", "activity", "event"] },
-        { "term": "सक्नु", "definition": "To finish / be able to", "gloss": "to finish", "transliteration": "saknu", "phoneme": "sʌk.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "modal", "semantic_type": "finish_action" }
+        { "term": "समाप्त गर्नु", "definition": "To finish / complete", "gloss": "finish", "transliteration": "samaapt garnu", "phoneme": "sʌ.maːpt gʌr.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "action", "semantic_type": "finish_action", "requires_object_type": ["work", "task", "activity"] },
+        { "term": "सक्नु", "definition": "To be capable of", "gloss": "can", "transliteration": "saknu", "phoneme": "sʌk.nu", "part_of_speech": "verb", "can_be": ["predicate", "verb"], "verb_type": "modal", "semantic_type": "ability_modal" }
       ]
     },
     {

@@ -44,5 +44,6 @@ export function getAvailableVocabulary(currentUnit = 1) {
  * Get sentence templates for the unit
  */
 export function getTemplatesForUnit(currentUnit) {
-  return sentenceTemplates.filter(tmpl => tmpl.unit === currentUnit);
+  const unit = Number(currentUnit);
+  return sentenceTemplates.filter(tmpl => tmpl.unit === unit);
 }

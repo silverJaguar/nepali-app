@@ -43,7 +43,8 @@ function replaceBlankInTransliteration(fullTransliteration, blankTranslit) {
  */
 export function generateFillBlankExercises(unitId, vocabulary, templates, count = 6) {
   const exercises = [];
-  const validTemplates = templates.filter(t => t.unit === unitId);
+  const unit = Number(unitId);
+  const validTemplates = templates.filter(t => t.unit === unit);
   if (validTemplates.length === 0) return exercises;
 
   const shuffledTemplates = shuffle([...validTemplates]);
@@ -123,7 +124,7 @@ function buildExerciseFromSentence(sentence, unitId, template) {
     explanation = 'ले (le) is the ergative marker - used on subjects of transitive verbs.';
   } else if (type === 'grammar_question') {
     const kind = sentence.question_kind;
-    let blank = 'के';
+    blank = 'के';
     if (kind === 'wh_where') blank = 'कहाँ';
     else if (kind === 'wh_who') blank = sentence.nepali.includes('कोले') ? 'कोले' : 'को';
     if (!nepali.includes(blank)) return null;

@@ -1213,6 +1213,18 @@ button:focus-visible, .pastel-button:focus-visible {
   color: #db7093;
 }
 
+.identify-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+  margin-top: 1em;
+}
+
+.identify-option {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .identify-hint, .fillblank-hint {
   background: #fef3c7;
   border-radius: 10px;

@@ -131,11 +131,11 @@ export const grammarPathwayUnits = [
   {
     id: 4,
     name: 'Unit 4: Questions',
-    description: 'Learn to form yes/no questions and basic information questions using question words like “what,” “who,” and “where."',
+    description: 'Learn to form yes/no questions and basic information questions using question words like “what,” “who,” and “where".',
     rules: [
       {
         title: 'Yes/No Questions',
-        rule: 'के [Subject] [Object] छ? (ke [Subject] [Object] cha?)',
+        rule: 'के [Subject] [Object] छ? (ke [Subject] [Object] [Verb]?)',
         examples: [
           { nepali: 'के तपाईंसँग किताब छ?', literal: '? You have book', natural: 'Do you have a book?' },
           { nepali: 'के ऊ विद्यालय जान्छ?', literal: '? He school goes', natural: 'Does he go to school?' },

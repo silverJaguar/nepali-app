@@ -12,6 +12,7 @@ import { generateIdentifyExercises } from '../utils/identifyGenerator';
 
 const getInstructionForUnit = (unitId) => {
   if (Number(unitId) === 4) return 'What kind of question is this?';
+  if (Number(unitId) === 5) return 'Is this about one or many?';
   return 'What type of sentence is this?';
 };
 

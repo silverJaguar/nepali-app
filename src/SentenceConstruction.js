@@ -8,6 +8,8 @@ import { buildEnglishObjectPhrase, buildEnglishSubjectPhrase, getEnglishArticle 
 import { filterSafeExercises, checkContentSafety } from './utils/contentFilter';
 import { getSettings } from './utils/settings';
 import { generateGrammarQuestionExercises } from './utils/grammarQuestionExercises';
+import { generatePluralGrammarExercises, isNonChipVocab } from './utils/grammarPluralExercises';
+import { normalizePluralChipJoin } from './utils/pluralForms';
 import WordVariantDropdown from './components/WordVariantDropdown';
 
 const SentenceConstruction = ({ currentUnit, onComplete }) => {
@@ -33,6 +35,9 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
     
     // Apply content filtering to vocabulary
     const safeVocabulary = allVocabulary.filter(word => {
+      // Multi-word phrases / interjections are never valid sentence-building chips
+      if (isNonChipVocab(word)) return false;
+
       const safetyCheck = checkContentSafety(word.term || '');
       if (safetyCheck.isNSFW) {
         console.log(`[CONTENT FILTER] Blocked vocabulary word: "${word.term}" - ${safetyCheck.reason}`);
@@ -172,6 +177,15 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
         return [];
       }
       return filterSafeExercises(gq);
+    }
+
+    if (currentUnit === 5) {
+      const pluralEx = generatePluralGrammarExercises(vocabulary);
+      if (pluralEx.length === 0) {
+        console.error('[ERROR] Unit 5: could not generate plural grammar exercises.');
+        return [];
+      }
+      return filterSafeExercises(pluralEx);
     }
     
     // Determine target exercise count based on number of templates
@@ -1523,21 +1537,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
       const allWordsForExercise = [...exercises[0].requiredWords, ...exercises[0].distractors];
       
       // Filter out words that are gender variants of other words
-      const filteredAvailableWords = allWordsForExercise.filter(word => {
-        // Don't filter out if this word has variants (it's a base word)
-        if (hasVariants(word)) return true;
-        
-        // Check if this word is a gender variant of another word
-        const isVariant = allWordsForExercise.some(w => {
-          if (w.gender_variants) {
-            return w.gender_variants.some(v => v.term === word.term);
-          }
-          return false;
-        });
-        
-        // Only include if it's not a variant
-        return !isVariant;
-      });
+      const filteredAvailableWords = filterAvailableWords(allWordsForExercise);
       
       setAvailableWords(filteredAvailableWords.sort(() => Math.random() - 0.5)); // Shuffle
     }
@@ -1547,8 +1547,31 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
   const hasVariants = (word) => {
     const hasVerbForms = word.verb_forms && Object.keys(word.verb_forms).length > 0;
     const hasGenderVariants = word.gender_variants && word.gender_variants.length > 0;
-    return hasVerbForms || hasGenderVariants;
+    const hasAgreementVariants = word.agreement_variants && word.agreement_variants.length > 0;
+    return hasVerbForms || hasGenderVariants || hasAgreementVariants;
   };
+
+  const chipKey = (w) => w?._chipId ?? w?.term;
+
+  const getEffectiveTerm = (word) => {
+    if (word.agreement_required) {
+      return selectedVariants[word.term] ?? word.display_default ?? word.term;
+    }
+    return selectedVariants[word.term] ?? word.term;
+  };
+
+  const filterAvailableWords = (allWords) =>
+    allWords.filter(word => {
+      if (hasVariants(word)) return true;
+      const isVariant = allWords.some(w =>
+        w.gender_variants?.some(v => v.term === word.term)
+      );
+      if (isVariant) return false;
+      const isAgreementAlt = allWords.some(w =>
+        w.agreement_variants?.some(v => v.term === word.term && v.term !== w.term)
+      );
+      return !isAgreementAlt;
+    });
 
   // Helper to check if a word is a gender variant of another word
   const isGenderVariant = (word, allWords) => {
@@ -1562,6 +1585,10 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
 
   // Helper to get all valid variant terms for a word
   const getAllValidVariants = (word) => {
+    if (word.agreement_required) {
+      return [word.term];
+    }
+
     const variants = [word.term]; // Include the base term
     
     if (word.verb_forms) {
@@ -1577,16 +1604,28 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
     return variants;
   };
 
+  // A bank chip matches the last selected word (by unique chip id, or by term for
+  // duplicates like हरू). Only the last word can be removed by clicking the bank.
+  const matchesLastSelected = (word) => {
+    const last = selectedWords[selectedWords.length - 1];
+    if (!last || !word) return false;
+    return chipKey(last) === chipKey(word) || last.term === word.term;
+  };
+
   const handleWordSelect = (word) => {
-    if (selectedWords.some(w => w.term === word.term)) {
-      // Remove word if already selected
-      setSelectedWords(selectedWords.filter(w => w.term !== word.term));
-      // Also remove variant selection
-      const newVariants = { ...selectedVariants };
-      delete newVariants[word.term];
-      setSelectedVariants(newVariants);
+    if (matchesLastSelected(word)) {
+      // Only deselect when this is the last word in the built sentence.
+      // Prevents clicking a second हरू from removing an earlier हरू.
+      const remaining = selectedWords.slice(0, -1);
+      setSelectedWords(remaining);
+      const removedTerm = selectedWords[selectedWords.length - 1]?.term;
+      if (removedTerm && !remaining.some(w => w.term === removedTerm)) {
+        const newVariants = { ...selectedVariants };
+        delete newVariants[removedTerm];
+        setSelectedVariants(newVariants);
+      }
     } else {
-      // Add word (use default term, variant can be selected via dropdown)
+      // Always append — including a second हरू after the object
       setSelectedWords([...selectedWords, word]);
     }
     setIsCorrect(null);
@@ -1608,6 +1647,15 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
     if (!exercise || !exercise.requiredWords) return '';
     
     const template = exercise.template;
+
+    // Prefer dynamically generated prompt from sentenceBuilder (used by Unit 5 plural exercises).
+    // This avoids awkward gloss-based prompts like "are (plural copula)" leaking into English.
+    if (exercise.questionEnglishPrompt) {
+      const prompt = exercise.questionEnglishPrompt;
+      const safetyCheck = checkContentSafety(prompt);
+      if (safetyCheck.isNSFW) return 'Please select a different exercise.';
+      return prompt;
+    }
 
     if (template.type === 'grammar_question') {
       const prompt = exercise.questionEnglishPrompt || template.english || '';
@@ -1770,20 +1818,30 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
     if (!currentExercise) return;
     
     // Get user terms using selected variants if available
-    const userTerms = selectedWords.map(w => {
-      const variantTerm = selectedVariants[w.term];
-      return variantTerm || w.term;
-    });
+    const userTerms = selectedWords.map(w => getEffectiveTerm(w));
     
     // Get user sentence using selected variants if available
     const userSentence = userTerms.join(' ');
     
     let isAnswerCorrect = false;
-    
-    // For animate existence sentences, accept both word orders:
-    // PERSON + LOCATION + COPULA or LOCATION + PERSON + COPULA
-    // (The copula is always last in both orders)
-    if (currentExercise.template.type === 'existence_animate') {
+
+    if (currentExercise.plural && currentExercise.targetNepali) {
+      const target = currentExercise.targetNepali
+        .replace(/\?/g, '')
+        .replace(/।/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      // Gender variants are equally correct (शिक्षक / शिक्षिका), so map them back to
+      // the canonical term before comparing against the target sentence.
+      const genderCanonical = {};
+      currentExercise.requiredWords.forEach(w => {
+        w.gender_variants?.forEach(v => {
+          genderCanonical[v.term] = w.term;
+        });
+      });
+      const canonicalTerms = userTerms.map(t => genderCanonical[t] ?? t);
+      isAnswerCorrect = normalizePluralChipJoin(canonicalTerms) === target;
+    } else if (currentExercise.template.type === 'existence_animate') {
       const requiredTerms = currentExercise.requiredWords.map(w => w.term);
       
       // Get all valid variants for each required word
@@ -1855,10 +1913,11 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
       setCurrentExercise(nextExercise);
       setSelectedWords([]);
       setSelectedVariants({}); // Clear variant selections
-      setAvailableWords([
-        ...nextExercise.requiredWords,
-        ...nextExercise.distractors
-      ].sort(() => Math.random() - 0.5));
+      setAvailableWords(
+        filterAvailableWords([...nextExercise.requiredWords, ...nextExercise.distractors]).sort(
+          () => Math.random() - 0.5
+        )
+      );
       setIsCorrect(null);
       setShowHint(false);
     } else {
@@ -1913,10 +1972,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5em' }}>
           <h3 className="font-bold mb-2" style={{ marginBottom: 0, marginRight: '0.5em' }}>Your sentence:</h3>
           <button
-            onClick={() => speakText(selectedWords.map(w => {
-              const variantTerm = selectedVariants[w.term];
-              return variantTerm || w.term;
-            }).join(' '))}
+            onClick={() => speakText(selectedWords.map(w => getEffectiveTerm(w)).join(' '))}
             className="minimal-btn"
             style={{
               background: '#e0e7ff',
@@ -1945,10 +2001,7 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
           {selectedWords.length === 0 ? (
             <span className="text-gray-400 italic">Select words to build your sentence...</span>
           ) : (
-            <span className="text-lg">{selectedWords.map(w => {
-              const variantTerm = selectedVariants[w.term];
-              return variantTerm || w.term;
-            }).join(' ')}</span>
+            <span className="text-lg">{selectedWords.map(w => getEffectiveTerm(w)).join(' ')}</span>
           )}
         </div>
         
@@ -1970,7 +2023,8 @@ const SentenceConstruction = ({ currentUnit, onComplete }) => {
         <h3 className="font-bold mb-3">Available words:</h3>
         <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap', gap: '0.7em', justifyContent: 'center' }}>
           {(availableWords.slice(0, Math.max(10, availableWords.length))).map((word, index) => {
-            const isSelected = selectedWords.some(w => w.term === word.term);
+            // Only the last word in the sentence is highlighted as removable
+            const isSelected = matchesLastSelected(word);
             
             // Show dropdown if word has variants, otherwise show regular button
             if (hasVariants(word)) {

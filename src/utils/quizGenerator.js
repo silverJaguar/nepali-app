@@ -532,6 +532,22 @@ function generateGrammarFeatureMC(templates, vocabulary, unitId) {
       wh_where: 'wh_where',
     };
     correctFeatureId = map[sentence.question_kind] || '';
+  } else if (unitId === 5) {
+    const cop = sentence.components?.copula;
+    const verbTerm = sentence.components?.verb_finite?.nepali || '';
+    if (sentence.type === 'action' || verbTerm.endsWith('न्')) {
+      correctFeatureId = cop === 'छैनन्' || verbTerm.includes('दैनन्') ? 'plural_negation' : 'plural_action';
+    } else if (cop === 'हुन्' || cop === 'होइनन्') {
+      correctFeatureId = cop === 'होइनन्' ? 'plural_negation' : 'plural_identity';
+    } else if (cop === 'छैनन्') {
+      correctFeatureId = 'plural_negation';
+    } else if (cop === 'छन्') {
+      correctFeatureId = sentence.type === 'existence' || sentence.type === 'identity_location' || sentence.type === 'possession'
+        ? 'plural_existence'
+        : 'plural_noun';
+    } else if (sentence.nepali.includes('हरू')) {
+      correctFeatureId = 'plural_noun';
+    }
   } else if (unitId === 3) {
     if (sentence.type === 'action') {
       correctFeatureId = 'negation_action';
@@ -781,6 +797,43 @@ function introduceGrammaticalError(sentence, unitId) {
         sentence: wrong,
         transliteration: generateTransliterationFromNepali(wrong),
         explanation: 'Where-questions use कहाँ in the location slot, not के.',
+      };
+    }
+  } else if (unitId === 5) {
+    if (sentence.type === 'possession' && sentence.components?.copula === 'छ') {
+      const wrong = sentence.nepali.replace(/\sछ([।?])/g, ' छन्$1');
+      return {
+        sentence: wrong,
+        transliteration: sentence.transliteration?.replace(/\bcha\b/, 'chan') || generateTransliterationFromNepali(wrong),
+        explanation: 'छ/छन् agree with what is possessed. Mass nouns like पैसा take singular छ even when the possessor is plural.',
+      };
+    }
+    if (
+      sentence.nepali.includes('हरू') &&
+      (sentence.components?.copula === 'छन्' || sentence.components?.copula === 'छैनन्') &&
+      sentence.type !== 'possession'
+    ) {
+      const wrong = sentence.nepali.replace('छन्', 'छ');
+      return {
+        sentence: wrong,
+        transliteration: sentence.transliteration?.replace(/\bchan\b/, 'cha') || generateTransliterationFromNepali(wrong),
+        explanation: 'Plural subjects use छन्, not singular छ.',
+      };
+    }
+    if (sentence.nepali.includes('हरू') && sentence.components?.copula === 'हुन्') {
+      const wrong = sentence.nepali.replace('हुन्', 'हो');
+      return {
+        sentence: wrong,
+        transliteration: sentence.transliteration?.replace(/\bhun\b/, 'ho') || generateTransliterationFromNepali(wrong),
+        explanation: 'Plural identity uses हुन्, not singular हो.',
+      };
+    }
+    if (sentence.nepali.includes('हरू') && !sentence.nepali.includes('हरूले')) {
+      const wrong = sentence.nepali.replace(/हरू/g, '');
+      return {
+        sentence: wrong,
+        transliteration: generateTransliterationFromNepali(wrong),
+        explanation: 'Plural nouns need the हरू suffix when talking about more than one.',
       };
     }
   } else if (unitId === 3) {

@@ -173,6 +173,83 @@ export const grammarPathwayUnits = [
       { type: 'identify_grammar', id: 'u4_identify' },
     ]
   },
+  {
+    id: 5,
+    name: 'Unit 5: Plurals & Agreement',
+    description: 'Learn to talk about more than one person or thing. The sentence patterns stay the same as earlier units — you add the plural marker हरू to nouns and switch to the plural verb and copula forms.',
+    rules: [
+      {
+        title: 'Plural Nouns (हरू)',
+        rule: '[noun] + हरू ([noun] + haru)',
+        examples: [
+          { nepali: 'केटा → केटाहरू', transliteration: 'keta → ketaharu', literal: 'boy → boys', natural: 'Add हरू to a noun to make it plural.' },
+          { nepali: 'किताब → किताबहरू', transliteration: 'kitab → kitabharu', literal: 'book → books', natural: 'The same suffix works for objects.' },
+        ]
+      },
+      {
+        title: 'Plural Existence & Location (छ → छन्)',
+        rule: '[object]हरू छन् ([object]haru chan)',
+        examples: [
+          { nepali: 'किताब छ। → किताबहरू छन्।', transliteration: 'kitab cha → kitabharu chan', literal: 'book is → books are', natural: 'छ becomes छन् when the subject is plural.' },
+          { nepali: 'कुकुर बगैंचामा छ। → कुकुरहरू बगैंचामा छन्।', transliteration: 'kukur bagaicha-ma cha → kukurharu bagaicha-ma chan', literal: 'dog garden-in is → dogs garden-in are', natural: 'Location works the same way.' },
+        ]
+      },
+      {
+        title: 'Plural Identity (हो → हुन्)',
+        rule: '[subjects]हरू [noun] हुन् ([subjects]haru [noun] hun)',
+        examples: [
+          { nepali: 'ऊ शिक्षक हो। → उनीहरू शिक्षक हुन्।', transliteration: 'u shikshak ho → uniharu shikshak hun', literal: 'he teacher is → they teacher are', natural: 'Identity uses हुन् instead of हो for plural.' },
+          { nepali: 'बहिनीहरू शिक्षक हुन्।', transliteration: 'bahiniharu shikshak hun', literal: 'younger-sisters teacher are', natural: 'The predicate noun does NOT take हरू — only the subject does. English still needs the plural: "The younger sisters are teachers."' },
+        ]
+      },
+      {
+        title: 'Predicate nouns stay singular after हो/हुन्',
+        rule: '[subject]हरू [noun] हुन्  —  never [noun]हरू हुन्',
+        examples: [
+          { nepali: 'विद्यार्थीहरू शिक्षक हुन्।', transliteration: 'vidyarthiharu shikshak hun', literal: 'students teacher are', natural: 'Correct — the profession noun is left unmarked.' },
+          { nepali: '✗ विद्यार्थीहरू शिक्षकहरू हुन्।', transliteration: '✗ vidyarthiharu shikshakharu hun', literal: '✗ students teachers are', natural: 'Incorrect — do not add हरू to the noun after हो/हुन्.' },
+        ]
+      },
+      {
+        title: 'Plural Action Verbs (+ न्)',
+        rule: '[subject]हरूले [object] [verb]न् ([subject]haru-le [object] [verb]-n)',
+        examples: [
+          { nepali: 'केटाले भात खान्छ। → केटाहरूले भात खान्छन्।', transliteration: 'keta-le bhat khancha → ketaharu-le bhat khanchan', literal: 'boy-le rice eats → boys-le rice eat', natural: 'The verb adds न् to agree with a plural subject. In English the -s drops too: "eats" → "eat".' },
+          { nepali: 'आमा जान्छ। → आमाहरू जान्छन्।', transliteration: 'aama jancha → aamaharu janchan', literal: 'mother goes → mothers go', natural: 'जान्छ → जान्छन्, and English "goes" → "go" (never "goes" with a plural subject).' },
+        ]
+      },
+      {
+        title: 'Location needs मा',
+        rule: '[subject]हरू [place]मा छन् ([subject]haru [place]-ma chan)',
+        examples: [
+          { nepali: 'किताबहरू टेबलमा छन्।', transliteration: 'kitabharu tebal-ma chan', literal: 'books table-in are', natural: 'मा attaches to the place word and cannot be left out.' },
+          { nepali: 'विद्यार्थीहरू विद्यालयमा छन्।', transliteration: 'vidyarthiharu vidyalaya-ma chan', literal: 'students school-in are', natural: 'Without मा the sentence has no "in/at" meaning.' },
+        ]
+      },
+      {
+        title: 'Possession: copula matches what is owned',
+        rule: '[owner]हरूसँग [thing] [छ / छन्]',
+        examples: [
+          { nepali: 'आमाहरूसँग पैसा छ।', transliteration: 'aamaharu-sanga paisa cha', literal: 'mothers-with money is', natural: 'पैसा (money) is a mass noun, so it stays छ even though the owners are plural.' },
+          { nepali: 'आमाहरूसँग किताबहरू छन्।', transliteration: 'aamaharu-sanga kitabharu chan', literal: 'mothers-with books are', natural: 'किताबहरू (books) is countable and plural, so the copula becomes छन्.' },
+        ]
+      },
+      {
+        title: 'Plural Negatives (छैन → छैनन्, होइन → होइनन्)',
+        rule: 'छैन → छैनन् (existence/location), होइन → होइनन् (identity)',
+        examples: [
+          { nepali: 'केटाहरू यहाँ छैनन्।', transliteration: 'ketaharu yaha chainan', literal: 'boys here are-not', natural: 'छैन becomes छैनन् for plural existence and location.' },
+          { nepali: 'उनीहरू शिक्षक होइनन्।', transliteration: 'uniharu shikshak hoinan', literal: 'they teacher are-not', natural: 'होइन becomes होइनन् for plural identity.' },
+        ]
+      },
+    ],
+    activities: [
+      { type: 'sentence_building', id: 'u5_build' },
+      { type: 'quiz', id: 'u5_quiz' },
+      { type: 'fill_blank', id: 'u5_fill' },
+      { type: 'identify_grammar', id: 'u5_identify' },
+    ]
+  },
 ];
 
 // Helper to get initial progress state

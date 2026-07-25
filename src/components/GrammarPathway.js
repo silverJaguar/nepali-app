@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { 
   FiInfo, 
   FiPlay, 
   FiX
 } from 'react-icons/fi';
+import { getSettings } from '../utils/settings';
 
 // DEV MODE: Set to true to unlock all activities for development/testing
 const DEV_MODE = true; // TODO: Disabled for development - set to false for production
@@ -77,6 +78,18 @@ const ACTIVITY_TYPES = {
 
 export const UnitInfoModal = ({ unit, onClose }) => {
   const openedAtRef = useRef(Date.now());
+  const [showTransliteration, setShowTransliteration] = useState(() => getSettings().showTransliteration);
+
+  useEffect(() => {
+    const checkSettings = () => setShowTransliteration(getSettings().showTransliteration);
+    window.addEventListener('settingsChanged', checkSettings);
+    window.addEventListener('storage', checkSettings);
+    return () => {
+      window.removeEventListener('settingsChanged', checkSettings);
+      window.removeEventListener('storage', checkSettings);
+    };
+  }, []);
+
   const handleOverlayClick = () => {
     const elapsed = Date.now() - openedAtRef.current;
     if (elapsed < 300) return; // Ignore overlay clicks for 300ms
@@ -96,21 +109,26 @@ export const UnitInfoModal = ({ unit, onClose }) => {
         </button>
         <h3 className="pathway-modal-title">{unit.name}</h3>
         <p className="pathway-modal-description">{unit.description}</p>
+        {unit.rules?.length > 0 && (
         <div className="pathway-modal-rules">
           <h4>Grammar Rules:</h4>
-          {unit.rules?.map((rule, idx) => (
+          {unit.rules.map((rule, idx) => (
             <div key={idx} className="pathway-modal-rule">
               <strong>{rule.title}</strong>
               <code>{rule.rule}</code>
               {rule.examples?.slice(0, 2).map((ex, exIdx) => (
                 <div key={exIdx} className="pathway-modal-example">
                   <span className="nepali">{ex.nepali}</span>
+                  {showTransliteration && ex.transliteration && (
+                    <span className="transliteration">{ex.transliteration}</span>
+                  )}
                   <span className="english">{ex.natural}</span>
                 </div>
               ))}
             </div>
           ))}
         </div>
+        )}
       </div>
     </div>
   );

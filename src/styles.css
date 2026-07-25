@@ -872,6 +872,12 @@ button:focus-visible, .pastel-button:focus-visible {
   color: #333;
 }
 
+.pathway-modal-example .transliteration {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #8a7a95;
+}
+
 .pathway-modal-example .english {
   font-size: 0.9rem;
   color: #666;

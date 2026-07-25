@@ -162,7 +162,7 @@ export function getEnglishArticle(noun, nounData = {}) {
   }
   
   // No article for plural or mass nouns (check for -s ending or plural flag)
-  if (nounData.plural || nounData.mass_noun || noun.toLowerCase().endsWith('s')) {
+  if (nounData.plural || nounData.mass_noun || nounData.can_plural === false || noun.toLowerCase().endsWith('s')) {
     return '';
   }
   
@@ -193,10 +193,15 @@ export function getEnglishArticle(noun, nounData = {}) {
  * @param {object} verb - The verb object (for context)
  * @returns {string} - The complete English object phrase
  */
+/** "House / Home" → "House"; learners should never see slashed glosses in a sentence. */
+function primaryGloss(text) {
+  return String(text || '').trim().split(/\s*\/\s*/)[0].trim();
+}
+
 export function buildEnglishObjectPhrase(objectWord, verb = null) {
   if (!objectWord) return '';
   
-  const objectEnglish = objectWord.gloss || objectWord.definition || '';
+  const objectEnglish = primaryGloss(objectWord.gloss || objectWord.definition || '');
   const objectNepali = objectWord.term || '';
   
   // Extract postposition from the Nepali term if present
@@ -229,7 +234,7 @@ export function buildEnglishObjectPhrase(objectWord, verb = null) {
 export function buildEnglishSubjectPhrase(subjectWord) {
   if (!subjectWord) return '';
   
-  const subjectEnglish = subjectWord.gloss || subjectWord.definition || '';
+  const subjectEnglish = primaryGloss(subjectWord.gloss || subjectWord.definition || '');
   
   // Get article
   const article = getEnglishArticle(subjectEnglish, subjectWord);

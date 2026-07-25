@@ -175,6 +175,10 @@ export function isValidVerbObjectPair(verb, object, termToFlashcardMap = null) {
     if (objectCategory === 'body' || objectCategory === 'body_part') {
       return false;
     }
+    // Physical substances in the health category aren't feelings ("feels medicine")
+    if (objectSemanticType === 'medicine') {
+      return false;
+    }
     return emotionCategories.includes(objectCategory) || isSensation;
   }
   

@@ -11,22 +11,118 @@ import {
   isFiniteActionLemmaVerb,
   verbUsesErgativeConstruction,
 } from './helpers';
-import { buildEnglishSubjectPhrase, buildEnglishObjectPhrase, getEnglishArticle } from './postpositionMapper';
+import {
+  buildEnglishSubjectPhrase,
+  buildEnglishObjectPhrase,
+  getEnglishArticle,
+  getEnglishPreposition,
+} from './postpositionMapper';
 import { PARTICLE_KE, PARTICLE_KO_WHO, PARTICLE_KAHA, KO_LE, findVocabByTerm } from './questionParticles';
+import {
+  asPluralWord,
+  toPluralCopula,
+  toPluralVerb,
+  attachErgativeToPlural,
+  attachSangaToPlural,
+  buildEnglishPluralSubjectPhrase,
+  buildEnglishPluralObjectPhrase,
+  mergeCompWithVocab,
+  canTakePlural,
+  copulaAgreesWithNoun,
+  englishPluralLabel,
+} from './pluralForms';
+import {
+  toBareEnglishVerb,
+  pluralEnglishVerbPhrase,
+  singularEnglishVerbPhrase,
+  verbNeedsToBeforeObject,
+} from './englishVerbForms';
 
 /** Use first gloss before " / " so English is not "shop / store". */
 function primaryGlossFromWord(word) {
   if (!word) return '';
-  const raw = String(word.gloss || word.definition || '').trim();
+  return primaryGlossText(word.gloss || word.definition || '');
+}
+
+/** "House / Home" → "House" so slashed glosses never reach the learner. */
+function primaryGlossText(text) {
+  const raw = String(text || '').trim();
   if (!raw) return '';
   return raw.split(/\s*\/\s*/)[0].trim();
 }
 
 /** Subjects that can plausibly "be" at a physical location (exclude time, abstract, genitive-linked). */
+// Things that can't sensibly be said to sit "in/on" a place in this beginner grammar.
+// Body parts need a possessor (मेरो पेट), and buildings/places aren't located inside other places.
+const NOT_LOCATABLE_CATEGORIES = new Set([
+  'time',
+  'number',
+  'concept',
+  'emotion',
+  'body',
+  'body_part',
+  'health',
+  'appearance',
+  'quality',
+  'size',
+  'taste',
+  'price',
+  'direction',
+  'location',
+  'place',
+  'accommodation',
+  'nature',
+  'music',
+  'household_activity',
+  'work',
+  'work_activity',
+  'work_process',
+  'work_material',
+  'time_management',
+  'time_state',
+]);
+
+// Abstract or body-related nouns make nonsense existence claims ("Are there noses?").
+const NOT_EXISTABLE_CATEGORIES = new Set([
+  'body',
+  'body_part',
+  'appearance',
+  'concept',
+  'emotion',
+  'health',
+  'direction',
+  'household_activity',
+  'work',
+  'work_activity',
+  'work_process',
+  'time_management',
+  'time_state',
+]);
+
+// Only small, portable things belong "on" a piece of furniture.
+const TOO_BIG_FOR_FURNITURE = new Set([
+  'person',
+  'family_member',
+  'transportation',
+  'place',
+  'accommodation',
+  'household_space',
+]);
+
 function canBeLocatedEntity(n) {
   if (!n?.can_be?.includes('subject')) return false;
-  if (n.category === 'time' || n.category === 'number' || n.category === 'concept') return false;
+  if (NOT_LOCATABLE_CATEGORIES.has(n.category)) return false;
+  if (n.requires_possession) return false;
   if (n.requires_genitive_link) return false;
+  return true;
+}
+
+/** Reject nonsense pairs like "the stomachs are in the company" or "the car is on the table". */
+function isValidSubjectPlacePair(subject, place) {
+  if (!subject || !place) return false;
+  if (subject.term === place.term) return false;
+  const placeIsFurniture = place.category === 'furniture';
+  if (placeIsFurniture && TOO_BIG_FOR_FURNITURE.has(subject.category)) return false;
   return true;
 }
 
@@ -41,7 +137,14 @@ function canBeLocatedEntity(n) {
  */
 export function buildSentence(template, vocabulary, unitId) {
   if (template.type === 'grammar_question') {
+    if (template.unit === 5 || template.plural) {
+      return buildPluralGrammarQuestionSentence(template, vocabulary);
+    }
     return buildGrammarQuestionSentence(template, vocabulary);
+  }
+
+  if (template.unit === 5 && template.plural) {
+    return buildPluralDeclarativeSentence(template, vocabulary);
   }
 
   // Group vocabulary by part of speech
@@ -136,12 +239,15 @@ function buildActionSentence(template, vocabByPos, unitId, vocabulary) {
     let transliteration;
     const subjectPhrase = buildEnglishSubjectPhrase(subject);
     let verbGloss = verb?.gloss || verb?.definition || 'does';
-    if (isNegative) {
-      if (!verbGloss.includes('does not')) {
-        verbGloss = `does not ${verbGloss.replace(/s$/, '')}`;
-      }
+    if (isNegative && !verbGloss.includes('does not')) {
+      verbGloss = singularEnglishVerbPhrase(verbGloss, true);
     }
-    const objectPhrase = buildEnglishObjectPhrase(object, verb);
+    const objGloss = primaryGlossFromWord(object);
+    let objectPhrase = buildEnglishObjectPhrase(
+      { ...object, gloss: objGloss, definition: objGloss },
+      verb
+    );
+    if (verbNeedsToBeforeObject(verbGloss)) objectPhrase = `to ${objectPhrase}`;
     const english = `${subjectPhrase} ${verbGloss} ${objectPhrase}`;
 
     const subjectComp = {
@@ -207,6 +313,10 @@ function buildActionSentence(template, vocabByPos, unitId, vocabulary) {
         location_phrase: {
           nepali: locPhrase,
           english: objectPhrase,
+          // Bare place gloss + preposition, so plural rewrites can rebuild the phrase
+          place_english: primaryGlossFromWord(object).toLowerCase(),
+          preposition: getEnglishPreposition(pp, verb) || 'in',
+          basePlace: object,
           transliteration: locTranslit,
         },
         uses_ergative: false,
@@ -238,6 +348,7 @@ function buildExistenceSentence(template, vocabByPos, unitId) {
     const isBodyWhole = bodyWholeTerms.includes(word.term);
     // Block numbers (pedagogically weird - "seven exists" doesn't make sense)
     const isNumber = word.category === 'number';
+    if (NOT_EXISTABLE_CATEGORIES.has(word.category)) return false;
     return !isAnimate && !isAnimal && !isBodyWhole && !isNumber;
   });
 
@@ -250,7 +361,9 @@ function buildExistenceSentence(template, vocabByPos, unitId) {
 
   const nepali = `${object.term} ${copula}।`;
   const transliteration = `${object.transliteration || object.term} ${copulaTrans}`;
-  const english = `There is ${isNegative ? 'not ' : ''}a ${(object.definition || object.gloss || 'thing').toLowerCase()}.`;
+  const objectEnglish = primaryGlossFromWord(object).toLowerCase() || 'thing';
+  const article = /^[aeiou]/.test(objectEnglish) ? 'an' : 'a';
+  const english = `There is ${isNegative ? 'not ' : ''}${article} ${objectEnglish}.`;
 
   return {
     nepali,
@@ -328,10 +441,7 @@ function buildPossessionSentence(template, vocabByPos, unitId) {
 function buildIdentityLocationSentence(template, vocabByPos, unitId) {
   if (unitId === 2) return null;
 
-  let subjects = vocabByPos['noun']?.filter(canBeLocatedEntity) || [];
-  if (subjects.length === 0) {
-    subjects = vocabByPos['noun']?.filter(n => n.can_be?.includes('subject') && n.category !== 'time') || [];
-  }
+  const subjects = vocabByPos['noun']?.filter(canBeLocatedEntity) || [];
   const placeNouns =
     vocabByPos['noun']?.filter(
       n =>
@@ -344,8 +454,15 @@ function buildIdentityLocationSentence(template, vocabByPos, unitId) {
 
   if (subjects.length === 0 || placeNouns.length === 0) return null;
 
-  const subject = subjects[Math.floor(Math.random() * subjects.length)];
-  const place = placeNouns[Math.floor(Math.random() * placeNouns.length)];
+  const validPairs = [];
+  subjects.forEach(s => {
+    placeNouns.forEach(p => {
+      if (isValidSubjectPlacePair(s, p)) validPairs.push([s, p]);
+    });
+  });
+  if (validPairs.length === 0) return null;
+
+  const [subject, place] = validPairs[Math.floor(Math.random() * validPairs.length)];
   const locationNepali = `${place.term}मा`;
   const locationTranslit = `${place.transliteration || place.term}ma`;
 
@@ -358,7 +475,8 @@ function buildIdentityLocationSentence(template, vocabByPos, unitId) {
 
   const subjectPhrase = buildEnglishSubjectPhrase(subject);
   const placeWord = primaryGlossFromWord(place).toLowerCase() || 'there';
-  const english = `${subjectPhrase} is ${isNegative ? 'not ' : ''}in the ${placeWord}.`;
+  const preposition = place.category === 'furniture' ? 'on' : 'in';
+  const english = `${subjectPhrase} is ${isNegative ? 'not ' : ''}${preposition} the ${placeWord}.`;
 
   return {
     nepali,
@@ -371,6 +489,7 @@ function buildIdentityLocationSentence(template, vocabByPos, unitId) {
       location: {
         nepali: locationNepali,
         english: placeWord,
+        preposition,
         transliteration: locationTranslit,
         basePlace: place,
       },
@@ -386,13 +505,25 @@ function buildIdentityNounSentence(template, vocabByPos, unitId) {
   // Only for unit 1 or 3 (negation)
   if (unitId === 2) return null;
 
-  const subjects = vocabByPos['noun']?.filter(n => n.can_be?.includes('subject')) || [];
-  const identityNouns = vocabByPos['noun']?.filter(n => n.can_be?.includes('identity_noun') || n.category === 'profession') || [];
+  const subjects = vocabByPos['noun']?.filter(n => {
+    if (!n.can_be?.includes('subject')) return false;
+    const isPerson = n.category === 'person' || n.category === 'family_member';
+    const isAnimate = n.animacy === 'animate' || isPerson;
+    return isAnimate && n.category !== 'time' && n.category !== 'number';
+  }) || [];
+  const identityNouns = vocabByPos['noun']?.filter(n =>
+    n.can_be?.includes('identity_noun') ||
+    n.category === 'profession' ||
+    (n.category === 'person' && n.animacy === 'animate')
+  ) || [];
 
   if (subjects.length === 0 || identityNouns.length === 0) return null;
 
   const subject = subjects[Math.floor(Math.random() * subjects.length)];
-  const identityNoun = identityNouns[Math.floor(Math.random() * identityNouns.length)];
+  // "The students are not students" is a useless exercise
+  const distinctNouns = identityNouns.filter(n => n.term !== subject.term);
+  if (distinctNouns.length === 0) return null;
+  const identityNoun = distinctNouns[Math.floor(Math.random() * distinctNouns.length)];
   const isNegative = template.negation_type === 'identity';
   const copula = isNegative ? 'होइन' : 'हो';
   const copulaTrans = copula === 'हो' ? 'ho' : 'hoina';
@@ -430,7 +561,12 @@ function buildIdentityAdjSentence(template, vocabByPos, unitId) {
   // Only for unit 1 or 3 (negation)
   if (unitId === 2) return null;
 
-  const subjects = vocabByPos['noun']?.filter(n => n.can_be?.includes('subject')) || [];
+  const subjects = vocabByPos['noun']?.filter(n => {
+    if (!n.can_be?.includes('subject')) return false;
+    const isPerson = n.category === 'person' || n.category === 'family_member';
+    const isAnimate = n.animacy === 'animate' || isPerson;
+    return isAnimate && n.category !== 'time' && n.category !== 'number';
+  }) || [];
   const adjectives = vocabByPos['adjective'] || [];
 
   if (subjects.length === 0 || adjectives.length === 0) return null;
@@ -469,47 +605,347 @@ function buildIdentityAdjSentence(template, vocabByPos, unitId) {
   };
 }
 
+/**
+ * Unit 5: pluralize a declarative built from a base template (units 1–3 patterns).
+ */
+function buildPluralDeclarativeSentence(template, vocabulary) {
+  const base = sentenceTemplates.find(t => t.id === template.base_template_id);
+  if (!base) return null;
+
+  const decl = buildSentence(base, vocabulary, base.unit);
+  if (!decl) return null;
+
+  return applyPluralTransform(decl, template, vocabulary);
+}
+
+/** True for both singular and plural negative copulas (छैन/छैनन्, होइन/होइनन्). */
+function isNegativeCopula(cop) {
+  return cop === 'छैन' || cop === 'छैनन्' || cop === 'होइन' || cop === 'होइनन्';
+}
+
+function applyPluralTransform(decl, template, vocabulary = []) {
+  const type = decl.type;
+  const pluralCopula = cop => toPluralCopula(cop);
+
+  if (type === 'identity_noun') {
+    const sub = decl.components.subject;
+    const idn = decl.components.identityNoun;
+    const subMeta = mergeCompWithVocab(sub, vocabulary);
+    if (!subMeta || !canTakePlural(subMeta)) return null;
+    const cop = pluralCopula(decl.components.copula);
+    const subP = asPluralWord(subMeta);
+    // A predicate noun after हो/हुन् stays SINGULAR in Nepali (उनीहरू शिक्षक हुन्),
+    // so strip any हरू rather than adding one.
+    const idnTerm = (idn.nepali || '').replace(/हरू$/, '');
+    const idnMeta = mergeCompWithVocab({ ...idn, nepali: idnTerm }, vocabulary);
+    const transIdn = (idn.transliteration || idnTerm).replace(/haru$/i, '');
+    const nepali = `${subP.term} ${idnTerm} ${cop}।`;
+    const transliteration = `${subP.transliteration || subP.term} ${transIdn} ${cop === 'हुन्' ? 'hun' : cop === 'होइनन्' ? 'hoinan' : 'chan'}`;
+    const subjEn = buildEnglishPluralSubjectPhrase(subP);
+    // English DOES need the plural predicate: "The sisters are teachers."
+    const nounEn = englishPluralLabel(
+      idnMeta || { gloss: primaryGlossText(idn.english || idn.gloss) }
+    ).toLowerCase();
+    const isNeg = cop === 'होइनन्';
+    const english = `${subjEn} ${isNeg ? 'are not' : 'are'} ${nounEn}.`;
+    return {
+      ...decl,
+      nepali,
+      transliteration,
+      english,
+      template: template.id,
+      plural: true,
+      components: {
+        ...decl.components,
+        subject: { ...sub, nepali: subP.term, english: subP.gloss },
+        identityNoun: { ...idn, nepali: idnTerm },
+        copula: cop,
+      },
+    };
+  }
+
+  if (type === 'identity_location') {
+    const sub = decl.components.subject;
+    const loc = decl.components.location;
+    const subMeta = mergeCompWithVocab(sub, vocabulary);
+    if (!subMeta || !canTakePlural(subMeta)) return null;
+    const cop = pluralCopula(decl.components.copula);
+    const subP = asPluralWord(subMeta);
+    const locNepali = loc.nepali || '';
+    const nepali = `${subP.term} ${locNepali} ${cop}।`;
+    const transliteration = `${subP.transliteration || subP.term} ${loc.transliteration || locNepali} ${cop === 'छन्' ? 'chan' : 'chainan'}`;
+    const subjEn = buildEnglishPluralSubjectPhrase(subP);
+    const placeWord = primaryGlossText(loc.english || 'there').toLowerCase();
+    const isNeg = isNegativeCopula(cop);
+    const english = `${subjEn} ${isNeg ? 'are not' : 'are'} ${loc.preposition || 'in'} the ${placeWord}.`;
+    return {
+      ...decl,
+      nepali,
+      transliteration,
+      english,
+      template: template.id,
+      plural: true,
+      components: {
+        ...decl.components,
+        subject: { ...sub, nepali: subP.term, english: subP.gloss },
+        copula: cop,
+      },
+    };
+  }
+
+  if (type === 'existence') {
+    const obj = decl.components.object;
+    const objMeta = mergeCompWithVocab(obj, vocabulary);
+    if (!objMeta || !canTakePlural(objMeta)) return null;
+    const cop = pluralCopula(decl.components.copula);
+    const objP = asPluralWord(objMeta);
+    const nepali = `${objP.term} ${cop}।`;
+    const transliteration = `${objP.transliteration || objP.term} ${cop === 'छन्' ? 'chan' : 'chainan'}`;
+    const isNeg = isNegativeCopula(cop);
+    const objEn = buildEnglishPluralObjectPhrase(objP);
+    const english = isNeg ? `There are no ${objEn}.` : `There are ${objEn}.`;
+    return {
+      ...decl,
+      nepali,
+      transliteration,
+      english,
+      template: template.id,
+      plural: true,
+      components: {
+        ...decl.components,
+        object: { ...obj, nepali: objP.term, english: objP.gloss },
+        copula: cop,
+      },
+    };
+  }
+
+  if (type === 'possession') {
+    const poss = decl.components.possessor;
+    const obj = decl.components.object;
+    const possMeta = mergeCompWithVocab(poss, vocabulary);
+    const objMeta = mergeCompWithVocab(obj, vocabulary);
+    if (!possMeta || !canTakePlural(possMeta)) return null;
+    const possP = asPluralWord(possMeta);
+    const objP = canTakePlural(objMeta) ? asPluralWord(objMeta) : objMeta;
+    const objSurface = objP.term;
+    const cop = copulaAgreesWithNoun(decl.components.copula, objSurface, objMeta);
+    const nepali = `${possP.term}सँग ${objSurface} ${cop}।`;
+    const transliteration = `${possP.transliteration || possP.term}sanga ${objP.transliteration || objSurface} ${cop === 'छन्' || cop === 'छैनन्' ? (cop === 'छैनन्' ? 'chainan' : 'chan') : cop === 'छैन' ? 'chhaina' : 'cha'}`;
+    const possEn = buildEnglishPluralSubjectPhrase(possP);
+    const objEn = englishPluralLabel(objMeta);
+    const isNeg = isNegativeCopula(cop);
+    const english = isNeg
+      ? `${possEn} do not have ${objEn}.`
+      : `${possEn} have ${objEn}.`;
+    return {
+      ...decl,
+      nepali,
+      transliteration,
+      english,
+      template: template.id,
+      plural: true,
+      components: {
+        ...decl.components,
+        possessor: { ...poss, nepali: possP.term, english: possP.gloss },
+        object: { ...obj, nepali: objSurface, english: objMeta.gloss || objMeta.definition },
+        copula: cop,
+      },
+    };
+  }
+
+  if (type === 'action') {
+    const sub = decl.components.subject;
+    const obj = decl.components.object;
+    const vf = decl.components.verb_finite || decl.components.verb;
+    const verbLemma = decl.components.verb;
+    const usesErg = decl.components.uses_ergative !== false;
+    const subMeta = mergeCompWithVocab(sub, vocabulary);
+    if (!subMeta || !canTakePlural(subMeta)) return null;
+    const subP = asPluralWord(subMeta);
+    const objTerm = obj.nepali;
+    const verbTerm = toPluralVerb(vf.nepali || vf.term);
+    const isNeg = (vf.nepali || '').includes('दैन') || decl.nepali.includes('दैन');
+
+    let nepali;
+    let transliteration;
+    if (usesErg) {
+      const subErg = attachErgativeToPlural(subP.term);
+      nepali = `${subErg} ${objTerm} ${verbTerm}।`;
+      transliteration = `${subP.transliteration || subP.term}le ${obj.transliteration || objTerm} ${verbTerm}`;
+    } else {
+      const loc = decl.components.location_phrase;
+      const locNepali = loc?.nepali || '';
+      nepali = `${subP.term} ${locNepali} ${verbTerm}।`;
+      transliteration = `${subP.transliteration || subP.term} ${loc?.transliteration || locNepali} ${verbTerm}`;
+    }
+
+    const subjEn = buildEnglishPluralSubjectPhrase(subP);
+    // Plural subjects take the bare English verb: "goes" → "go", never "goe"
+    const verbGloss = pluralEnglishVerbPhrase(
+      vf?.english || vf?.gloss || verbLemma?.english || 'do',
+      isNeg
+    );
+    let objectPhrase;
+    if (usesErg) {
+      const objGloss = primaryGlossText(obj.english);
+      objectPhrase = buildEnglishObjectPhrase(
+        { term: objTerm, gloss: objGloss, definition: objGloss },
+        verbLemma
+      );
+      if (verbNeedsToBeforeObject(verbGloss)) objectPhrase = `to ${objectPhrase}`;
+    } else {
+      // Motion verbs need their preposition: "go to the shop", not "go shop"
+      const loc = decl.components.location_phrase;
+      const place = (loc?.place_english || primaryGlossText(loc?.english) || 'there').toLowerCase();
+      objectPhrase = `${loc?.preposition || 'in'} the ${place}`;
+    }
+    const english = `${subjEn} ${verbGloss} ${objectPhrase}.`;
+
+    return {
+      ...decl,
+      nepali,
+      transliteration,
+      english,
+      template: template.id,
+      plural: true,
+      components: {
+        ...decl.components,
+        subject: { ...sub, nepali: subP.term, english: subP.gloss },
+        object: { ...obj, nepali: objTerm },
+        verb_finite: { ...vf, nepali: verbTerm },
+        uses_ergative: usesErg,
+      },
+    };
+  }
+
+  return null;
+}
+
+function buildPluralGrammarQuestionSentence(template, vocabulary) {
+  const baseDeclTemplate = sentenceTemplates.find(t => t.id === template.base_template_id);
+  if (!baseDeclTemplate) return null;
+
+  const singular = buildSentence(baseDeclTemplate, vocabulary, baseDeclTemplate.unit);
+  if (!singular) return null;
+
+  const decl = applyPluralTransform(singular, {
+    ...template,
+    plural: true,
+    unit: 5,
+    type: baseDeclTemplate.type,
+    id: template.id,
+  }, vocabulary);
+  if (!decl) return null;
+
+  const kind = template.question_kind;
+  const core = decl.nepali.replace(/।\s*$/, '').replace(/\?\s*$/, '').trim();
+  const coreTrans = decl.transliteration.replace(/\.?\s*$/, '').trim();
+
+  let nepali = '';
+  let transliteration = '';
+  let english = '';
+
+  if (kind === 'yes_no') {
+    nepali = `के ${core}?`;
+    transliteration = `ke ${coreTrans}`;
+    english = yesNoQuestionEnglish(decl);
+  } else if (kind === 'wh_where' && decl.type === 'identity_location') {
+    const { subject, copula } = decl.components;
+    nepali = `${subject.nepali} ${PARTICLE_KAHA.term} ${copula}?`;
+    transliteration = `${subject.transliteration || subject.nepali} kahaan ${copula === 'छन्' ? 'chan' : 'chainan'}`;
+    english = whereQuestionEnglish(decl);
+  } else {
+    return null;
+  }
+
+  return {
+    nepali,
+    transliteration,
+    english,
+    type: 'grammar_question',
+    question_kind: kind,
+    base_sentence_type: decl.type,
+    declarative_nepali: decl.nepali,
+    declarative_english: decl.english,
+    template: template.id,
+    plural: true,
+    components: {
+      ...decl.components,
+      declarative: { nepali: decl.nepali, english: decl.english, transliteration: decl.transliteration },
+    },
+  };
+}
+
 function asWord(c) {
   if (!c) return null;
   return { ...c, gloss: c.gloss || c.english, definition: c.definition || c.english };
 }
 
+const ENGLISH_PRONOUNS = new Set(['i', 'you', 'he', 'she', 'it', 'we', 'they']);
+
+/**
+ * Subject phrase for use *inside* a question, where it is no longer sentence-initial:
+ * "Are the mothers …?" rather than "Are Mothers …?".
+ */
+function questionSubjectPhrase(sub, isPlural) {
+  const phrase = isPlural
+    ? buildEnglishPluralSubjectPhrase(sub)
+    : buildEnglishSubjectPhrase(sub);
+  if (!phrase) return '';
+  if (ENGLISH_PRONOUNS.has(phrase.toLowerCase())) {
+    return phrase.toLowerCase() === 'i' ? 'I' : phrase.toLowerCase();
+  }
+  const lowered = phrase.charAt(0).toLowerCase() + phrase.slice(1);
+  return /^(the|a|an|my|your|his|her|our|their)\b/i.test(lowered) ? lowered : `the ${lowered}`;
+}
+
 function yesNoQuestionEnglish(decl) {
   const t = decl.type;
+  const isPlural = decl.plural === true;
+  const negCopula = isNegativeCopula;
   if (t === 'possession') {
     const poss = asWord(decl.components.possessor);
     const obj = asWord(decl.components.object);
-    const subj = buildEnglishSubjectPhrase(poss);
+    const subj = questionSubjectPhrase(poss, isPlural);
     const objEn = (obj.gloss || '').toLowerCase();
     const article = getEnglishArticle(objEn, obj);
     const objPhrase = article ? `${article} ${objEn}` : objEn;
-    const neg = decl.components.copula === 'छैन';
-    return neg ? `Does ${subj} not have ${objPhrase}?` : `Does ${subj} have ${objPhrase}?`;
+    const neg = negCopula(decl.components.copula);
+    const doWord = isPlural ? 'Do' : 'Does';
+    return neg ? `${doWord} ${subj} not have ${objPhrase}?` : `${doWord} ${subj} have ${objPhrase}?`;
   }
   if (t === 'identity_noun') {
     const sub = asWord(decl.components.subject);
     const idn = asWord(decl.components.identityNoun);
-    const subj = buildEnglishSubjectPhrase(sub);
-    const nounEn = idn.gloss || idn.definition || '';
-    const article = getEnglishArticle(nounEn, idn);
+    const subj = questionSubjectPhrase(sub, isPlural);
+    const nounEn = primaryGlossText(idn.gloss || idn.definition || '');
+    const article = getEnglishArticle(nounEn, idn) || (isPlural ? '' : 'a');
     const np = article ? `${article} ${nounEn.toLowerCase()}` : nounEn.toLowerCase();
-    const neg = decl.components.copula === 'होइन';
+    const neg = negCopula(decl.components.copula);
+    if (isPlural) {
+      return neg ? `Are ${subj} not ${np}?` : `Are ${subj} ${np}?`;
+    }
     return neg ? `Is it not true that ${subj} is ${np}?` : `Is ${subj} ${np}?`;
   }
   if (t === 'identity_adj') {
     const sub = asWord(decl.components.subject);
     const adj = asWord(decl.components.adjective);
-    const subj = buildEnglishSubjectPhrase(sub);
+    const subj = questionSubjectPhrase(sub, isPlural);
     const adjEn = (adj.gloss || adj.definition || '').toLowerCase();
-    const neg = decl.components.copula === 'छैन';
-    return neg ? `Is ${subj} not ${adjEn}?` : `Is ${subj} ${adjEn}?`;
+    const neg = negCopula(decl.components.copula);
+    const be = isPlural ? 'Are' : 'Is';
+    return neg ? `${be} ${subj} not ${adjEn}?` : `${be} ${subj} ${adjEn}?`;
   }
   if (t === 'existence') {
     const obj = asWord(decl.components.object);
     const o = (obj.gloss || obj.definition || 'something').toLowerCase();
+    const neg = negCopula(decl.components.copula);
+    if (isPlural) {
+      // o is already the plural gloss (e.g. "schools"); no article needed
+      return neg ? `Are there no ${o}?` : `Are there ${o}?`;
+    }
     const article = getEnglishArticle(o, obj);
     const op = article ? `${article} ${o}` : o;
-    const neg = decl.components.copula === 'छैन';
     return neg ? `Is there not ${op}?` : `Is there ${op}?`;
   }
   if (t === 'action') {
@@ -517,57 +953,76 @@ function yesNoQuestionEnglish(decl) {
     const obj = asWord(decl.components.object);
     const verbLemma = decl.components.verb;
     const vf = decl.components.verb_finite || verbLemma;
-    const subj = buildEnglishSubjectPhrase(sub);
-    let verbGloss = vf?.english || vf?.gloss || verbLemma?.english || verbLemma?.definition || 'verb';
+    const subj = questionSubjectPhrase(sub, isPlural);
+    const rawGloss = vf?.english || vf?.gloss || verbLemma?.english || verbLemma?.definition || 'verb';
     const neg = (vf?.nepali || '').includes('दैन') || decl.nepali.includes('दैन');
-    if (neg && !String(verbGloss).toLowerCase().includes('does not')) {
-      verbGloss = `does not ${String(verbGloss).replace(/s$/i, '')}`;
-    } else if (!neg) {
-      verbGloss = String(verbGloss).replace(/^does not\s+/i, '');
+    const doWord = isPlural ? 'Do' : 'Does';
+    // "Does the boy eat …?" — after do/does the verb is always bare
+    const verbGloss = toBareEnglishVerb(rawGloss);
+    const loc = decl.components.location_phrase;
+    let objectPhrase;
+    if (decl.components.uses_ergative === false && loc) {
+      const place = (loc.place_english || primaryGlossText(loc.english) || 'there').toLowerCase();
+      objectPhrase = `${loc.preposition || 'in'} the ${place}`;
+    } else {
+      const objGloss = primaryGlossText(obj?.gloss || obj?.definition || obj?.english);
+      objectPhrase = buildEnglishObjectPhrase(
+        { ...asWord(obj), gloss: objGloss, definition: objGloss },
+        verbLemma
+      );
+      if (verbNeedsToBeforeObject(verbGloss)) objectPhrase = `to ${objectPhrase}`;
     }
-    const objectPhrase = buildEnglishObjectPhrase(asWord(obj), verbLemma);
-    return neg ? `Does ${subj} not ${verbGloss} ${objectPhrase}?` : `Does ${subj} ${verbGloss} ${objectPhrase}?`;
+    return neg ? `${doWord} ${subj} not ${verbGloss} ${objectPhrase}?` : `${doWord} ${subj} ${verbGloss} ${objectPhrase}?`;
   }
   if (t === 'identity_location') {
     const sub = asWord(decl.components.subject);
-    const subj = buildEnglishSubjectPhrase(sub);
-    const neg = decl.components.copula === 'छैन';
-    const placeWord = (decl.components.location?.english || 'there').toLowerCase();
-    return neg ? `Is ${subj} not in the ${placeWord}?` : `Is ${subj} in the ${placeWord}?`;
+    const subj = questionSubjectPhrase(sub, isPlural);
+    const neg = negCopula(decl.components.copula);
+    const placeWord = primaryGlossText(decl.components.location?.english || 'there').toLowerCase();
+    const prep = decl.components.location?.preposition || 'in';
+    const be = isPlural ? 'Are' : 'Is';
+    return neg ? `${be} ${subj} not ${prep} the ${placeWord}?` : `${be} ${subj} ${prep} the ${placeWord}?`;
   }
   return `Question: (${decl.english})`;
 }
 
 function whatQuestionEnglish(decl) {
+  const isPlural = decl.plural === true;
   if (decl.type === 'identity_noun') {
     const sub = asWord(decl.components.subject);
-    return `What is ${buildEnglishSubjectPhrase(sub)}?`;
+    return `What ${isPlural ? 'are' : 'is'} ${questionSubjectPhrase(sub, isPlural)}?`;
   }
   if (decl.type === 'possession') {
     const poss = asWord(decl.components.possessor);
-    return `What does ${buildEnglishSubjectPhrase(poss)} have?`;
+    return `What ${isPlural ? 'do' : 'does'} ${questionSubjectPhrase(poss, isPlural)} have?`;
   }
   if (decl.type === 'action') {
     const sub = asWord(decl.components.subject);
     const vf = decl.components.verb_finite || decl.components.verb;
-    let stem = (vf?.gloss || vf?.english || 'do').toLowerCase();
-    stem = stem.replace(/^does not\s+/i, '').replace(/s$/, '');
-    return `What does ${buildEnglishSubjectPhrase(sub)} ${stem}?`;
+    const stem = toBareEnglishVerb((vf?.gloss || vf?.english || 'do').toLowerCase());
+    const doWord = isPlural ? 'do' : 'does';
+    return `What ${doWord} ${questionSubjectPhrase(sub, isPlural)} ${stem}?`;
   }
   return `What? (related to: ${decl.english})`;
 }
 
 function whoQuestionEnglish(decl) {
+  const isPlural = decl.plural === true;
   if (decl.type === 'identity_noun') {
     const sub = asWord(decl.components.subject);
-    return `Who is ${buildEnglishSubjectPhrase(sub)}?`;
+    return `Who ${isPlural ? 'are' : 'is'} ${questionSubjectPhrase(sub, isPlural)}?`;
   }
   if (decl.type === 'action') {
     const obj = asWord(decl.components.object);
     const v = decl.components.verb;
     const vf = decl.components.verb_finite || v;
-    const objectPhrase = buildEnglishObjectPhrase(obj, asWord(v));
+    const objGloss = primaryGlossText(obj?.gloss || obj?.definition || obj?.english);
     const gloss = vf?.gloss || vf?.english || v?.gloss || v?.english || 'do';
+    let objectPhrase = buildEnglishObjectPhrase(
+      { ...obj, gloss: objGloss, definition: objGloss },
+      asWord(v)
+    );
+    if (verbNeedsToBeforeObject(gloss)) objectPhrase = `to ${objectPhrase}`;
     return `Who ${gloss} ${objectPhrase}?`;
   }
   return `Who? (related to: ${decl.english})`;
@@ -575,19 +1030,23 @@ function whoQuestionEnglish(decl) {
 
 function whereQuestionEnglish(decl) {
   const sub = asWord(decl.components.subject);
-  const thing = buildEnglishSubjectPhrase(sub);
-  return `Where is ${thing}?`;
+  const isPlural = decl.plural === true;
+  const thing = questionSubjectPhrase(sub, isPlural);
+  return `Where ${isPlural ? 'are' : 'is'} ${thing}?`;
 }
 
 /** Where-questions for intransitive motion (जानु / आउनु): कहाँ + verb, no ले. */
 function motionWhereQuestionEnglish(decl) {
   const sub = asWord(decl.components.subject);
-  const thing = buildEnglishSubjectPhrase(sub);
+  const isPlural = decl.plural === true;
+  const thing = questionSubjectPhrase(sub, isPlural);
   const vf = decl.components.verb_finite || decl.components.verb;
   const neg = (vf?.nepali || '').includes('दैन') || (decl.nepali || '').includes('दैन');
-  let stem = (vf?.gloss || vf?.english || 'go').toLowerCase();
-  stem = stem.replace(/^does not\s+/i, '').replace(/s$/, '');
-  return neg ? `Where does ${thing} not ${stem}?` : `Where does ${thing} ${stem}?`;
+  const stem = toBareEnglishVerb((vf?.gloss || vf?.english || 'go').toLowerCase());
+  const doWord = isPlural ? 'do' : 'does';
+  return neg
+    ? `Where ${doWord} ${thing} not ${stem}?`
+    : `Where ${doWord} ${thing} ${stem}?`;
 }
 
 /**

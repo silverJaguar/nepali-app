@@ -48,10 +48,15 @@ const WordVariantDropdown = ({ word, onSelectVariant, onSelectWord, selectedVari
   }, [isOpen]);
 
   // Get the display term (selected variant or default)
-  const displayTerm = selectedVariant || word.term;
+  const displayTerm = selectedVariant || (word.agreement_required ? word.display_default : null) || word.term;
   
   // Find transliteration for selected variant
   let displayTransliteration = word.transliteration;
+  if (word.agreement_variants) {
+    const lookup = selectedVariant || (word.agreement_required ? word.display_default : null) || word.term;
+    const found = word.agreement_variants.find(v => v.term === lookup);
+    if (found?.transliteration) displayTransliteration = found.transliteration;
+  }
   if (selectedVariant && word.verb_forms) {
     Object.values(word.verb_forms).forEach(forms => {
       const found = forms.find(f => f.term === selectedVariant);
@@ -66,8 +71,9 @@ const WordVariantDropdown = ({ word, onSelectVariant, onSelectWord, selectedVari
   // Check if word has variants
   const hasVerbForms = word.verb_forms && Object.keys(word.verb_forms).length > 0;
   const hasGenderVariants = word.gender_variants && word.gender_variants.length > 0;
+  const hasAgreementVariants = word.agreement_variants && word.agreement_variants.length > 0;
   
-  if (!hasVerbForms && !hasGenderVariants) {
+  if (!hasVerbForms && !hasGenderVariants && !hasAgreementVariants) {
     return null; // No variants, don't show dropdown
   }
 
@@ -161,6 +167,25 @@ const WordVariantDropdown = ({ word, onSelectVariant, onSelectWord, selectedVari
     );
   };
 
+  const renderAgreementVariants = () => {
+    if (!hasAgreementVariants) return null;
+
+    return word.agreement_variants.map((variant, idx) => (
+      <button
+        key={idx}
+        onClick={() => handleVariantSelect(variant)}
+        className={`w-full text-left px-3 py-1.5 text-sm hover:bg-gray-100 transition-colors ${
+          selectedVariant === variant.term ? 'bg-blue-50 font-semibold' : ''
+        }`}
+      >
+        <div className="font-medium">{variant.term}</div>
+        {variant.transliteration && showTransliteration && (
+          <div className="text-xs text-gray-600">{variant.transliteration}</div>
+        )}
+      </button>
+    ));
+  };
+
   return (
     <div ref={dropdownRef} style={{ display: 'inline-block', position: 'relative' }}>
       <button
@@ -221,8 +246,15 @@ const WordVariantDropdown = ({ word, onSelectVariant, onSelectWord, selectedVari
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
           }}
         >
-          {renderVerbForms()}
-          {renderGenderVariants()}
+          {word.agreement_required && hasAgreementVariants
+            ? renderAgreementVariants()
+            : (
+              <>
+                {renderVerbForms()}
+                {renderGenderVariants()}
+                {renderAgreementVariants()}
+              </>
+            )}
         </div>
       )}
     </div>

@@ -227,6 +227,73 @@ export const GRAMMAR_RULES = {
       falseExplanation: 'The same yes/no rule applies: prepend के to the negative statement.',
     },
   ],
+
+  5: [
+    {
+      feature: 'plural_suffix_haru',
+      statement: 'Plural nouns are formed by adding हरू to the singular noun',
+      true: true,
+      explanation: 'केटा → केटाहरू, किताब → किताबहरू. हरू marks more than one.',
+      falseVersion: 'Plural nouns are formed by adding ले to the singular noun',
+      falseExplanation: 'ले is the ergative marker for transitive subjects, not a plural suffix. हरू makes nouns plural.',
+    },
+    {
+      feature: 'plural_existence_copula',
+      statement: 'For plural existence or location sentences, छ becomes छन्',
+      true: true,
+      explanation: 'Singular: किताब टेबलमा छ। Plural: किताबहरू टेबलमा छन्।',
+      falseVersion: 'For plural existence sentences, हो becomes छन्',
+      falseExplanation: 'हो/हुन् is for identity (A is B). Existence and location use छ/छन्.',
+    },
+    {
+      feature: 'possession_copula_agreement',
+      statement: 'In possession sentences, छ/छन् agree with what is possessed, not who possesses it',
+      true: true,
+      explanation: 'आमाहरूसँग पैसा छ। (money is singular) vs आमाहरूसँग किताबहरू छन्। (books are plural).',
+      falseVersion: 'In possession sentences, छ/छन् always agree with the plural possessor',
+      falseExplanation: 'The possessor can be plural, but the copula follows the possessed thing: पैसा → छ, किताबहरू → छन्.',
+    },
+    {
+      feature: 'plural_identity_copula',
+      statement: 'For plural identity sentences (A is B), हो becomes हुन्',
+      true: true,
+      explanation: 'Singular: उनी शिक्षक हो। Plural: उनीहरू शिक्षक हुन्।',
+      falseVersion: 'For plural identity sentences, छ becomes हुन्',
+      falseExplanation: 'हुन् replaces हो for plural identity. छ/छन् is for adjectives, existence, and location.',
+    },
+    {
+      feature: 'plural_verb_agreement',
+      statement: 'Plural subjects use plural verb endings (e.g. खान्छ → खान्छन्)',
+      true: true,
+      explanation: 'The verb gains न् in the present tense when the subject is plural.',
+      falseVersion: 'Plural subjects keep the same verb form as singular subjects',
+      falseExplanation: 'Verbs agree with the subject in number: खान्छ (singular) vs खान्छन् (plural).',
+    },
+    {
+      feature: 'plural_ergative_le',
+      statement: 'Plural transitive subjects still take ले (e.g. केटाहरूले)',
+      true: true,
+      explanation: 'ले marks the doer in action sentences; it attaches after the plural noun: [noun]हरूले.',
+      falseVersion: 'Plural transitive subjects drop ले and use only हरू',
+      falseExplanation: 'हरू pluralizes the noun; ले still marks the ergative subject: केटाहरूले.',
+    },
+    {
+      feature: 'plural_word_order',
+      statement: 'Plural sentences keep the same SOV word order as singular sentences',
+      true: true,
+      explanation: 'Only noun endings and verb/copula forms change; Subject + Object + Verb order stays the same.',
+      falseVersion: 'Plural sentences reverse word order compared to singular sentences',
+      falseExplanation: 'Nepali remains verb-final (SOV) in plural sentences, just like singular ones.',
+    },
+    {
+      feature: 'plural_negation_copula',
+      statement: 'Plural negative existence uses छैनन् (छैन → छैनन्)',
+      true: true,
+      explanation: 'केटाहरू यहाँ छैनन्। — plural negation of छ/location/existence.',
+      falseVersion: 'Plural negative existence uses होइनन् for all sentence types',
+      falseExplanation: 'होइनन् negates plural identity (हो/हुन्). Existence/location negation uses छैनन्.',
+    },
+  ],
 };
 
 // Helper to get a random true/false grammar question for a unit
@@ -290,6 +357,13 @@ export function getGrammarFeaturesForUnit(unitId) {
       { id: 'wh_what', label: 'What question (के in a slot)', description: 'के replaces the asked-about noun' },
       { id: 'wh_who', label: 'Who question (को / कोले)', description: 'को replaces the person (or कोले for transitive subject)' },
       { id: 'wh_where', label: 'Where question (कहाँ)', description: 'कहाँ replaces location (copula sentences) or destination with motion verbs (no ले)' },
+    ],
+    5: [
+      { id: 'plural_noun', label: 'Plural noun (हरू)', description: 'Noun + हरू for many' },
+      { id: 'plural_existence', label: 'Plural existence (छन्)', description: 'छ → छन् for plural' },
+      { id: 'plural_identity', label: 'Plural identity (हुन्)', description: 'हो → हुन् for plural' },
+      { id: 'plural_action', label: 'Plural action verb', description: 'Verb + न् with plural subject' },
+      { id: 'plural_negation', label: 'Plural negation', description: 'छैनन् / होइनन् / -दैनन्' },
     ],
   };
   

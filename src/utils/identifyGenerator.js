@@ -30,6 +30,23 @@ const HINTS = {
   statement: 'There is no question word — this is a plain declarative.',
 };
 
+export const UNIT_5_PLURAL_OPTIONS = [
+  { id: 'singular', label: 'One person or thing' },
+  { id: 'plural', label: 'Many (a group)' },
+];
+
+const UNIT_5_HINTS = {
+  singular: 'Look for a noun without हरू and a singular copula or verb (छ, हो, खान्छ…).',
+  plural: 'Look for हरू on nouns and plural endings: छन्, हुन्, or verbs ending in न्.',
+};
+
+function isPluralSentence(sentence) {
+  if (!sentence?.nepali) return false;
+  if (sentence.plural) return true;
+  const n = sentence.nepali;
+  return n.includes('हरू') || n.includes('छन्') || n.includes('हुन्') || n.includes('छैनन्') || /[^\s]+न्[।?]/.test(n);
+}
+
 function normalizeNepali(nepali) {
   return (nepali || '').replace(/[?।]/g, '').replace(/\s+/g, ' ').trim();
 }
@@ -91,6 +108,7 @@ function tryPushExercise(template, vocabulary, correctAnswer, seen, out) {
  */
 export function generateIdentifyExercises(unitId, vocabulary, templates, count = 7) {
   const unit = Number(unitId);
+  if (unit === 5) return generateUnit5IdentifyExercises(vocabulary, templates, count);
   if (unit !== 4) return [];
 
   const questionTemplates = templates.filter(t => t.unit === unit && t.type === 'grammar_question');
@@ -145,6 +163,77 @@ export function generateIdentifyExercises(unitId, vocabulary, templates, count =
     const tmpl = questionTemplates[attempts % questionTemplates.length];
     const answer = KIND_TO_ANSWER[tmpl.question_kind];
     if (answer) tryPushExercise(tmpl, vocabulary, answer, seen, raw);
+  }
+
+  const safe = filterSafeExercises(raw);
+  return shuffle(safe).slice(0, count);
+}
+
+function tryPushPluralIdentify(template, vocabulary, correctAnswer, seen, out) {
+  const unitForBuild = template.unit === 5 ? 5 : template.unit;
+  const sentence = buildSentence(template, vocabulary, unitForBuild);
+  if (!sentence?.nepali) return false;
+
+  const norm = normalizeNepali(sentence.nepali);
+  if (seen.has(norm)) return false;
+  seen.add(norm);
+
+  const isPlural = isPluralSentence(sentence);
+  const answer = isPlural ? 'plural' : 'singular';
+  if (answer !== correctAnswer) return false;
+
+  out.push({
+    sentence: sentence.nepali,
+    transliteration: sentence.transliteration,
+    correctAnswer: answer,
+    options: UNIT_5_PLURAL_OPTIONS,
+    hint: UNIT_5_HINTS[answer],
+    explanation: isPlural
+      ? 'हरू on nouns and plural verb/copula endings (छन्, हुन्, …न्) signal more than one.'
+      : 'No हरू suffix and singular copula/verb forms signal one person or thing.',
+    template,
+    questionEnglishPrompt: sentence.english,
+    targetNepali: sentence.nepali,
+  });
+  return true;
+}
+
+function generateUnit5IdentifyExercises(vocabulary, templates, count = 7) {
+  const pluralTemplates = templates.filter(t => t.unit === 5 && t.plural);
+  const singularTemplates = sentenceTemplates.filter(
+    t => t.unit <= 3 && !t.negation_type && t.type !== 'grammar_question' && t.type !== 'identity_adj'
+  );
+
+  if (pluralTemplates.length === 0) return [];
+
+  const buckets = [
+    { answer: 'plural', target: 4, pool: pluralTemplates.filter(t => t.type !== 'grammar_question') },
+    { answer: 'singular', target: 3, pool: singularTemplates },
+  ].filter(b => b.pool.length > 0);
+
+  const counts = Object.fromEntries(buckets.map(b => [b.answer, 0]));
+  const raw = [];
+  const seen = new Set();
+  let attempts = 0;
+
+  while (attempts < 400) {
+    const need = buckets.filter(b => counts[b.answer] < b.target);
+    if (need.length === 0) break;
+    attempts++;
+    const bucket = need[Math.floor(Math.random() * need.length)];
+    const tmpl = bucket.pool[Math.floor(Math.random() * bucket.pool.length)];
+    if (tryPushPluralIdentify(tmpl, vocabulary, bucket.answer, seen, raw)) {
+      counts[bucket.answer] += 1;
+    }
+  }
+
+  while (raw.length < count && attempts < 600) {
+    attempts++;
+    const usePlural = raw.filter(e => e.correctAnswer === 'plural').length <= raw.filter(e => e.correctAnswer === 'singular').length;
+    const bucket = usePlural ? buckets.find(b => b.answer === 'plural') : buckets.find(b => b.answer === 'singular');
+    if (!bucket) break;
+    const tmpl = bucket.pool[attempts % bucket.pool.length];
+    tryPushPluralIdentify(tmpl, vocabulary, bucket.answer, seen, raw);
   }
 
   const safe = filterSafeExercises(raw);

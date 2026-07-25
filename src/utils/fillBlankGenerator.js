@@ -9,6 +9,10 @@ const GRAMMAR_WORDS = {
   छ: 'chha',
   होइन: 'hoina',
   छैन: 'chhaina',
+  हुन्: 'hun',
+  छन्: 'chan',
+  होइनन्: 'hoinan',
+  छैनन्: 'chainan',
   सङ्ग: 'sanga',
   ले: 'le',
   मा: 'ma',
@@ -86,9 +90,16 @@ function buildExerciseFromSentence(sentence, unitId, template) {
     parts[idx] = '___';
     sentenceWithBlank = parts.join(' ') + '।';
     transliterationWithBlank = replaceBlankInTransliteration(fullTransliteration, getTransliteration(blank));
-    options = makeOptions(['हो', 'छ', 'होइन', 'छैन']);
+    const isPluralIdentity = blank === 'हुन्' || blank === 'होइनन्' || nepali.includes('हरू');
+    options = makeOptions(isPluralIdentity ? ['हुन्', 'हो', 'होइनन्', 'होइन'] : ['हो', 'छ', 'होइन', 'छैन']);
     hint = 'Talking about who someone is (identity)';
-    explanation = blank === 'हो' ? 'हो (ho) is used for identity - stating what someone IS (a noun).' : 'होइन (hoina) negates identity: हो → होइन.';
+    explanation = blank === 'हुन्'
+      ? 'हुन् (hun) is the plural identity copula: हो → हुन् when the subject is plural.'
+      : blank === 'होइनन्'
+        ? 'होइनन् negates plural identity.'
+        : blank === 'हो'
+          ? 'हो (ho) is used for identity - stating what someone IS (a noun).'
+          : 'होइन (hoina) negates identity: हो → होइन.';
   } else if (type === 'identity_adj' && components.copula) {
     blank = components.copula;
     const parts = nepali.replace(/।\s*$/, '').split(' ');
@@ -104,13 +115,49 @@ function buildExerciseFromSentence(sentence, unitId, template) {
     blank = components.copula;
     sentenceWithBlank = nepali.replace(blank, '___');
     transliterationWithBlank = replaceBlankInTransliteration(fullTransliteration, getTransliteration(blank));
-    options = makeOptions(['हो', 'छ', 'होइन', 'छैन', 'सङ्ग']);
+    const isPlural = blank === 'छन्' || blank === 'छैनन्' || nepali.includes('हरू');
+    options = makeOptions(isPlural ? ['छन्', 'छ', 'छैनन्', 'छैन'] : ['हो', 'छ', 'होइन', 'छैन', 'सङ्ग']);
     hint = 'Saying that something exists';
-    explanation = blank === 'छ' ? 'छ is used for existence: stating that something exists.' : 'छैन (chhaina) negates existence: छ → छैन.';
+    explanation = blank === 'छन्'
+      ? 'छन् is the plural existence/location copula: छ → छन्.'
+      : blank === 'छैनन्'
+        ? 'छैनन् negates plural existence.'
+        : blank === 'छ'
+          ? 'छ is used for existence: stating that something exists.'
+          : 'छैन (chhaina) negates existence: छ → छैन.';
+  } else if (type === 'identity_location' && components.copula) {
+    blank = components.copula;
+    const parts = nepali.replace(/।\s*$/, '').split(' ');
+    const idx = parts.indexOf(blank);
+    if (idx === -1) return null;
+    parts[idx] = '___';
+    sentenceWithBlank = parts.join(' ') + '।';
+    transliterationWithBlank = replaceBlankInTransliteration(fullTransliteration, getTransliteration(blank));
+    const isPlural = blank === 'छन्' || blank === 'छैनन्' || nepali.includes('हरू');
+    options = makeOptions(isPlural ? ['छन्', 'छ', 'छैनन्', 'छैन'] : ['हो', 'छ', 'होइन', 'छैन']);
+    hint = 'Saying where something is';
+    explanation = blank === 'छन्'
+      ? 'छन् is used when the subject is plural: location + छन्.'
+      : blank === 'छैनन्'
+        ? 'छैनन् negates plural location/existence.'
+        : 'छ marks location or existence for singular subjects.';
+  } else if (type === 'possession' && components.copula && (components.copula === 'छन्' || components.copula === 'छैनन्')) {
+    blank = components.copula;
+    const parts = nepali.replace(/।\s*$/, '').split(' ');
+    const idx = parts.indexOf(blank);
+    if (idx === -1) return null;
+    parts[idx] = '___';
+    sentenceWithBlank = parts.join(' ') + '।';
+    transliterationWithBlank = replaceBlankInTransliteration(fullTransliteration, getTransliteration(blank));
+    options = makeOptions(['छन्', 'छ', 'छैनन्', 'छैन']);
+    hint = 'The copula agrees with what is possessed';
+    explanation = blank === 'छन्'
+      ? 'छन् agrees with a plural possessed thing (e.g. किताबहरू), not the plural possessor.'
+      : 'छैनन् negates plural possession of countable things.';
   } else if (type === 'possession') {
     // Blank the particle सङ्ग (transliteration may be concatenated e.g. "didisanga")
     blank = 'सङ्ग';
-    sentenceWithBlank = nepali.replace('सङ्ग', '___');
+    sentenceWithBlank = nepali.replace('सङ्ग', '___').replace('सँग', '___');
     transliterationWithBlank = replaceBlankInTransliteration(fullTransliteration, 'sanga');
     options = makeOptions(['ले', 'सङ्ग', 'मा', 'को']);
     hint = 'Talking about what someone has';
